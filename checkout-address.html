@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Address — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body class="checkout-page" data-step="2">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <div class="checkout-grid container">
+
+    <!-- Left column: decorative negative space + Add new address -->
+    <div style="padding-top:0;">
+      <h2 class="h2-i color-sc-100" style="margin-bottom:8px;">Delivery Address</h2>
+      <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:32px;"></div>
+      <p class="h5-a color-sc-l3" style="margin-bottom:32px;">Choose a saved address or add a new one.</p>
+
+      <button
+        class="h6-a"
+        style="display:flex;align-items:center;gap:8px;color:var(--pr-b2);text-transform:uppercase;letter-spacing:0.15em;background:none;border:none;cursor:pointer;text-decoration:underline;"
+        id="add-address-btn"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add new address
+      </button>
+
+      <!-- Add new address form (hidden by default) -->
+      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;">
+        <form>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="input-wrap">
+              <label class="input-label" for="addr-name">Full Name</label>
+              <input type="text" id="addr-name" class="input-field" placeholder="Riya Sharma" required>
+            </div>
+            <div class="input-wrap">
+              <label class="input-label" for="addr-phone">Phone</label>
+              <input type="tel" id="addr-phone" class="input-field" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+          <div class="input-wrap" style="margin-bottom:16px;">
+            <label class="input-label" for="addr-line1">Address Line 1</label>
+            <input type="text" id="addr-line1" class="input-field" placeholder="House / Flat / Building No." required>
+          </div>
+          <div class="input-wrap" style="margin-bottom:16px;">
+            <label class="input-label" for="addr-line2">Address Line 2</label>
+            <input type="text" id="addr-line2" class="input-field" placeholder="Street / Locality">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+            <div class="input-wrap">
+              <label class="input-label" for="addr-city">City</label>
+              <input type="text" id="addr-city" class="input-field" placeholder="Bengaluru" required>
+            </div>
+            <div class="input-wrap">
+              <label class="input-label" for="addr-pin">PIN Code</label>
+              <input type="text" id="addr-pin" class="input-field" placeholder="560078" pattern="\d{6}" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-gold">Save Address</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: Sidebar with addresses -->
+    <aside class="checkout-sidebar" aria-label="Delivery address selection">
+
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 1: Cart">1</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step active" aria-current="step">
+          <div class="stepper__circle" aria-label="Step 2: Delivery Address (current)">2</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 3: Payment">3</div>
+        </div>
+      </div>
+
+      <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Delivery Address</h2>
+
+      <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="radiogroup" aria-label="Saved addresses">
+        <!-- Populated by JS -->
+      </div>
+
+      <button class="btn-proceed" style="margin-top:32px;" id="proceed-btn">Proceed</button>
+      <a href="cart.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
+
+    </aside>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    const ADDRESSES = await fetch('/data/addresses.json').then(r => r.json());
+    let selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
+
+    function renderAddresses() {
+      const list = document.getElementById('address-list');
+      if (!list) return;
+      list.innerHTML = ADDRESSES.map(addr => `
+        <div
+          class="address-card ${addr.id === selectedId ? 'selected' : ''}"
+          data-id="${addr.id}"
+          role="radio"
+          aria-checked="${addr.id === selectedId}"
+          tabindex="0"
+        >
+          <span class="address-card__label">${addr.label}</span>
+          <p class="address-card__title">${addr.title}</p>
+          <p class="address-card__body">${addr.address.replace(/\n/g, '<br>')}</p>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.address-card').forEach(card => {
+        const select = () => {
+          selectedId = card.dataset.id;
+          list.querySelectorAll('.address-card').forEach(c => {
+            c.classList.toggle('selected', c.dataset.id === selectedId);
+            c.setAttribute('aria-checked', c.dataset.id === selectedId);
+          });
+        };
+        card.addEventListener('click', select);
+        card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
+      });
+    }
+
+    document.getElementById('add-address-btn')?.addEventListener('click', () => {
+      const form = document.getElementById('new-address-form');
+      if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.getElementById('proceed-btn')?.addEventListener('click', () => {
+      if (selectedId) {
+        localStorage.setItem('rangmudra_delivery_address', selectedId);
+        window.location.href = 'checkout-payment.html';
+      }
+    });
+
+    renderAddresses();
+  </script>
+</body>
+</html>

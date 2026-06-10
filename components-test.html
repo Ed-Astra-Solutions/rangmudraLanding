@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    body { background: var(--pr-l5); padding-top: 88px; }
+    .test-section { padding: 64px 48px; border-bottom: 1px solid rgba(44,26,16,0.1); }
+    .test-title { font-family: var(--font-archivo); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sc-l3); margin-bottom: 32px; }
+    .test-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 24px; }
+    .dark-bg { background: var(--sc-100); padding: 48px; }
+  </style>
+</head>
+<body>
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Typography -->
+    <section class="test-section">
+      <p class="test-title">Typography Scale</p>
+      <p class="h1-i" style="color:var(--sc-100)">h1-italiana — Delivery Address</p>
+      <p class="h2-i" style="color:var(--sc-100)">h2-italiana — Connect With Us</p>
+      <p class="h3-i" style="color:var(--sc-100)">h3-italiana — Payment Method</p>
+      <p class="h4-i" style="color:var(--sc-100)">h4-italiana — Block Printing Workshop</p>
+      <p class="h5-i" style="color:var(--sc-100)">h5-italiana — Immerse in the Spectrum</p>
+      <p class="h4-a" style="color:var(--sc-100)">H4-ARCHIVO — UPI / CARDS / BANKS</p>
+      <p class="h5-a" style="color:var(--sc-100)">h5-archivo — Default body text description here</p>
+      <p class="h6-a" style="color:var(--sc-100); text-transform:uppercase">H6-ARCHIVO — Navigation links · Featured · SHIRO · SHIRT</p>
+      <p class="h7-a" style="color:var(--sc-l3); text-transform:uppercase">H7-ARCHIVO — Tax . 8% · Micro captions · Fine print</p>
+    </section>
+
+    <!-- Colour swatches -->
+    <section class="test-section">
+      <p class="test-title">Colour Palette</p>
+      <div class="test-row">
+        <div style="width:80px;height:80px;background:var(--pr-100);border-radius:8px;" title="PR_100"></div>
+        <div style="width:80px;height:80px;background:var(--pr-b2);border-radius:8px;" title="PR_B2"></div>
+        <div style="width:80px;height:80px;background:var(--pr-b3);border-radius:8px;" title="PR_B3"></div>
+        <div style="width:80px;height:80px;background:var(--pr-l2);border-radius:8px;" title="PR_L2"></div>
+        <div style="width:80px;height:80px;background:var(--pr-l5);border-radius:8px;border:1px solid rgba(0,0,0,0.1);" title="PR_L5"></div>
+        <div style="width:80px;height:80px;background:var(--sc-100);border-radius:8px;" title="SC_100"></div>
+        <div style="width:80px;height:80px;background:var(--sc-l1);border-radius:8px;" title="SC_L1"></div>
+        <div style="width:80px;height:80px;background:var(--sc-l3);border-radius:8px;" title="SC_L3"></div>
+        <div style="width:80px;height:80px;background:var(--ac-100);border-radius:8px;" title="AC_100"></div>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="test-section">
+      <p class="test-title">Buttons</p>
+      <div class="test-row">
+        <button class="btn-primary">Primary Button</button>
+        <button class="btn-primary pill">Primary Pill</button>
+        <button class="btn-primary" disabled>Disabled</button>
+        <button class="btn-gold">Send Message →</button>
+        <button class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+      </div>
+      <div class="test-row">
+        <button class="btn-proceed" style="width:280px;">Proceed</button>
+        <button class="btn-back" style="width:280px;">Back</button>
+      </div>
+      <div class="test-row">
+        <button class="btn-add-to-cart" style="width:320px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          ADD TO CART
+        </button>
+      </div>
+      <div class="test-row">
+        <div class="btn-go-to-cart" style="width:320px;" role="group">
+          <div class="btn-go-to-cart__label">
+            GO TO CART
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <button class="btn-go-to-cart__trash" aria-label="Remove from cart">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter pills & Dropdown -->
+    <section class="test-section">
+      <p class="test-title">Filter Pills &amp; Dropdown</p>
+      <div class="filter-pills" style="margin-bottom:32px;">
+        <button class="filter-pill active" data-filter="all">ALL</button>
+        <button class="filter-pill" data-filter="mens">MEN'S WEAR</button>
+        <button class="filter-pill" data-filter="womens">WOMEN'S WEAR</button>
+        <button class="filter-pill" data-filter="decor">HOME DECOR</button>
+        <button class="filter-pill" data-filter="accessories">ACCESSORIES</button>
+      </div>
+      <div class="test-row">
+        <div class="dropdown" id="test-dropdown">
+          <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span>Featured</span>
+            <svg class="dropdown__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dropdown__menu" role="listbox">
+            <div class="dropdown__option active" data-value="featured">Featured</div>
+            <div class="dropdown__option" data-value="price-asc">Price: Low to High</div>
+            <div class="dropdown__option" data-value="price-desc">Price: High to Low</div>
+          </div>
+        </div>
+        <div class="dropdown" id="test-dropdown-2">
+          <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span>All</span>
+            <svg class="dropdown__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dropdown__menu" role="listbox">
+            <div class="dropdown__option active" data-value="all">All</div>
+            <div class="dropdown__option" data-value="block">Block Printed</div>
+            <div class="dropdown__option" data-value="eco">Eco Printed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="test-section">
+      <p class="test-title">Inputs</p>
+      <div style="max-width:480px; display:flex; flex-direction:column; gap:24px;">
+        <div class="input-wrap">
+          <label class="input-label" for="test-name">Your Name</label>
+          <input type="text" id="test-name" class="input-field" placeholder="Riya Sharma">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label" for="test-email">Your Email</label>
+          <input type="email" id="test-email" class="input-field error" placeholder="hello@rangmudra.com">
+          <span class="input-error">Please enter a valid email address</span>
+        </div>
+        <div class="input-wrap">
+          <label class="input-label" for="test-msg">Message</label>
+          <textarea id="test-msg" class="textarea-field" placeholder="Tell us about your vision..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coupon Input -->
+    <section class="test-section">
+      <p class="test-title">Coupon Input</p>
+      <div style="max-width:400px;">
+        <div class="coupon-input">
+          <div class="coupon-input__label">Coupon code</div>
+          <input type="text" class="coupon-input__field" placeholder="Enter code" aria-label="Enter coupon code">
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <section class="test-section">
+      <p class="test-title">Progress Bar</p>
+      <div style="max-width:400px;">
+        <div class="progress-bar">
+          <div class="progress-bar__fill" style="width:85%"></div>
+        </div>
+        <p class="progress-label">12 of 14 seats booked</p>
+      </div>
+    </section>
+
+    <!-- Stepper -->
+    <section class="test-section">
+      <p class="test-title">Stepper</p>
+      <div style="max-width:400px;">
+        <div class="stepper">
+          <div class="stepper__step active">
+            <div class="stepper__circle">1</div>
+          </div>
+          <div class="stepper__connector"></div>
+          <div class="stepper__step">
+            <div class="stepper__circle">2</div>
+          </div>
+          <div class="stepper__connector"></div>
+          <div class="stepper__step">
+            <div class="stepper__circle">3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accordion -->
+    <section class="test-section">
+      <p class="test-title">Accordion</p>
+      <div class="accordion-list" style="max-width:640px;">
+        <div class="accordion-item open">
+          <button class="accordion-trigger">
+            <span class="accordion-trigger__question">Do I need any prior experience?</span>
+            <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p class="accordion-body">No prior experience is needed. Our workshops are designed for complete beginners and walk you through every step of the process.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <span class="accordion-trigger__question">What should I wear?</span>
+            <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p class="accordion-body">We recommend wearing clothes you don't mind getting a little dye on. Aprons are provided but it's best to be safe!</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <span class="accordion-trigger__question">Are the dyes safe?</span>
+            <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p class="accordion-body">Yes, all our dyes are natural, plant-based, and non-toxic. They are safe for all ages including children.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Address Card -->
+    <section class="test-section">
+      <p class="test-title">Address Cards</p>
+      <div style="max-width:400px; display:flex; flex-direction:column; gap:24px;">
+        <div class="address-card selected">
+          <span class="address-card__label">Home</span>
+          <p class="address-card__title">Brigade Millennium</p>
+          <p class="address-card__body">17th Main Rd, Jagruthi Colony,<br>Puttenahalli, Phase 7, J. P. Nagar,<br>Bengaluru, Karnataka 560078</p>
+        </div>
+        <div class="address-card">
+          <span class="address-card__label">Home 02</span>
+          <p class="address-card__title">Prestige Shantiniketan</p>
+          <p class="address-card__body">Whitefield Main Road,<br>Hoodi, Whitefield,<br>Bengaluru, Karnataka 560048</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Rows -->
+    <section class="test-section">
+      <p class="test-title">Payment Method Rows</p>
+      <div style="max-width:420px; display:flex; flex-direction:column; gap:12px;">
+        <button class="payment-row">
+          <div class="payment-row__logo">
+            <span style="font-size:12px;font-weight:bold;color:#000;font-family:var(--font-archivo);">⌘Pay</span>
+          </div>
+          <span class="payment-row__label h5-a">Apple Pay</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="payment-row">
+          <div class="payment-row__logo">
+            <span style="font-size:11px;color:#4285F4;font-family:var(--font-archivo);font-weight:bold;">G Pay</span>
+          </div>
+          <span class="payment-row__label h5-a">Gpay</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="payment-row">
+          <div class="payment-row__logo">
+            <span style="font-size:11px;color:#1A1F71;font-family:var(--font-archivo);font-style:italic;font-weight:bold;">VISA</span>
+          </div>
+          <span class="payment-row__label h5-a">4153 xxxx xxxxx 0981</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- OTP Input -->
+    <section class="test-section">
+      <p class="test-title">OTP Input</p>
+      <div class="otp-grid" id="otp-grid" role="group" aria-label="OTP code">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 1">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 2">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 3">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 4">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 5">
+        <input class="otp-box" type="tel" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="Digit 6">
+      </div>
+      <div style="margin-top:16px;" class="test-row">
+        <div class="otp-grid" role="group" aria-label="OTP success example">
+          <input class="otp-box success" type="tel" maxlength="1" value="1" readonly>
+          <input class="otp-box success" type="tel" maxlength="1" value="2" readonly>
+          <input class="otp-box success" type="tel" maxlength="1" value="3" readonly>
+          <input class="otp-box success" type="tel" maxlength="1" value="4" readonly>
+          <input class="otp-box success" type="tel" maxlength="1" value="5" readonly>
+          <input class="otp-box success" type="tel" maxlength="1" value="6" readonly>
+        </div>
+        <span class="h6-a color-sc-l3">Success state</span>
+      </div>
+      <div style="margin-top:8px;" class="test-row">
+        <div class="otp-grid" role="group" aria-label="OTP error example">
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+          <input class="otp-box error" type="tel" maxlength="1" value="0" readonly>
+        </div>
+        <span class="h6-a color-sc-l3">Error state</span>
+      </div>
+    </section>
+
+    <!-- Dark section samples -->
+    <section class="test-section dark-bg">
+      <p class="test-title" style="color:var(--pr-100);">Dark Background Elements</p>
+      <div class="test-row" style="margin-bottom:32px;">
+        <div class="stars">★★★★★</div>
+      </div>
+      <p class="testimonial-quote">"The workshop was absolutely magical. I came with no experience and left with a beautifully printed scarf I made myself."</p>
+      <p class="testimonial-author">— Priya M., Bangalore</p>
+    </section>
+
+    <!-- Pagination -->
+    <section class="test-section">
+      <p class="test-title">Pagination</p>
+      <div class="pagination">
+        <button class="pagination__btn prev-next">← Previous</button>
+        <button class="pagination__btn">1</button>
+        <button class="pagination__btn active">2</button>
+        <button class="pagination__btn">3</button>
+        <span class="pagination__btn" style="border:none;cursor:default;">…</span>
+        <button class="pagination__btn">5</button>
+        <button class="pagination__btn">6</button>
+        <button class="pagination__btn prev-next">Next →</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { initDropdowns } from '/js/dropdown.js';
+    import { initFilterPills } from '/js/filter-pills.js';
+    import { initAccordions } from '/js/accordion.js';
+    import { initOTPInput } from '/js/otp-input.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      initDropdowns();
+      initFilterPills('.filter-pills');
+      initAccordions();
+      initOTPInput();
+    });
+  </script>
+</body>
+</html>

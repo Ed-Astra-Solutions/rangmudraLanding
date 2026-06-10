@@ -1,0 +1,115 @@
+[
+  {
+    "id": "eco-printing-at-home",
+    "slug": "eco-printing-at-home",
+    "title": "How to do eco printing at home?",
+    "excerpt": "Pressed leaves, simple bundles, and a steaming pot — discover how the slow art of eco printing can be practised in your kitchen, with results that surprise every time.",
+    "author": "Rangmudra Studio",
+    "readTime": "5 min read",
+    "date": "2026-04-12",
+    "category": "Eco Printing",
+    "image": "/images/uploads/blog-eco-printing.jpg",
+    "featured": true,
+    "content": [
+      { "type": "p", "text": "Eco printing is an ancient surface-design technique where the pigments of leaves, flowers, and bark transfer directly onto cloth or paper through heat and pressure. Nothing is wasted, nothing is forced — the plant decides what shows." },
+      { "type": "h", "text": "What you'll need" },
+      { "type": "ul", "items": ["A natural-fibre cloth — silk, cotton, or linen, pre-soaked in a mild mordant", "Freshly gathered leaves (eucalyptus, rose, oak, maple work beautifully)", "A length of jute string or rubber bands", "A wooden dowel or smooth rod, and a large lidded pot for steaming"] },
+      { "type": "h", "text": "The process" },
+      { "type": "p", "text": "Lay the damp cloth flat. Arrange your leaves face-down in the pattern you'd like to see — remember that the prints will be soft, painterly, and never perfectly mirrored. Roll the cloth tightly around the dowel, then bind it with string. The tighter the bundle, the crisper the print." },
+      { "type": "p", "text": "Steam the bundle for 60–90 minutes. Let it cool overnight before unrolling. The reveal is the most exquisite moment — every print is a one-of-a-kind dialogue between the plant and the cloth." },
+      { "type": "h", "text": "A note on patience" },
+      { "type": "p", "text": "Eco printing rewards the slow practitioner. Some bundles will print boldly; others will whisper. There are no failures here — only conversations with the season." }
+    ]
+  },
+  {
+    "id": "natural-dye-basics",
+    "slug": "natural-dye-basics",
+    "title": "Natural dye basics for beginners",
+    "excerpt": "Indigo, madder, turmeric, pomegranate — the pigments that built the textile world. A gentle introduction to the dyer's pantry and how to begin.",
+    "author": "Rangmudra Studio",
+    "readTime": "4 min read",
+    "date": "2026-03-28",
+    "category": "Natural Dyes",
+    "image": "/images/uploads/blog-natural-dye.jpg",
+    "featured": false,
+    "content": [
+      { "type": "p", "text": "Before synthetic dyes flooded the world in the 19th century, every colour on every garment was coaxed out of a plant, a mineral, or an insect. Learning to dye naturally is, in a small way, a reconnection with that lineage." },
+      { "type": "h", "text": "Four pigments to begin with" },
+      { "type": "ul", "items": ["Turmeric — a sunny, fugitive yellow, perfect for a first attempt", "Pomegranate rind — a warm khaki to deep ochre, surprisingly lightfast", "Madder root — the reds and corals of every traditional Indian textile", "Indigo — the blue that needs no introduction, requiring a fermented vat"] },
+      { "type": "h", "text": "Mordants — the bridge" },
+      { "type": "p", "text": "Mordants are minerals that help the dye bond permanently to the fibre. Alum is the safest and most common; iron deepens and saddens a colour; tannin from gallnuts or oak bark adds depth. Always mordant before you dye — the cloth must be ready to receive." }
+    ]
+  },
+  {
+    "id": "caring-for-block-printed-fabric",
+    "slug": "caring-for-block-printed-fabric",
+    "title": "Caring for your block-printed fabric",
+    "excerpt": "Hand-block printed pieces are made to be lived in, washed, and loved — but they ask for gentleness. A short field guide to keeping them beautiful for decades.",
+    "author": "Rangmudra Studio",
+    "readTime": "3 min read",
+    "date": "2026-03-10",
+    "category": "Care Guide",
+    "image": "/images/uploads/blog-caring.jpg",
+    "featured": false,
+    "content": [
+      { "type": "p", "text": "Every Rangmudra piece is hand-printed on natural-fibre cloth with vegetable dyes. The colours are alive — they breathe, mellow, and deepen with age. Treating them well is the simplest way to honour the maker's hours." },
+      { "type": "h", "text": "First wash" },
+      { "type": "p", "text": "Before the first wear, soak the garment for ten minutes in cold water with a tablespoon of rock salt. This sets the dyes. Wash separately the first three times; bleed is natural and will gradually settle." },
+      { "type": "h", "text": "Day-to-day" },
+      { "type": "ul", "items": ["Hand-wash or use a gentle machine cycle in cold water", "Use a mild, neutral detergent — never bleach", "Dry in shade, inside out — direct sun will fade vegetable dyes", "Iron on the reverse side while slightly damp"] }
+    ]
+  },
+  {
+    "id": "story-of-ajrakh",
+    "slug": "story-of-ajrakh",
+    "title": "The story of Ajrakh: cloth as cosmology",
+    "excerpt": "From the Indus Valley to the deserts of Kutch — Ajrakh is more than pattern. It is a calendar, a prayer, and a sixteen-step ritual that has survived four thousand years.",
+    "author": "Rangmudra Studio",
+    "readTime": "7 min read",
+    "date": "2026-02-22",
+    "category": "Craft Heritage",
+    "image": "/images/uploads/blog-ajrakh.jpg",
+    "featured": true,
+    "content": [
+      { "type": "p", "text": "The word Ajrakh is thought to come from the Arabic 'azrak', meaning blue — though some scholars trace it to the Sindhi 'aaj rakh', 'keep it today'. Either etymology hints at the cloth's place in daily life: it is worn, slept on, gifted at births and deaths." },
+      { "type": "h", "text": "Sixteen steps to a single cloth" },
+      { "type": "p", "text": "A finished Ajrakh requires up to sixteen separate stages — washing, mordanting, resist-printing, dyeing, washing again, sun-drying, layering more resist, more dye. Each stage takes a day. Each day depends on the weather, the river, the artisan's intuition." },
+      { "type": "h", "text": "A living art" },
+      { "type": "p", "text": "The Khatri families of Ajrakhpur — relocated after the 2001 Kutch earthquake — keep this craft alive against industrial pressure. To buy a true Ajrakh is to invest in that continuity." }
+    ]
+  },
+  {
+    "id": "why-handloom-matters",
+    "slug": "why-handloom-matters",
+    "title": "Why handloom still matters",
+    "excerpt": "In a world of fast fashion, the handloom is a quiet form of resistance — slower, kinder, and capable of carrying a weaver's hand into the next generation.",
+    "author": "Rangmudra Studio",
+    "readTime": "5 min read",
+    "date": "2026-02-08",
+    "category": "Slow Fashion",
+    "image": "/images/uploads/blog-handloom.jpg",
+    "featured": false,
+    "content": [
+      { "type": "p", "text": "Handloom textiles use a fraction of the energy of power-loom equivalents. No electricity, fewer chemicals, less water — and a finished piece that lasts decades rather than seasons." },
+      { "type": "h", "text": "The economics of the human hand" },
+      { "type": "p", "text": "A handloom saree might take seven to thirty days to weave. The premium you pay isn't a brand markup — it is the weaver's livelihood. When you choose handloom, you choose to keep a family in their craft and a village in its trade." }
+    ]
+  },
+  {
+    "id": "indigo-dye-vat",
+    "slug": "indigo-dye-vat",
+    "title": "Inside an indigo dye vat",
+    "excerpt": "Why does indigo come out of the vat green and turn blue in the air? A short, magical lesson in fermentation chemistry.",
+    "author": "Rangmudra Studio",
+    "readTime": "4 min read",
+    "date": "2026-01-19",
+    "category": "Natural Dyes",
+    "image": "/images/uploads/blog-indigo.jpg",
+    "featured": false,
+    "content": [
+      { "type": "p", "text": "Indigo is famously stubborn. Unlike most dyes, it is not water-soluble in its natural state. To bind it to cloth, dyers must first reduce it — strip its oxygen — inside a fermented vat of indigo leaves, lime, and jaggery." },
+      { "type": "h", "text": "The reveal" },
+      { "type": "p", "text": "Cloth dipped in a healthy vat emerges yellow-green. Held to the air, it oxidises in real time, blooming from celadon to teal to that iconic deep, smoky blue. Multiple dips deepen the shade. The chemistry is centuries old and still feels like a small miracle every time." }
+    ]
+  }
+]

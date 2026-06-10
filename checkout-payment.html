@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="checkout-page" data-step="3">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <div class="checkout-grid container">
+
+    <!-- Left column: order summary review -->
+    <div style="padding-top:0;">
+      <h2 class="h2-i color-sc-100" style="margin-bottom:8px;">Review &amp; Pay</h2>
+      <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:32px;"></div>
+      <p class="h5-a color-sc-l3">Please review your order before completing payment.</p>
+
+      <div style="margin-top:32px;background:var(--w1);border-radius:16px;padding:32px;" id="order-summary-card">
+        <h3 class="h4-i color-sc-100" style="margin-bottom:24px;">Order Summary</h3>
+        <div id="order-items-preview" style="display:flex;flex-direction:column;gap:16px;"></div>
+        <div style="border-top:1px solid rgba(44,26,16,0.12);margin-top:24px;padding-top:24px;">
+          <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="review-subtotal">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Tax (8%)</span><span class="h5-a" id="review-tax">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a">₹99</span></div>
+          <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-value" id="review-total">₹0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Sidebar with payment methods -->
+    <aside class="checkout-sidebar" aria-label="Payment">
+
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 1: Cart">1</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 2: Delivery Address">2</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step active" aria-current="step">
+          <div class="stepper__circle" aria-label="Step 3: Payment (current)">3</div>
+        </div>
+      </div>
+
+      <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Payment</h2>
+
+      <!-- UPI -->
+      <div style="margin-bottom:48px;">
+        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">UPI</p>
+        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="UPI options">
+          <button class="payment-row" aria-label="Pay with Apple Pay">
+            <div class="payment-row__logo" aria-hidden="true">
+              <span style="font-size:14px;font-family:var(--font-archivo);">⌘</span>
+            </div>
+            <span class="payment-row__label h5-a">Apple Pay</span>
+            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="payment-row" aria-label="Pay with Google Pay">
+            <div class="payment-row__logo" aria-hidden="true">
+              <span style="font-size:11px;color:#4285F4;font-family:var(--font-archivo);">G</span>
+            </div>
+            <span class="payment-row__label h5-a">Gpay</span>
+            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <button class="h5-a" style="display:block;text-align:center;width:100%;margin-top:12px;color:var(--sc-l3);background:none;border:none;cursor:pointer;" id="show-more-upi">Show More</button>
+      </div>
+
+      <!-- Cards -->
+      <div style="margin-bottom:48px;">
+        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Cards</p>
+        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="Saved cards">
+          <button class="payment-row" aria-label="Pay with Visa card ending 0981">
+            <div class="payment-row__logo" aria-hidden="true">
+              <span style="font-size:11px;color:#1A1F71;font-family:var(--font-archivo);font-style:italic;font-weight:bold;">VISA</span>
+            </div>
+            <span class="payment-row__label h5-a">4153 xxxx xxxxx 0981</span>
+            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <button class="h5-a" style="display:block;text-align:center;width:100%;margin-top:12px;color:var(--sc-l3);background:none;border:none;cursor:pointer;">Add new card +</button>
+      </div>
+
+      <!-- Banks -->
+      <div style="margin-bottom:48px;">
+        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Banks</p>
+        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="Bank options">
+          <button class="payment-row" aria-label="Pay with HDFC Bank">
+            <div class="payment-row__logo" aria-hidden="true">
+              <span style="font-size:10px;color:#004C97;font-family:var(--font-archivo);font-weight:bold;">HDFC</span>
+            </div>
+            <span class="payment-row__label h5-a">HDFC Bank</span>
+            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="payment-row" aria-label="Pay with SBI Bank">
+            <div class="payment-row__logo" aria-hidden="true">
+              <span style="font-size:10px;color:#1B4D8E;font-family:var(--font-archivo);font-weight:bold;">SBI</span>
+            </div>
+            <span class="payment-row__label h5-a">SBI Bank</span>
+            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-proceed" id="proceed-btn">Proceed</button>
+      <a href="checkout-address.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
+
+    </aside>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { getCart, getCartTotal, clearCart } from '/js/cart.js';
+    import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
+
+    const DELIVERY_FEE = 99;
+    const TAX_RATE = 0.08;
+
+    function formatPrice(n) {
+      return '₹' + Math.round(n).toLocaleString('en-IN');
+    }
+
+    function renderOrderSummary() {
+      const cart = getCart();
+      const subtotal = getCartTotal();
+      const tax = subtotal * TAX_RATE;
+      const total = subtotal + tax + DELIVERY_FEE;
+
+      const preview = document.getElementById('order-items-preview');
+      if (preview) {
+        preview.innerHTML = cart.map(item => `
+          <div style="display:flex;gap:16px;align-items:center;">
+            <img src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" loading="lazy" width="60" height="60">
+            <div style="flex:1;">
+              <p class="h5-a color-sc-100">${item.name}</p>
+              <p class="h6-a color-sc-l3" style="text-transform:uppercase;">Size: ${item.size}</p>
+            </div>
+            <p class="h5-a color-sc-100">${formatPrice(item.price)}</p>
+          </div>
+        `).join('');
+      }
+
+      const s = document.getElementById('review-subtotal');
+      const t = document.getElementById('review-tax');
+      const tot = document.getElementById('review-total');
+      if (s) s.textContent = formatPrice(subtotal);
+      if (t) t.textContent = formatPrice(tax);
+      if (tot) tot.textContent = formatPrice(total);
+    }
+
+    async function resolveDeliveryAddress() {
+      const id = localStorage.getItem('rangmudra_delivery_address');
+      if (!id) return null;
+      try {
+        const addresses = await fetch('/data/addresses.json').then(r => r.json());
+        return addresses.find(a => a.id === id) || null;
+      } catch {
+        return null;
+      }
+    }
+
+    const proceedBtn = document.getElementById('proceed-btn');
+
+    proceedBtn?.addEventListener('click', async () => {
+      const cart = getCart();
+      if (!cart.length) {
+        alert('Your cart is empty.');
+        window.location.href = 'shop.html';
+        return;
+      }
+
+      if (!isLoggedIn()) {
+        openAuthModal(() => proceedBtn.click());
+        return;
+      }
+
+      proceedBtn.disabled = true;
+      const originalLabel = proceedBtn.textContent;
+      proceedBtn.textContent = 'Starting payment…';
+
+      try {
+        const address = await resolveDeliveryAddress();
+        const token = getToken();
+
+        const orderRes = await fetch('/api/checkout/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-user-token': token },
+          body: JSON.stringify({
+            items: cart.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty || 1, price: i.price })),
+            address,
+          }),
+        });
+        const order = await orderRes.json().catch(() => ({}));
+
+        if (!orderRes.ok) {
+          alert(order.error || 'Could not start payment. Please try again.');
+          return;
+        }
+
+        const rzp = new Razorpay({
+          key: order.keyId,
+          amount: order.amount,
+          currency: order.currency,
+          name: 'Rangmudra',
+          description: 'Colour of the Hand',
+          order_id: order.orderId,
+          handler: async (response) => {
+            try {
+              const verifyRes = await fetch('/api/checkout/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-user-token': token },
+                body: JSON.stringify(response),
+              });
+              if (verifyRes.ok) {
+                clearCart();
+                window.location.href = `order-confirmation.html?order=${encodeURIComponent(order.receipt)}`;
+              } else {
+                const v = await verifyRes.json().catch(() => ({}));
+                alert(v.error || 'We could not verify your payment. If you were charged, please contact us.');
+              }
+            } catch {
+              alert('We could not verify your payment. If you were charged, please contact us.');
+            }
+          },
+          theme: { color: '#7C684F' },
+          modal: {
+            ondismiss: () => {
+              proceedBtn.disabled = false;
+              proceedBtn.textContent = originalLabel;
+            },
+          },
+        });
+        rzp.on('payment.failed', (resp) => {
+          alert('Payment failed: ' + (resp.error?.description || 'please try again.'));
+        });
+        rzp.open();
+      } catch (err) {
+        alert('Something went wrong starting payment. Please try again.');
+      } finally {
+        proceedBtn.disabled = false;
+        proceedBtn.textContent = originalLabel;
+      }
+    });
+
+    document.getElementById('show-more-upi')?.addEventListener('click', function() {
+      this.style.display = 'none';
+      const parent = this.previousElementSibling;
+      if (parent) parent.insertAdjacentHTML('beforeend', `
+        <button class="payment-row" aria-label="Pay with PhonePe">
+          <div class="payment-row__logo" aria-hidden="true"><span style="font-size:10px;color:#5F259F;font-family:var(--font-archivo);">PP</span></div>
+          <span class="payment-row__label h5-a">PhonePe</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="payment-row" aria-label="Pay with Paytm">
+          <div class="payment-row__logo" aria-hidden="true"><span style="font-size:10px;color:#002970;font-family:var(--font-archivo);">PT</span></div>
+          <span class="payment-row__label h5-a">Paytm</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      `);
+    });
+
+    document.addEventListener('DOMContentLoaded', renderOrderSummary);
+  </script>
+</body>
+</html>

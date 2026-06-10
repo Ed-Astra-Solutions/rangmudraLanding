@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — Rangmudra</title>
+  <meta name="description" content="Stories, craft guides, and dispatches from the Rangmudra studio — block printing, eco printing, and the slow art of making by hand.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/blogs.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="workshops-hero" aria-label="Journal hero" style="min-height:480px;">
+      <img
+        src="/images/uploads/process-dyeing.jpg"
+        alt="Pressed botanicals arranged for an eco-print study"
+        class="workshops-hero__bg"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="480"
+      >
+      <div class="workshops-hero__overlay" aria-hidden="true"></div>
+
+      <a href="index.html" class="btn-ghost" style="position:absolute;top:24px;left:48px;z-index:3;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+
+      <div class="workshops-hero__content">
+        <p class="h6-a" style="text-transform:uppercase;color:var(--pr-l5);margin-bottom:16px;letter-spacing:0.15em;">JOURNAL</p>
+        <h1 class="h2-i" style="color:var(--pr-l5);font-size:clamp(40px,5vw,72px);line-height:1.1;">Quick Reads &amp;<br>Long Stories</h1>
+        <p class="h5-a" style="color:var(--pr-l5);opacity:0.85;max-width:560px;margin:24px auto 0;text-align:center;">Notes from the studio, the dye vat, and the carving bench — for anyone who loves the slow art of making by hand.</p>
+      </div>
+    </section>
+
+    <!-- Filter bar -->
+    <section style="background:var(--pr-l5);padding:32px 0 0;">
+      <div class="container">
+        <div class="workshops-toolbar">
+          <p class="h6-a color-sc-l3" style="text-transform:uppercase;">All stories</p>
+          <input
+            type="search"
+            class="workshops-search"
+            id="blog-search"
+            placeholder="Search the journal..."
+            aria-label="Search blog posts"
+          >
+        </div>
+
+        <div class="blogs-filter-row" id="blog-filter-row" role="tablist" aria-label="Filter by category">
+          <!-- Category pills injected by blogs.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured post -->
+    <section class="section" style="padding-top:48px;padding-bottom:24px;">
+      <div class="container">
+        <p class="eyebrow" style="margin-bottom:16px;">FEATURED</p>
+        <a href="#" id="featured-card" class="blog-feature" aria-label="Featured blog post">
+          <div class="blog-feature__img-wrap">
+            <img id="featured-img" src="" alt="" class="blog-feature__img" loading="eager" width="900" height="600">
+          </div>
+          <div class="blog-feature__body">
+            <p class="h6-a color-pr-100" id="featured-cat" style="text-transform:uppercase;margin-bottom:16px;"></p>
+            <h2 class="h2-i color-sc-100" id="featured-title" style="margin-bottom:16px;"></h2>
+            <p class="h5-a color-sc-l3" id="featured-excerpt" style="margin-bottom:24px;"></p>
+            <p class="h6-a color-sc-l3" id="featured-meta" style="margin-bottom:24px;text-transform:uppercase;"></p>
+            <span class="btn-primary pill" style="height:48px;padding-inline:32px;display:inline-flex;align-items:center;">Read the story</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Posts grid -->
+    <section class="section" style="padding-top:24px;">
+      <div class="container">
+        <p class="eyebrow" style="margin-bottom:24px;">RECENT POSTS</p>
+        <div class="blogs-grid" id="blogs-grid" aria-live="polite">
+          <!-- Blog cards injected by blogs.js -->
+        </div>
+        <div id="blogs-empty" class="blogs-empty" hidden>
+          <p class="h5-a color-sc-l3">No stories match your search. Try a different keyword or category.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/blogs.js"></script>
+
+</body>
+</html>

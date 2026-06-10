@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Collection — Rangmudra</title>
+  <meta name="description" content="Each piece hand-printed on natural fabrics with wooden blocks and plant-based dyes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="shop-hero" aria-label="Shop hero">
+      <img
+        data-section="shop.hero"
+        src="/images/uploads/wshop-corporate-block.jpg"
+        alt="Row of hand block-printed fabrics hanging in warm natural light"
+        class="shop-hero__bg"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="560"
+      >
+      <div class="shop-hero__overlay" aria-hidden="true"></div>
+
+      <a href="index.html" class="btn-ghost" style="position:absolute;top:24px;left:48px;z-index:3;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+
+      <div class="shop-hero__content">
+        <p class="shop-hero__eyebrow">HANDCRAFTED WITH LOVE</p>
+        <h1 class="shop-hero__title">The Collection</h1>
+        <p class="shop-hero__subtitle">Each piece hand-printed on natural fabrics with wooden blocks and plant-based dyes.</p>
+      </div>
+    </section>
+
+    <!-- Shop catalogue -->
+    <section class="section" style="padding-top:48px;">
+      <div class="container">
+
+        <!-- Print-type tabs — primary categories -->
+        <div class="filter-pills shop-print-tabs" id="print-tabs" role="group" aria-label="Print type" style="margin-bottom:24px;">
+          <button class="filter-pill active" data-print="all">ALL</button>
+          <button class="filter-pill" data-print="block">BLOCK PRINTING</button>
+          <button class="filter-pill" data-print="eco">ECO PRINTING</button>
+        </div>
+
+        <!-- Filter toolbar -->
+        <div class="shop-toolbar" role="toolbar" aria-label="Filter and sort products">
+          <div class="filter-pills" id="category-pills" role="group" aria-label="Product categories">
+            <button class="filter-pill active" data-filter="all">ALL</button>
+            <button class="filter-pill" data-filter="mens">MEN'S WEAR</button>
+            <button class="filter-pill" data-filter="womens">WOMEN'S WEAR</button>
+            <button class="filter-pill" data-filter="decor">HOME DECOR</button>
+            <button class="filter-pill" data-filter="accessories">ACCESSORIES</button>
+          </div>
+
+          <div class="shop-toolbar__dropdowns">
+            <div class="dropdown" id="sort-dropdown">
+              <button class="dropdown__trigger">
+                <span data-label>Featured</span>
+                <svg class="dropdown__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="dropdown__menu" role="listbox">
+                <div class="dropdown__option active" data-value="featured">Featured</div>
+                <div class="dropdown__option" data-value="price-asc">Price: Low to High</div>
+                <div class="dropdown__option" data-value="price-desc">Price: High to Low</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="shop-result-count" id="result-count">52+ Products</p>
+
+        <!-- Product grid -->
+        <div class="shop-grid" id="product-grid" aria-label="Products">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" style="margin-top:64px;" role="navigation" aria-label="Product pages">
+          <button class="pagination__btn prev-next" id="prev-page" aria-label="Previous page">← Previous</button>
+          <button class="pagination__btn active" aria-current="page">1</button>
+          <button class="pagination__btn">2</button>
+          <button class="pagination__btn">3</button>
+          <span class="pagination__btn" style="border:none;cursor:default;" aria-hidden="true">…</span>
+          <button class="pagination__btn">5</button>
+          <button class="pagination__btn">6</button>
+          <button class="pagination__btn prev-next" id="next-page" aria-label="Next page">Next →</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/sections.js"></script>
+  <script type="module">
+    import { initDropdowns } from '/js/dropdown.js';
+    import { initFilterPills } from '/js/filter-pills.js';
+    import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
+    import { isInCart, addToCart } from '/js/cart.js';
+
+    const PRODUCTS = await fetch('/data/products.json').then(r => r.json());
+
+    function renderProducts(products) {
+      const grid = document.getElementById('product-grid');
+      if (!grid) return;
+      grid.innerHTML = products.map(p => `
+        <a href="product.html?slug=${p.slug}" class="shop-card" data-product-id="${p.id}">
+          <div class="shop-card__img-wrap">
+            <img
+              src="${p.images[0]}"
+              alt="${p.name} — ${p.description}"
+              class="shop-card__image"
+              loading="lazy"
+              width="400" height="500"
+              onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
+            >
+            ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
+            <button
+              class="shop-card__wishlist ${isInWishlist(p.id) ? 'active' : ''}"
+              data-id="${p.id}"
+              aria-label="${isInWishlist(p.id) ? 'Remove from wishlist' : 'Add to wishlist'}"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="${isInWishlist(p.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </button>
+          </div>
+          <div class="shop-card__info">
+            <p class="shop-card__category">${p.tags.join(' · ')}</p>
+            <h2 class="shop-card__name">${p.name}</h2>
+            <p class="shop-card__price">₹${p.price.toLocaleString('en-IN')}</p>
+          </div>
+        </a>
+      `).join('');
+
+      /* Wishlist buttons */
+      grid.querySelectorAll('.shop-card__wishlist').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const product = PRODUCTS.find(p => p.id === id);
+          if (!product) return;
+          const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: product.images[0] });
+          btn.classList.toggle('active', added);
+          btn.setAttribute('aria-label', added ? 'Remove from wishlist' : 'Add to wishlist');
+          const icon = btn.querySelector('path');
+          if (icon) icon.setAttribute('fill', added ? 'currentColor' : 'none');
+        });
+      });
+    }
+
+    function filterProducts(category, printType, sortBy) {
+      let products = [...PRODUCTS];
+
+      if (category && category !== 'all') {
+        const map = { mens: "Men's Wear", womens: "Women's Wear", decor: "Home Decor", accessories: "Accessories" };
+        products = products.filter(p => p.category === map[category]);
+      }
+
+      if (printType && printType !== 'all') {
+        const map = { block: 'Block Printed', eco: 'Eco Printed' };
+        products = products.filter(p => p.printType === map[printType]);
+      }
+
+      if (sortBy === 'price-asc') products.sort((a, b) => a.price - b.price);
+      if (sortBy === 'price-desc') products.sort((a, b) => b.price - a.price);
+      if (sortBy === 'featured') products.sort((a, b) => b.featured - a.featured);
+
+      return products;
+    }
+
+    const urlParams = new URLSearchParams(location.search);
+    let activeCategory = urlParams.get('category') || 'all';
+    let activePrintType = urlParams.get('print') || 'all';
+    let activeSort = 'featured';
+
+    function syncURL() {
+      const next = new URLSearchParams();
+      if (activePrintType !== 'all') next.set('print', activePrintType);
+      if (activeCategory !== 'all') next.set('category', activeCategory);
+      const qs = next.toString();
+      const newURL = qs ? `${location.pathname}?${qs}` : location.pathname;
+      history.replaceState(null, '', newURL);
+      /* Refresh the breadcrumb to reflect the new filter state */
+      import('/js/breadcrumbs.js').then(m => m.initBreadcrumbs());
+    }
+
+    function setActivePill(container, attr, value) {
+      container?.querySelectorAll('.filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset[attr] === value);
+      });
+    }
+
+    function updateGrid() {
+      const filtered = filterProducts(activeCategory, activePrintType, activeSort);
+      renderProducts(filtered);
+      document.getElementById('result-count').textContent = `${filtered.length} Products`;
+    }
+
+    /* Pre-activate pills from URL params */
+    setActivePill(document.getElementById('print-tabs'), 'print', activePrintType);
+    setActivePill(document.getElementById('category-pills'), 'filter', activeCategory);
+    updateGrid();
+    initDropdowns();
+
+    initFilterPills('#category-pills', (val) => {
+      activeCategory = val || 'all';
+      updateGrid();
+      syncURL();
+    });
+
+    initFilterPills('#print-tabs', (val) => {
+      activePrintType = val || 'all';
+      updateGrid();
+      syncURL();
+    }, 'print');
+
+    document.getElementById('sort-dropdown')?.addEventListener('dropdown-select', (e) => { activeSort = e.detail.value; updateGrid(); });
+  </script>
+</body>
+</html>

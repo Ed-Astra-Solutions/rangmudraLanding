@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Addresses — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+  <main class="profile-page">
+    <div class="container" style="max-width:700px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;">
+        <a href="profile.html" class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Profile
+        </a>
+        <h1 class="h3-i color-sc-100">Saved Addresses</h1>
+      </div>
+      <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="list" aria-label="Saved addresses"></div>
+      <button class="btn-gold" style="margin-top:32px;display:flex;align-items:center;gap:8px;" id="add-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add New Address
+      </button>
+    </div>
+  </main>
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, openAuthModal } from '/js/auth.js';
+    const ADDRESSES = await fetch('/data/addresses.json').then(r => r.json());
+    if (!isLoggedIn()) {
+      openAuthModal(() => location.reload());
+    } else {
+      const list = document.getElementById('address-list');
+      if (list) {
+        list.innerHTML = ADDRESSES.map(a => `
+          <div class="address-card ${a.default ? 'selected' : ''}" role="listitem">
+            <span class="address-card__label">${a.label}</span>
+            <p class="address-card__title">${a.title}</p>
+            <p class="address-card__body">${a.address.replace(/\n/g,'<br>')}</p>
+          </div>
+        `).join('');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body class="checkout-page" data-step="1">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <div class="checkout-grid container">
+
+    <!-- Left column -->
+    <div class="checkout-main" style="padding-top:0;">
+      <div style="display:flex;align-items:baseline;gap:32px;margin-bottom:8px;">
+        <h1 class="h2-i color-sc-100">My Cart</h1>
+      </div>
+      <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:16px;"></div>
+      <p class="h5-a color-sc-l3" id="cart-item-count">Loading cart...</p>
+
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:32px;" id="cart-items-list" aria-label="Cart items">
+        <!-- Populated by JS -->
+      </div>
+
+      <div style="margin-top:32px;">
+        <a href="shop.html" class="h6-a" style="color:var(--pr-b2);text-decoration:underline;letter-spacing:0.15em;text-transform:uppercase;">
+          ← Continue Shopping
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: Sidebar -->
+    <aside class="checkout-sidebar" aria-label="Order summary">
+
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="stepper__step active" aria-current="step">
+          <div class="stepper__circle" aria-label="Step 1: Cart">1</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 2: Delivery Address">2</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 3: Payment">3</div>
+        </div>
+      </div>
+
+      <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">My Cart</h2>
+
+      <!-- Summary rows -->
+      <div class="cart-summary-row">
+        <span class="h5-a">Total</span>
+        <span class="h5-a" id="summary-total">₹0</span>
+      </div>
+      <div class="cart-summary-row">
+        <span class="h5-a">Tax <span class="h7-a" style="vertical-align:middle;">. 8%</span></span>
+        <span class="h5-a" id="summary-tax">₹0</span>
+      </div>
+      <div class="cart-summary-row">
+        <span class="h5-a">Delivery fee</span>
+        <span class="h5-a" id="summary-delivery">₹99</span>
+      </div>
+
+      <!-- Coupon -->
+      <div class="coupon-input" style="margin:24px 0;" role="group" aria-label="Coupon code">
+        <div class="coupon-input__label" aria-hidden="true">Coupon code</div>
+        <input type="text" class="coupon-input__field" id="coupon-input" placeholder="Enter code" aria-label="Enter coupon code" autocomplete="off">
+      </div>
+
+      <div class="cart-summary-row">
+        <span class="h5-a">Discount</span>
+        <span class="h5-a" id="summary-discount">-₹0</span>
+      </div>
+
+      <div class="cart-total-row">
+        <span class="cart-total-label">Amount to be paid</span>
+        <span class="cart-total-value" id="summary-amount">₹0</span>
+      </div>
+
+      <button class="btn-proceed" id="proceed-btn">Proceed</button>
+      <button class="btn-back" style="margin-top:12px;" onclick="history.back()">Back</button>
+
+    </aside>
+  </div>
+
+  <!-- Mobile sticky summary bar -->
+  <div class="mobile-cta-bar" style="justify-content:space-between;" aria-live="polite">
+    <div>
+      <p class="h7-a color-sc-l3" style="text-transform:uppercase;">Amount to be paid</p>
+      <p class="h3-i color-sc-100" id="mobile-amount">₹0</p>
+    </div>
+    <button class="btn-primary" id="mobile-proceed-btn">Proceed</button>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { getCart, removeFromCart, getCartTotal } from '/js/cart.js';
+
+    const DELIVERY_FEE = 99;
+    const TAX_RATE = 0.08;
+
+    function formatPrice(n) {
+      return '₹' + Math.round(n).toLocaleString('en-IN');
+    }
+
+    function updateSummary() {
+      const subtotal = getCartTotal();
+      const tax = subtotal * TAX_RATE;
+      const total = subtotal + tax + DELIVERY_FEE;
+
+      document.getElementById('summary-total').textContent = formatPrice(subtotal);
+      document.getElementById('summary-tax').textContent = formatPrice(tax);
+      document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
+      document.getElementById('summary-amount').textContent = formatPrice(total);
+      const mobileAmt = document.getElementById('mobile-amount');
+      if (mobileAmt) mobileAmt.textContent = formatPrice(total);
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const list = document.getElementById('cart-items-list');
+      const countEl = document.getElementById('cart-item-count');
+
+      if (countEl) {
+        countEl.textContent = cart.length === 0
+          ? 'Your cart is empty'
+          : `You have ${cart.reduce((s, i) => s + (i.qty || 1), 0)} item${cart.reduce((s, i) => s + (i.qty || 1), 0) !== 1 ? 's' : ''} in the cart`;
+      }
+
+      if (!list) return;
+
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div style="text-align:center;padding:64px 0;">
+            <p class="h4-i color-sc-l3">Your cart is empty</p>
+            <a href="shop.html" class="btn-primary" style="margin-top:24px;display:inline-flex;">Shop Now</a>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = cart.map(item => `
+        <div class="cart-item" data-id="${item.id}" data-size="${item.size}">
+          <img
+            src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}"
+            alt="${item.name}"
+            class="cart-item__image"
+            loading="lazy"
+            width="100" height="100"
+          >
+          <div class="cart-item__info">
+            <p class="cart-item__category">${item.category || 'RANGMUDRA'}</p>
+            <h3 class="cart-item__name">${item.name}</h3>
+          </div>
+          <div class="cart-item__controls">
+            <button class="cart-item__size-select" aria-label="Selected size: ${item.size}">
+              ${item.size} ▾
+            </button>
+            <span class="cart-item__price">${formatPrice(item.price)}</span>
+            <button class="cart-item__delete" data-id="${item.id}" data-size="${item.size}" aria-label="Remove ${item.name}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.cart-item__delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+          removeFromCart(btn.dataset.id, btn.dataset.size);
+          renderCart();
+          updateSummary();
+        });
+      });
+    }
+
+    function initProceed() {
+      const btn = document.getElementById('proceed-btn');
+      const mobileBtn = document.getElementById('mobile-proceed-btn');
+      const go = () => {
+        if (getCart().length === 0) return;
+        window.location.href = 'checkout-address.html';
+      };
+      btn?.addEventListener('click', go);
+      mobileBtn?.addEventListener('click', go);
+    }
+
+    window.addEventListener('cart-updated', () => { renderCart(); updateSummary(); });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCart();
+      updateSummary();
+      initProceed();
+    });
+  </script>
+</body>
+</html>

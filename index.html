@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rangmudra — Colour of the Hand</title>
+  <meta name="description" content="Ancient craft, contemporary soul. Each piece hand-printed with wooden blocks dipped in natural dyes, carrying centuries of artisanal heritage.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="/images/uploads/home-hero.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Section 1: Hero -->
+    <section class="home-hero" aria-label="Rangmudra hero">
+      <img
+        data-section="homepage.hero"
+        src="/images/uploads/home-hero.jpg"
+        alt="Three models in red block-printed apparel against a dark studio interior"
+        class="home-hero__bg"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="900"
+      >
+      <div class="home-hero__overlay" aria-hidden="true"></div>
+      <div class="home-hero__content">
+        <div class="home-hero__rule" aria-hidden="true"></div>
+        <h1 class="home-hero__wordmark">RANGMUDRA</h1>
+        <div class="home-hero__rule" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- Section 2: Introduction -->
+    <section class="section bg-cream" aria-labelledby="intro-heading">
+      <div class="container">
+        <p class="intro-eyebrow">WHAT WE DO</p>
+        <div class="intro-grid">
+          <div>
+            <img
+              data-section="homepage.introduction"
+              src="/images/uploads/home-introduction.jpg"
+              alt="Block-printed fabric still life — indigo and natural cotton pieces arranged artfully"
+              class="intro-image"
+              loading="lazy"
+              width="520" height="600"
+            >
+            <p class="intro-eyebrow" style="margin-top:32px;">WHAT WE DO</p>
+          </div>
+          <div>
+            <h2 class="intro-narrative" id="intro-heading">Immerse in the Spectrum of Tradition.</h2>
+            <p class="intro-body" style="margin-bottom:24px;">Discover the traditional art of block printing and Eco printing at Rangmudra. We are a Bangalore-based studio reviving the age-old craft of hand block printing and eco printing.</p>
+            <p class="intro-body">Each piece is lovingly hand-printed by skilled artisans using carved wooden blocks dipped in natural dyes derived from plants and minerals. The result is wearable art that carries the imprint of human hands and centuries of heritage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Workshops promo -->
+    <section class="promo-section" aria-label="Workshops promo">
+      <img
+        data-section="homepage.workshops-promo"
+        src="/images/uploads/home-workshops-promo.jpg"
+        alt="Artisan demonstrating block printing technique on natural fabric"
+        class="promo-section__bg"
+        loading="lazy"
+        width="1440" height="600"
+      >
+      <div class="promo-section__overlay" aria-hidden="true"></div>
+      <div class="promo-section__marquee-wrap" aria-hidden="true">
+        <div class="promo-section__marquee">
+          <span>Workshops · </span><span>Workshops · </span><span>Workshops · </span>
+          <span>Workshops · </span><span>Workshops · </span><span>Workshops · </span>
+        </div>
+      </div>
+      <div class="promo-section__content">
+        <a href="workshops.html" class="btn-primary pill" style="background:var(--sc-100);color:var(--pr-l5);">Explore Now</a>
+        <p class="promo-section__meta">12 PROJECTS · WORKSHOPS · EXPERTISE</p>
+      </div>
+    </section>
+
+    <!-- Section 4: Shop promo -->
+    <section class="promo-section" aria-label="Shop promo">
+      <img
+        data-section="homepage.shop-promo"
+        src="/images/uploads/home-shop-promo.jpg"
+        alt="Hand block-printed indigo saree draped elegantly — the Rangmudra collection"
+        class="promo-section__bg"
+        loading="lazy"
+        width="1440" height="600"
+        onerror="this.src='/images/uploads/home-shop-promo.jpg'"
+      >
+      <div class="promo-section__overlay" aria-hidden="true"></div>
+      <div class="promo-section__marquee-wrap" aria-hidden="true">
+        <div class="promo-section__marquee">
+          <span>Shop · </span><span>Shop · </span><span>Shop · </span>
+          <span>Shop · </span><span>Shop · </span><span>Shop · </span>
+        </div>
+      </div>
+      <div class="promo-section__content">
+        <a href="shop.html" class="btn-primary pill" style="background:var(--sc-100);color:var(--pr-l5);">Explore Now</a>
+        <p class="promo-section__meta">BLOCK PRINTED · MODERN COLLECTION · HANDMADE</p>
+      </div>
+    </section>
+
+    <!-- Section 5: Testimonials -->
+    <section class="section bg-chocolate" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="testimonials-grid">
+          <div>
+            <h2 class="testimonials-eyebrow" id="testimonials-heading">WHAT OUR<br>PATRONS SAY</h2>
+
+            <div class="carousel" id="testimonials-carousel" aria-live="polite" aria-label="Customer testimonials">
+              <div class="carousel__track">
+                <div class="carousel__slide" style="width:100%;">
+                  <div class="stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <blockquote class="testimonial-quote">"The workshop was absolutely magical. I came with no experience and left with a beautifully printed scarf I made myself."</blockquote>
+                  <p class="testimonial-author">— Priya M., Bangalore</p>
+                </div>
+                <div class="carousel__slide" style="width:100%;">
+                  <div class="stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <blockquote class="testimonial-quote">"Rangmudra's sarees are simply stunning. The quality and craftsmanship are unlike anything I've seen. Each print is unique."</blockquote>
+                  <p class="testimonial-author">— Kavitha R., Chennai</p>
+                </div>
+                <div class="carousel__slide" style="width:100%;">
+                  <div class="stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <blockquote class="testimonial-quote">"Our corporate team workshop was phenomenal. Everyone left feeling inspired and connected. Highly recommend for team bonding!"</blockquote>
+                  <p class="testimonial-author">— Arjun S., Hyderabad</p>
+                </div>
+              </div>
+              <div class="carousel__dots" aria-label="Testimonial indicators"></div>
+            </div>
+          </div>
+
+          <div>
+            <img
+              data-section="homepage.testimonials"
+              src="/images/uploads/home-testimonials.jpg"
+              alt="Delicate eco-print artwork — dried flowers pressed onto natural fabric"
+              class="testimonials-image"
+              loading="lazy"
+              width="480" height="576"
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Gallery of experience -->
+    <section class="section bg-cream" aria-labelledby="gallery-heading">
+      <div class="container">
+        <h2 class="h3-i color-sc-100" id="gallery-heading" style="margin-bottom:40px;">Gallery of experience</h2>
+      </div>
+      <div class="carousel" id="gallery-carousel" aria-label="Gallery" style="overflow:visible;">
+        <div class="carousel__track" style="padding-inline:48px;">
+          <div class="carousel__slide" style="width:100%;flex-shrink:0;">
+            <img
+              data-section="homepage.gallery"
+              src="/images/uploads/home-gallery.jpg"
+              alt="Model draped in blue block-print fabric — editorial fashion photograph"
+              style="width:100%;max-height:680px;object-fit:cover;"
+              loading="lazy"
+              width="1280" height="680"
+            >
+          </div>
+          <div class="carousel__slide" style="width:100%;flex-shrink:0;">
+            <img
+              src="/images/uploads/about-sustainability.jpg"
+              alt="Artisan at work — hands printing detailed floral blocks on cotton fabric"
+              style="width:100%;max-height:680px;object-fit:cover;"
+              loading="lazy"
+              width="1280" height="680"
+            >
+          </div>
+        </div>
+        <div class="carousel__dots" style="margin-top:32px;" aria-label="Gallery slide indicators"></div>
+      </div>
+    </section>
+
+    <!-- Section 7: Quick Reads -->
+    <section class="section bg-cream" aria-labelledby="reads-heading">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:40px;gap:24px;flex-wrap:wrap;">
+          <h2 class="h3-i color-sc-100" id="reads-heading">Quick Reads</h2>
+          <a href="blogs.html" class="h6-a color-sc-100" style="text-transform:uppercase;text-decoration:underline;text-underline-offset:6px;">View all stories →</a>
+        </div>
+        <div class="reads-grid">
+          <!-- Large card -->
+          <a href="blog-detail.html?slug=eco-printing-at-home" class="blog-card blog-card--large" aria-label="Read: How to do eco printing at home?">
+            <img
+              data-section="homepage.quick-reads-large"
+              src="/images/uploads/home-quickreads-large.jpg"
+              alt="Dried botanical leaves arranged on white fabric for eco printing at home"
+              class="blog-card__image"
+              loading="lazy"
+              width="720" height="540"
+            >
+            <div class="blog-card__overlay">
+              <h3 class="blog-card__title">How to do eco printing at home?</h3>
+              <p class="blog-card__author">By Rangmudra Studio · 5 min read</p>
+              <span class="btn-primary pill" style="height:44px;font-size:11px;padding-inline:24px;display:inline-flex;align-items:center;">Read</span>
+            </div>
+          </a>
+
+          <!-- Stacked small cards -->
+          <div class="reads-grid__stacked">
+            <a href="blog-detail.html?slug=natural-dye-basics" class="blog-card" aria-label="Read: Natural dye basics for beginners">
+              <img
+                data-section="homepage.quick-reads-1"
+                src="/images/uploads/home-quickreads-1.jpg"
+                alt="Natural dyes extracted from plants in traditional clay pots"
+                class="blog-card__image"
+                loading="lazy"
+                width="480" height="300"
+              >
+              <div class="blog-card__overlay">
+                <h3 class="blog-card__title" style="font-size:24px;line-height:32px;">Natural dye basics for beginners</h3>
+                <p class="blog-card__author">By Rangmudra Studio · 4 min read</p>
+              </div>
+            </a>
+            <a href="blog-detail.html?slug=caring-for-block-printed-fabric" class="blog-card" aria-label="Read: Caring for your block-printed fabric">
+              <img
+                data-section="homepage.quick-reads-2"
+                src="/images/uploads/home-quickreads-2.jpg"
+                alt="Carefully hand-washed block-printed kurta being air dried"
+                class="blog-card__image"
+                loading="lazy"
+                width="480" height="300"
+              >
+              <div class="blog-card__overlay">
+                <h3 class="blog-card__title" style="font-size:24px;line-height:32px;">Caring for your block-printed fabric</h3>
+                <p class="blog-card__author">By Rangmudra Studio · 3 min read</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/sections.js"></script>
+  <script type="module">
+    import { initCarousels } from '/js/carousel.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      initCarousels();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="40" viewBox="0 0 60 40">
+  <rect width="60" height="40" fill="white" rx="6"/>
+  <rect x="4" y="4" width="52" height="32" rx="4" fill="#22409A"/>
+  <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="700" letter-spacing="1.5">SBI</text>
+</svg>

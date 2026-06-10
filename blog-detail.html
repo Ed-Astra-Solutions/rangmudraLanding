@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story — Rangmudra</title>
+  <meta name="description" content="A story from the Rangmudra journal — block printing, eco printing, and the slow art of making by hand.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/blogs.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Cover hero -->
+    <section class="blog-cover" aria-label="Story cover">
+      <img id="cover-img" src="" alt="" class="blog-cover__img" loading="eager" fetchpriority="high" width="1440" height="600">
+      <div class="blog-cover__scrim" aria-hidden="true"></div>
+
+      <a href="blogs.html" class="btn-ghost" style="position:absolute;top:24px;left:48px;z-index:3;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Journal
+      </a>
+
+      <div class="blog-cover__content">
+        <p class="h6-a" id="cover-cat" style="text-transform:uppercase;color:var(--pr-l5);opacity:0.9;margin-bottom:16px;letter-spacing:0.15em;"></p>
+        <h1 class="h1-i" id="cover-title" style="color:var(--pr-l5);font-size:clamp(36px,5vw,64px);line-height:1.1;max-width:920px;"></h1>
+        <p class="h6-a" id="cover-meta" style="text-transform:uppercase;color:var(--pr-l5);opacity:0.8;margin-top:24px;letter-spacing:0.15em;"></p>
+      </div>
+    </section>
+
+    <!-- Article body -->
+    <section class="section" style="padding-top:48px;">
+      <article class="blog-article">
+        <p class="h5-a color-sc-l3" id="article-excerpt" style="font-style:italic;margin-bottom:48px;"></p>
+        <div id="article-body" class="blog-article__body">
+          <!-- Body rendered from JSON content blocks by blog-detail.js -->
+        </div>
+
+        <div class="blog-article__share">
+          <p class="h6-a color-sc-l3" style="text-transform:uppercase;margin-bottom:16px;">Share this story</p>
+          <div class="blog-share-row">
+            <a href="#" id="share-instagram" class="footer__social-icon" aria-label="Share on Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="#" id="share-facebook" class="footer__social-icon" aria-label="Share on Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" id="share-twitter" class="footer__social-icon" aria-label="Share on X">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16M4 20 20 4"/></svg>
+            </a>
+            <button id="share-copy" class="footer__social-icon" aria-label="Copy link" style="background:none;border:1px solid var(--pr-l5);color:var(--pr-l5);cursor:pointer;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Related posts -->
+    <section class="section bg-cream" style="padding-top:56px;">
+      <div class="container">
+        <p class="eyebrow" style="margin-bottom:16px;">CONTINUE READING</p>
+        <h2 class="h3-i color-sc-100" style="margin-bottom:40px;">More from the journal</h2>
+        <div class="blogs-grid" id="related-grid">
+          <!-- Related cards injected by blog-detail.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/blog-detail.js"></script>
+
+</body>
+</html>

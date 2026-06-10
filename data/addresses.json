@@ -1,0 +1,16 @@
+[
+  {
+    "id": "home-1",
+    "label": "Home",
+    "title": "Brigade Millennium",
+    "address": "17th Main Rd, Jagruthi Colony,\nPuttenahalli, Phase 7, J. P. Nagar,\nBengaluru, Karnataka 560078",
+    "default": true
+  },
+  {
+    "id": "home-2",
+    "label": "Home 02",
+    "title": "Prestige Shantiniketan",
+    "address": "Whitefield Main Road,\nHoodi, Whitefield,\nBengaluru, Karnataka 560048",
+    "default": false
+  }
+]

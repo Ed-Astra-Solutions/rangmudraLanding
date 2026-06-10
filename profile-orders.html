@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+  <main class="profile-page">
+    <div class="container" style="max-width:800px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;">
+        <a href="profile.html" class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Profile
+        </a>
+        <h1 class="h3-i color-sc-100">My Orders</h1>
+      </div>
+      <div id="orders-list" style="display:flex;flex-direction:column;gap:16px;"></div>
+      <div id="orders-empty" style="text-align:center;padding:80px 0;display:none;">
+        <p class="h4-i color-sc-l3" style="margin-bottom:24px;">No orders yet</p>
+        <a href="shop.html" class="btn-primary">Start Shopping</a>
+      </div>
+    </div>
+  </main>
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
+
+    const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+    const STATUS = {
+      paid: 'Paid', created: 'Pending payment', failed: 'Failed',
+      signature_failed: 'Verification failed',
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
+
+      const list = document.getElementById('orders-list');
+      const empty = document.getElementById('orders-empty');
+      try {
+        const orders = await fetch('/api/orders', { headers: { 'x-user-token': getToken() } }).then(r => r.json());
+        if (!Array.isArray(orders) || !orders.length) { empty.style.display = 'block'; return; }
+        orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        list.innerHTML = orders.map(o => `
+          <div style="background:var(--w1);border-radius:16px;padding:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;">
+              <span class="h6-a color-sc-l3" style="text-transform:uppercase;">${o.id}</span>
+              <span class="h6-a" style="color:${o.status === 'paid' ? 'var(--ac-b2)' : 'var(--sc-l3)'};">${STATUS[o.status] || o.status}</span>
+            </div>
+            <p class="h5-a color-sc-100">${o.items.map(i => `${i.name} × ${i.qty}`).join(', ')}</p>
+            <p class="h5-a color-sc-100" style="margin-top:8px;">${fmt(o.amount)}</p>
+            <p class="h6-a color-sc-l3" style="margin-top:4px;">${new Date(o.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+          </div>`).join('');
+      } catch {
+        empty.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

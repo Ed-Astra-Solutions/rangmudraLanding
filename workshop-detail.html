@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Detail — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Small hero -->
+    <section class="page-hero" style="min-height:320px;" aria-label="Workshop hero">
+      <img
+        src="/images/uploads/wshop-corporate-block.jpg"
+        alt="Workshop in progress"
+        class="page-hero__bg"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="320"
+        id="workshop-hero-img"
+      >
+      <div class="page-hero__back">
+        <a href="#" id="back-link" class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </a>
+      </div>
+      <div class="page-hero__content">
+        <h1 class="h2-i" style="color:var(--pr-l5);" id="hero-title">Workshop</h1>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+
+        <!-- Category title -->
+        <div style="margin-bottom:48px;">
+          <p class="eyebrow">WORKSHOPS</p>
+          <h2 class="h2-i color-sc-100" id="cat-heading" style="margin-bottom:16px;"></h2>
+          <p class="h5-a color-sc-l3" id="cat-desc" style="max-width:680px;"></p>
+        </div>
+
+        <!-- Workshop title + description -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:64px;" id="workshop-top-grid">
+          <div>
+            <h3 class="h4-i color-sc-100" id="workshop-title" style="margin-bottom:24px;"></h3>
+          </div>
+          <div style="background:var(--w1);border-radius:16px;padding:32px;box-shadow:var(--shadow-card);" id="workshop-desc-card">
+            <p class="h5-a color-sc-l3" id="workshop-desc" style="margin-bottom:20px;"></p>
+            <div class="workshop-card__meta" id="workshop-meta"></div>
+            <div class="workshop-card__chips" id="workshop-chips" style="margin-top:16px;"></div>
+            <p class="h5-a color-sc-l3" id="workshop-price" style="margin-top:16px;"></p>
+          </div>
+        </div>
+
+        <!-- Full-width image -->
+        <img
+          id="workshop-banner-img"
+          src="/images/uploads/wshop-corporate-block.jpg"
+          alt="Workshop environment"
+          style="width:100%;max-height:400px;object-fit:cover;border-radius:8px;margin-bottom:80px;"
+          loading="lazy"
+          width="1280" height="400"
+        >
+
+        <!-- What the Experience Includes + Ideal For (two-column) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px;" id="includes-section">
+          <div id="includes-col">
+            <h4 class="h3-i color-sc-100" style="margin-bottom:32px;">What the Experience Includes</h4>
+            <ul id="includes-list" style="display:flex;flex-direction:column;gap:16px;list-style:none;"></ul>
+          </div>
+          <div id="ideal-col">
+            <h4 class="h3-i color-sc-100" style="margin-bottom:32px;">Ideal For</h4>
+            <ul id="ideal-list" style="display:flex;flex-direction:column;gap:16px;list-style:none;"></ul>
+          </div>
+        </div>
+
+        <!-- Tertiary image + play -->
+        <div style="position:relative;margin-bottom:64px;">
+          <img
+            src="/images/uploads/wshop-eco-print.jpg"
+            alt="Artisan holding a carved block over fabric"
+            style="width:100%;max-height:480px;object-fit:cover;border-radius:8px;"
+            loading="lazy"
+            width="1280" height="480"
+          >
+          <button
+            class="btn-primary pill"
+            style="position:absolute;bottom:32px;left:32px;display:flex;align-items:center;gap:8px;"
+            aria-label="Play workshop video"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            PLAY NOW
+          </button>
+        </div>
+
+        <!-- Closing paragraph -->
+        <div style="text-align:center;max-width:720px;margin:0 auto 80px;">
+          <p class="h5-a color-sc-l3">
+            We offer flexible workshop formats for startups, enterprises, coworking spaces, schools, and organizations. Sessions can be conducted at your office, event venue, or studio space with customizable durations and group sizes.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Full-width CTA bar -->
+    <a href="#" id="book-cta" class="workshop-cta-bar" role="button">
+      <span class="workshop-cta-bar__text">BOOK NOW →</span>
+    </a>
+
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat') || 'corporate';
+    const slug = params.get('slug') || 'block-printing-workshop';
+
+    const CAT_META = {
+      experience: { title: 'Experience Workshops', desc: 'Experience the art of block printing and eco printing through hands-on workshops.' },
+      corporate: { title: 'Corporate Workshops', desc: 'Transform your workplace into a space of creativity and meaningful team experiences.' },
+      curated: { title: 'Curated Workshops', desc: 'Immersive multi-week workshops for design students and creative learners.' },
+    };
+
+    const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
+    const workshop = WORKSHOPS.find(w => w.slug === slug) || WORKSHOPS[0];
+    const catMeta = CAT_META[cat] || CAT_META.corporate;
+
+    document.title = `${workshop.title} — Rangmudra`;
+    document.getElementById('hero-title').textContent = catMeta.title;
+    document.getElementById('back-link').href = `workshop-category.html?cat=${cat}`;
+    document.getElementById('cat-heading').textContent = catMeta.title;
+    document.getElementById('cat-desc').textContent = catMeta.desc;
+    document.getElementById('workshop-title').textContent = workshop.title;
+    document.getElementById('workshop-desc').textContent = workshop.description;
+
+    const meta = document.getElementById('workshop-meta');
+    if (meta) meta.innerHTML = `<span>⏱ ${workshop.duration}</span><span class="workshop-card__meta-divider" aria-hidden="true"></span><span>👤 ${workshop.packageFor}</span>`;
+
+    const chips = document.getElementById('workshop-chips');
+    if (chips) chips.innerHTML = (workshop.tags || []).map(t => `<span class="workshop-card__chip">${t}</span>`).join('');
+
+    const priceEl = document.getElementById('workshop-price');
+    if (priceEl) {
+      priceEl.textContent = workshop.price
+        ? `₹${workshop.price.toLocaleString('en-IN')} / ${workshop.priceUnit}`
+        : (workshop.priceLabel || 'Contact for pricing');
+    }
+
+    const bulletList = (items) => items.map(item => `
+        <li style="display:flex;align-items:flex-start;gap:12px;">
+          <span style="color:var(--pr-100);font-size:18px;line-height:24px;flex-shrink:0;">•</span>
+          <span class="h5-a color-sc-l3">${item}</span>
+        </li>
+      `).join('');
+
+    const hasIncludes = Array.isArray(workshop.includes) && workshop.includes.length;
+    const hasIdeal = Array.isArray(workshop.idealFor) && workshop.idealFor.length;
+
+    if (hasIncludes) {
+      document.getElementById('includes-list').innerHTML = bulletList(workshop.includes);
+    } else {
+      document.getElementById('includes-col').style.display = 'none';
+    }
+
+    if (hasIdeal) {
+      document.getElementById('ideal-list').innerHTML = bulletList(workshop.idealFor);
+    } else {
+      document.getElementById('ideal-col').style.display = 'none';
+    }
+
+    // If neither column has content, drop the whole section (and its gap).
+    if (!hasIncludes && !hasIdeal) {
+      document.getElementById('includes-section').style.display = 'none';
+    } else if (!hasIncludes || !hasIdeal) {
+      // Single remaining column shouldn't sit in a half-width grid track.
+      document.getElementById('includes-section').style.gridTemplateColumns = '1fr';
+    }
+
+    if (workshop.image) {
+      const heroImg = document.getElementById('workshop-hero-img');
+      const bannerImg = document.getElementById('workshop-banner-img');
+      if (heroImg) heroImg.src = workshop.image;
+      if (bannerImg) bannerImg.src = workshop.image;
+    }
+
+    document.getElementById('book-cta')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Booking flow coming soon! Please enquire via the Enquire page.');
+    });
+
+    /* Responsive */
+    if (window.innerWidth < 768) {
+      const grid = document.getElementById('workshop-top-grid');
+      const incSection = document.getElementById('includes-section');
+      if (grid) grid.style.gridTemplateColumns = '1fr';
+      if (incSection) incSection.style.gridTemplateColumns = '1fr';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Rangmudra</title>
+  <meta name="description" content="Hand block-printed artisanal product from Rangmudra.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+    <div class="product-layout">
+
+      <!-- Left: Gallery -->
+      <div class="product-gallery">
+        <div class="product-gallery__main">
+          <img
+            src="/images/uploads/prod-ajrakh-corset-1.jpg"
+            alt="Product main image"
+            class="product-gallery__main-img"
+            id="main-product-img"
+            loading="eager"
+            fetchpriority="high"
+            width="600" height="750"
+          >
+          <button class="product-gallery__zoom" aria-label="Zoom image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+        </div>
+        <div class="product-gallery__thumbnails" id="thumbnails" role="list" aria-label="Product images"></div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="product-info" id="product-info">
+        <p class="product-info__category" id="product-category"></p>
+        <h1 class="product-info__title" id="product-title"></h1>
+        <p class="product-info__price" id="product-price"></p>
+
+        <p class="product-info__size-label">Select Size</p>
+        <div class="size-chips" id="size-chips" role="group" aria-label="Select size"></div>
+
+        <span class="available-chip" id="availability-chip">AVAILABLE</span>
+
+        <!-- Tabs -->
+        <div class="product-tabs" role="tablist" aria-label="Product information">
+          <button class="product-tab active" role="tab" aria-selected="true" aria-controls="tab-desc" id="tab-desc-btn" data-tab="desc">Description</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-feat" id="tab-feat-btn" data-tab="feat">Features</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-meas" id="tab-meas-btn" data-tab="meas">Measurements</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-care" id="tab-care-btn" data-tab="care">Care</button>
+        </div>
+
+        <div class="product-tab-content active" id="tab-desc" role="tabpanel" aria-labelledby="tab-desc-btn">
+          <p class="product-tab-body" id="product-desc"></p>
+        </div>
+        <div class="product-tab-content" id="tab-feat" role="tabpanel" aria-labelledby="tab-feat-btn">
+          <ul id="product-features" class="product-tab-body" style="padding-left:20px;"></ul>
+        </div>
+        <div class="product-tab-content" id="tab-meas" role="tabpanel" aria-labelledby="tab-meas-btn">
+          <p class="product-tab-body" id="product-meas"></p>
+        </div>
+        <div class="product-tab-content" id="tab-care" role="tabpanel" aria-labelledby="tab-care-btn">
+          <p class="product-tab-body" id="product-care"></p>
+        </div>
+
+        <div id="cta-area">
+          <!-- Add to cart / Go to cart rendered by JS -->
+        </div>
+
+        <!-- The Process section -->
+        <div class="process-section">
+          <p class="process-eyebrow">THE PROCESS</p>
+          <div class="process-strip" aria-label="Block printing process steps">
+            <div class="process-card">
+              <img src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+            <div class="process-card">
+              <img src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+            <div class="process-card">
+              <img src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /product-info -->
+
+    </div><!-- /product-layout -->
+
+    <!-- Similar Products -->
+    <section class="section bg-cream">
+      <div class="container">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:40px;">
+          <div>
+            <p class="eyebrow">SIMILAR PRODUCTS</p>
+            <h2 class="h3-i color-sc-100">Purchase together !</h2>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+            <div class="filter-pills" id="similar-pills">
+              <button class="filter-pill active" data-filter="all">ALL</button>
+              <button class="filter-pill" data-filter="mens">MEN'S WEAR</button>
+              <button class="filter-pill" data-filter="womens">WOMEN'S WEAR</button>
+              <button class="filter-pill" data-filter="decor">HOME DECOR</button>
+              <button class="filter-pill" data-filter="accessories">ACCESSORIES</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel">
+          <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous products">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="carousel__track" id="similar-track" style="gap:40px;"></div>
+          <button class="carousel__arrow carousel__arrow--next" aria-label="Next products">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile sticky CTA -->
+  <div class="mobile-cta-bar" aria-label="Quick add to cart" id="mobile-cta">
+    <div>
+      <p class="h6-a" style="color:var(--sc-l3);text-transform:uppercase;" id="mobile-product-name"></p>
+      <p class="mobile-cta-bar__price" id="mobile-product-price"></p>
+    </div>
+    <button class="btn-primary" id="mobile-add-btn">ADD TO CART</button>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { addToCart, isInCart } from '/js/cart.js';
+    import { initFilterPills } from '/js/filter-pills.js';
+    import { initCarousel } from '/js/carousel.js';
+
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('slug') || 'flora-patterned-set';
+
+    const PRODUCTS = await fetch('/data/products.json').then(r => r.json());
+    const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
+
+    let selectedSize = product.sizes[0];
+
+    function formatPrice(n) {
+      return '₹' + n.toLocaleString('en-IN');
+    }
+
+    function renderProductPage() {
+      document.title = `${product.name} — Rangmudra`;
+      document.querySelector('meta[name="description"]').content = product.description;
+
+      document.getElementById('product-category').textContent = product.tags.join(' · ');
+      document.getElementById('product-title').textContent = product.name;
+      document.getElementById('product-price').textContent = formatPrice(product.price);
+      document.getElementById('product-desc').textContent = product.description;
+
+      const meas = document.getElementById('product-meas');
+      if (meas) meas.textContent = product.measurements;
+      const care = document.getElementById('product-care');
+      if (care) care.textContent = product.care;
+
+      const featList = document.getElementById('product-features');
+      if (featList) {
+        featList.innerHTML = product.features.map(f => `<li style="margin-bottom:8px;">${f}</li>`).join('');
+      }
+
+      /* Main image */
+      const mainImg = document.getElementById('main-product-img');
+      if (mainImg) {
+        mainImg.src = product.images[0];
+        mainImg.alt = `${product.name} — block-printed artisanal piece`;
+      }
+
+      /* Thumbnails */
+      const thumbContainer = document.getElementById('thumbnails');
+      if (thumbContainer) {
+        thumbContainer.innerHTML = product.images.map((img, i) => `
+          <button class="product-gallery__thumb ${i === 0 ? 'active' : ''}" aria-label="View image ${i+1}" role="listitem">
+            <img src="${img}" alt="${product.name} view ${i+1}" loading="lazy" width="80" height="80">
+          </button>
+        `).join('');
+        thumbContainer.querySelectorAll('.product-gallery__thumb').forEach((btn, i) => {
+          btn.addEventListener('click', () => {
+            thumbContainer.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (mainImg) { mainImg.src = product.images[i]; }
+          });
+        });
+      }
+
+      /* Size chips */
+      const sizeContainer = document.getElementById('size-chips');
+      if (sizeContainer) {
+        sizeContainer.innerHTML = product.sizes.map((size, i) => `
+          <button class="size-chip ${i === 0 ? 'active' : ''}" data-size="${size}" aria-pressed="${i === 0}">${size}</button>
+        `).join('');
+        sizeContainer.querySelectorAll('.size-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            sizeContainer.querySelectorAll('.size-chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+            chip.classList.add('active');
+            chip.setAttribute('aria-pressed', 'true');
+            selectedSize = chip.dataset.size;
+            renderCTA();
+          });
+        });
+      }
+
+      /* Mobile CTA */
+      const mobileName = document.getElementById('mobile-product-name');
+      if (mobileName) mobileName.textContent = product.name;
+      const mobilePrice = document.getElementById('mobile-product-price');
+      if (mobilePrice) mobilePrice.textContent = formatPrice(product.price);
+
+      renderCTA();
+      renderSimilarProducts();
+    }
+
+    function renderCTA() {
+      const area = document.getElementById('cta-area');
+      if (!area) return;
+      const inCart = isInCart(product.id, selectedSize);
+
+      if (inCart) {
+        area.innerHTML = `
+          <div class="btn-go-to-cart" role="group" aria-label="Cart actions">
+            <a href="cart.html" class="btn-go-to-cart__label">
+              GO TO CART
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </a>
+            <button class="btn-go-to-cart__trash" id="remove-btn" aria-label="Remove from cart">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+            </button>
+          </div>
+        `;
+        document.getElementById('remove-btn')?.addEventListener('click', () => {
+          import('/js/cart.js').then(({ removeFromCart }) => { removeFromCart(product.id, selectedSize); renderCTA(); });
+        });
+      } else {
+        area.innerHTML = `
+          <button class="btn-add-to-cart" id="add-to-cart-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            ADD TO CART
+          </button>
+        `;
+        document.getElementById('add-to-cart-btn')?.addEventListener('click', () => {
+          addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: product.images[0] });
+          renderCTA();
+        });
+      }
+
+      /* Mobile button */
+      const mobileBtn = document.getElementById('mobile-add-btn');
+      if (mobileBtn) {
+        mobileBtn.textContent = inCart ? 'GO TO CART' : 'ADD TO CART';
+        mobileBtn.onclick = inCart
+          ? () => window.location.href = 'cart.html'
+          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: product.images[0] }); renderCTA(); };
+      }
+    }
+
+    function renderSimilarProducts() {
+      const track = document.getElementById('similar-track');
+      if (!track) return;
+      const similar = PRODUCTS.filter(p => p.id !== product.id).slice(0, 4);
+      track.innerHTML = similar.map(p => `
+        <a href="product.html?slug=${p.slug}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
+          <div class="shop-card__img-wrap">
+            <img src="${p.images[0]}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
+            ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
+          </div>
+          <div class="shop-card__info">
+            <p class="shop-card__category">${p.tags.join(' · ')}</p>
+            <h3 class="shop-card__name">${p.name}</h3>
+            <p class="shop-card__price">₹${p.price.toLocaleString('en-IN')}</p>
+          </div>
+        </a>
+      `).join('');
+      initCarousel(document.querySelector('.carousel'));
+    }
+
+    /* Tabs */
+    function initTabs() {
+      document.querySelectorAll('.product-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.product-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+          document.querySelectorAll('.product-tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          document.getElementById(`tab-${tab.dataset.tab}`)?.classList.add('active');
+        });
+      });
+    }
+
+    renderProductPage();
+    initTabs();
+    initFilterPills('#similar-pills');
+  </script>
+</body>
+</html>

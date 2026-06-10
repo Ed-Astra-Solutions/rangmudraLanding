@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshops — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Small hero -->
+    <section class="page-hero" style="min-height:320px;" aria-label="Category hero">
+      <img
+        src="/images/uploads/wshop-block-print-party.jpg"
+        alt="Block printing workshop in progress"
+        class="page-hero__bg"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="320"
+      >
+      <a href="workshops.html" class="btn-ghost page-hero__back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+      <div class="page-hero__content">
+        <h1 class="h2-i" style="color:var(--pr-l5);" id="hero-title">Workshops</h1>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+
+        <!-- Toolbar -->
+        <div class="workshops-toolbar" style="margin-bottom:40px;">
+          <input
+            type="search"
+            class="workshops-search"
+            id="workshop-search"
+            placeholder="Search workshops..."
+            aria-label="Search workshops in this category"
+          >
+          <button class="btn-primary" id="category-pill" style="white-space:nowrap;">
+            WORKSHOP CATEGORY
+          </button>
+        </div>
+
+        <!-- Category title block -->
+        <div style="margin-bottom:64px;">
+          <p class="eyebrow">WORKSHOPS</p>
+          <h2 class="h2-i color-sc-100" id="category-heading" style="margin-bottom:16px;"></h2>
+          <p class="h5-a color-sc-l3" id="category-desc" style="max-width:680px;"></p>
+        </div>
+
+        <!-- Workshop zigzag cards -->
+        <div class="workshop-zigzag" id="workshop-list" aria-label="Workshops in this category">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Enquire side panel -->
+  <div class="enquire-panel" id="enquire-panel" role="dialog" aria-modal="true" aria-labelledby="enquire-panel-title">
+    <button class="enquire-panel__close" id="enquire-panel-close" aria-label="Close enquiry form">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 class="h3-i color-sc-100" id="enquire-panel-title" style="margin-bottom:32px;">Reach out to us</h2>
+    <form id="enquire-form">
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-name">Name</label>
+        <input type="text" id="eq-name" class="input-field" placeholder="Your name" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-email">Email</label>
+        <input type="email" id="eq-email" class="input-field" placeholder="hello@you.com" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-phone">Phone</label>
+        <input type="tel" id="eq-phone" class="input-field" placeholder="+91 98765 43210">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-group">Group Size</label>
+        <input type="number" id="eq-group" class="input-field" placeholder="Number of people" min="1">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-date">Preferred Date</label>
+        <input type="date" id="eq-date" class="input-field">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-workshop">Workshop</label>
+        <select id="eq-workshop" class="input-field" style="cursor:pointer;appearance:auto;">
+          <option value="">Select a workshop...</option>
+        </select>
+      </div>
+      <div class="input-wrap" style="margin-bottom:32px;">
+        <label class="input-label" for="eq-message">Message</label>
+        <textarea id="eq-message" class="textarea-field" placeholder="Tell us more about your requirements..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary full-width">Submit</button>
+    </form>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat') || 'experience';
+
+    const CAT_META = {
+      experience: {
+        title: 'Experience Workshops',
+        desc: 'Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.',
+      },
+      corporate: {
+        title: 'Corporate Workshops',
+        desc: 'Transform your workplace into a space of creativity, collaboration, and meaningful team experiences through engaging hands-on corporate workshops.',
+      },
+      curated: {
+        title: 'Curated Workshops',
+        desc: 'Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.',
+      },
+    };
+
+    const meta = CAT_META[cat] || CAT_META.experience;
+
+    document.title = `${meta.title} — Rangmudra`;
+    document.getElementById('hero-title').textContent = meta.title;
+    document.getElementById('category-heading').textContent = meta.title;
+    document.getElementById('category-desc').textContent = meta.desc;
+    document.getElementById('category-pill').textContent = meta.title.toUpperCase();
+
+    const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
+    const filtered = WORKSHOPS.filter(w => w.category === cat);
+
+    function renderWorkshops(list) {
+      const container = document.getElementById('workshop-list');
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<p class="h5-a color-sc-l3">No workshops found.</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map(w => `
+        <div class="workshop-zigzag__item">
+          <div class="workshop-card">
+            <div class="workshop-card__img-wrap">
+              <img
+                src="${w.image}"
+                alt="${w.title} workshop"
+                class="workshop-card__image"
+                loading="lazy"
+                width="520" height="650"
+                onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"
+              >
+              <span class="workshop-card__level-tag">${w.level}</span>
+            </div>
+            <div class="workshop-card__body">
+              <h3 class="workshop-card__title">${w.title}</h3>
+              <p class="workshop-card__desc">${w.description}</p>
+              <div class="workshop-card__meta">
+                <span>⏱ ${w.duration}</span>
+                <span class="workshop-card__meta-divider" aria-hidden="true"></span>
+                <span>👤 ${w.packageFor}</span>
+              </div>
+              <div class="workshop-card__chips">
+                ${w.tags.map(t => `<span class="workshop-card__chip">${t}</span>`).join('')}
+              </div>
+              <div class="workshop-card__footer">
+                <div>
+                  ${w.price
+                    ? `<p class="workshop-card__price-value">₹${w.price.toLocaleString('en-IN')}</p><p class="workshop-card__price-unit">${w.priceUnit}</p>`
+                    : `<p class="workshop-card__price-label">${w.priceLabel || 'Contact for pricing'}</p>`
+                  }
+                </div>
+                <a href="workshop-detail.html?cat=${cat}&slug=${w.slug}" class="btn-primary pill" style="height:48px;padding-inline:24px;font-size:12px;">
+                  BOOK NOW →
+                </a>
+              </div>
+              <div class="workshop-card__progress-wrap">
+                <div class="workshop-card__progress-bar">
+                  <div class="workshop-card__progress-fill" style="width:${Math.round((w.seatsBooked / w.totalSeats) * 100)}%"></div>
+                </div>
+                <p class="workshop-card__progress-label">${w.seatsBooked} of ${w.totalSeats} seats booked</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* Enquire panel */
+    const panel = document.getElementById('enquire-panel');
+    const panelClose = document.getElementById('enquire-panel-close');
+
+    function openPanel() { panel?.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closePanel() { panel?.classList.remove('open'); document.body.style.overflow = ''; }
+
+    panelClose?.addEventListener('click', closePanel);
+    document.getElementById('enquire-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      closePanel();
+      alert('Enquiry sent! We\'ll get back to you within 24 hours.');
+    });
+
+    /* Workshop search */
+    document.getElementById('workshop-search')?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      renderWorkshops(filtered.filter(w =>
+        w.title.toLowerCase().includes(q) || w.description.toLowerCase().includes(q)
+      ));
+    });
+
+    /* Populate workshop select in enquire form */
+    const select = document.getElementById('eq-workshop');
+    if (select) {
+      WORKSHOPS.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.id;
+        opt.textContent = w.title;
+        select.appendChild(opt);
+      });
+    }
+
+    renderWorkshops(filtered);
+  </script>
+</body>
+</html>

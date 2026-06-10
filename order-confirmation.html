@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Rangmudra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <div data-partial="header"></div>
+
+  <main class="profile-page">
+    <div class="container" style="max-width:680px;text-align:center;padding-top:64px;">
+      <div style="width:72px;height:72px;border-radius:999px;background:var(--ac-100);display:flex;align-items:center;justify-content:center;margin:0 auto 32px;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1 class="h1-i color-sc-100" style="margin-bottom:16px;">Thank You</h1>
+      <p class="h5-a color-sc-l3" style="margin-bottom:8px;">Your order has been confirmed.</p>
+      <p class="h6-a color-sc-l3" id="order-ref" style="text-transform:uppercase;margin-bottom:40px;"></p>
+
+      <div id="order-detail" style="text-align:left;background:var(--w1);border-radius:16px;padding:32px;margin-bottom:40px;display:none;">
+        <h2 class="h4-i color-sc-100" style="margin-bottom:24px;">Order Summary</h2>
+        <div id="order-items" style="display:flex;flex-direction:column;gap:16px;"></div>
+        <div style="border-top:1px solid rgba(44,26,16,0.12);margin-top:24px;padding-top:24px;">
+          <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="oc-subtotal">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Tax</span><span class="h5-a" id="oc-tax">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a" id="oc-delivery">₹0</span></div>
+          <div class="cart-total-row"><span class="cart-total-label">Total Paid</span><span class="cart-total-value" id="oc-total">₹0</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="profile-orders.html" class="btn-primary">View My Orders</a>
+        <a href="shop.html" class="btn-back" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Continue Shopping</a>
+      </div>
+    </div>
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, getToken } from '/js/auth.js';
+
+    function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const receipt = new URLSearchParams(location.search).get('order');
+      const refEl = document.getElementById('order-ref');
+      if (receipt && refEl) refEl.textContent = 'Order ' + receipt;
+
+      if (!isLoggedIn() || !receipt) return;
+      try {
+        const orders = await fetch('/api/orders', { headers: { 'x-user-token': getToken() } }).then(r => r.json());
+        const order = orders.find(o => o.id === receipt);
+        if (!order) return;
+
+        document.getElementById('order-items').innerHTML = order.items.map(it => `
+          <div style="display:flex;justify-content:space-between;gap:16px;">
+            <span class="h5-a color-sc-100">${it.name}${it.size ? ' · ' + it.size : ''} × ${it.qty}</span>
+            <span class="h5-a color-sc-100">${fmt(it.price * it.qty)}</span>
+          </div>`).join('');
+        document.getElementById('oc-subtotal').textContent = fmt(order.subtotal);
+        document.getElementById('oc-tax').textContent = fmt(order.tax);
+        document.getElementById('oc-delivery').textContent = fmt(order.deliveryFee);
+        document.getElementById('oc-total').textContent = fmt(order.amount);
+        document.getElementById('order-detail').style.display = 'block';
+      } catch { /* leave the simple thank-you view */ }
+    });
+  </script>
+</body>
+</html>
