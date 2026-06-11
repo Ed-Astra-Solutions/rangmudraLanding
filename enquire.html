@@ -191,15 +191,37 @@
     document.addEventListener('DOMContentLoaded', () => {
       initCarousels();
 
-      document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+      document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = e.target.querySelector('[type=submit]');
-        btn.textContent = '✓ Sent!';
-        btn.style.background = 'var(--ac-100)';
-        setTimeout(() => {
-          btn.textContent = 'SEND MESSAGE →';
+        const form = e.target;
+        const btn = form.querySelector('[type=submit]');
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        try {
+          const res = await fetch('/api/enquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: form.querySelector('#c-name').value,
+              email: form.querySelector('#c-email').value,
+              phone: form.querySelector('#c-phone').value,
+              company: form.querySelector('#c-company').value,
+              message: form.querySelector('#c-message').value,
+            }),
+          });
+          if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+          btn.textContent = '✓ Sent!';
+          btn.style.background = 'var(--ac-100)';
+          form.reset();
+        } catch (err) {
+          btn.textContent = 'Try again';
           btn.style.background = '';
-          e.target.reset();
+        }
+        setTimeout(() => {
+          btn.textContent = label;
+          btn.style.background = '';
+          btn.disabled = false;
         }, 3000);
       });
     });

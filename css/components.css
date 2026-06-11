@@ -414,6 +414,12 @@
   .site-footer { padding-top: 64px; padding-bottom: 32px; }
   .footer__grid { grid-template-columns: 1fr; gap: 40px; }
   .footer__bottom { flex-direction: column; align-items: flex-start; }
+  /* Comfortable touch targets (≥44px) for footer interactions on mobile. */
+  .footer__social-icon { width: 44px; height: 44px; }
+  .footer__links { gap: 0; }
+  .footer__link { padding: 10px 0; }
+  .footer__legal-links { gap: 8px 24px; flex-wrap: wrap; }
+  .footer__legal-link { padding: 12px 0; }
 }
 
 /* ─── ProductCard (§5.3) ──────────────────────────────────────────────────── */
@@ -1386,6 +1392,7 @@
 }
 
 .carousel__dot {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -1394,6 +1401,14 @@
   border: none;
   padding: 0;
   transition: background var(--dur-micro) var(--ease-standard);
+}
+
+/* Invisible 32px hit area around each 8px dot — keeps the visual unchanged
+   while making the dot comfortably tappable on touch screens. */
+.carousel__dot::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
 }
 
 .carousel__dot.active { background: var(--sc-100); }
@@ -1525,6 +1540,7 @@
 
 .coupon-input__field {
   flex: 1;
+  min-width: 0;
   padding-inline: 20px;
   background: var(--w1);
   font-family: var(--font-archivo);
@@ -1536,6 +1552,12 @@
 }
 
 .coupon-input__field::placeholder { color: var(--pr-100); }
+
+@media (max-width: 767px) {
+  /* Give the input half more room so the "Enter code" placeholder isn't clipped. */
+  .coupon-input__label { width: 48%; padding-inline: 16px; font-size: 12px; }
+  .coupon-input__field { padding-inline: 16px; font-size: 15px; }
+}
 
 /* ─── Auth Modal ──────────────────────────────────────────────────────────── */
 
@@ -1896,6 +1918,7 @@
 @media (max-width: 767px) {
   .breadcrumb-wrap { margin-top: 64px; padding: 14px 0; }
   .breadcrumb-wrap .breadcrumb { padding-inline: 20px; font-size: 11px; }
+  .breadcrumb-wrap .breadcrumb a { display: inline-block; padding: 8px 0; }
 }
 
 /* ─── Section eyebrow ────────────────────────────────────────────────────── */
@@ -2266,6 +2289,12 @@
 .whatsapp-fab:hover { background: var(--pr-b3); transform: scale(1.05); }
 
 @media (max-width: 767px) { .whatsapp-fab { display: flex; } }
+
+/* Lift the FAB clear of the sticky bottom CTA bar on pages that have one
+   (cart, product) so it never covers the Proceed / Add-to-cart button. */
+@media (max-width: 767px) {
+  body:has(.mobile-cta-bar) .whatsapp-fab { bottom: calc(24px + 88px); }
+}
 
 /* ─── Sticky mobile CTA bar ───────────────────────────────────────────────── */
 

@@ -65,39 +65,68 @@
       </div>
     </section>
 
+    <!-- Category chooser -->
+    <section class="section" style="background:var(--pr-l5);padding-top:48px;" aria-label="Workshop categories">
+      <div class="container">
+        <div class="workshops-cat-grid">
+          <a href="#cat-experience" class="category-card">
+            <img src="/images/uploads/workshops-cat-experience.jpg" alt="Experience workshops" class="category-card__image" loading="lazy" width="420" height="525" onerror="this.src='/images/uploads/wshop-block-print-party.jpg'">
+            <div class="category-card__scrim" aria-hidden="true"></div>
+            <div class="category-card__content">
+              <h2 class="category-card__title">Experience<br>Workshops</h2>
+            </div>
+          </a>
+          <a href="#cat-corporate" class="category-card">
+            <img src="/images/uploads/workshops-cat-corporate.jpg" alt="Corporate workshops" class="category-card__image" loading="lazy" width="420" height="525" onerror="this.src='/images/uploads/wshop-corporate-block.jpg'">
+            <div class="category-card__scrim" aria-hidden="true"></div>
+            <div class="category-card__content">
+              <h2 class="category-card__title">Corporate<br>Workshops</h2>
+            </div>
+          </a>
+          <a href="#cat-curated" class="category-card">
+            <img src="/images/uploads/workshops-cat-curated.jpg" alt="Curated workshops" class="category-card__image" loading="lazy" width="420" height="525" onerror="this.src='/images/uploads/wshop-curated-course.jpg'">
+            <div class="category-card__scrim" aria-hidden="true"></div>
+            <div class="category-card__content">
+              <h2 class="category-card__title">Curated<br>Workshops</h2>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- Experience Workshops -->
-    <section class="section" id="cat-experience" style="background:var(--pr-l5);">
+    <section class="section" id="cat-experience" style="background:var(--pr-l5);scroll-margin-top:24px;">
       <div class="container">
         <div style="margin-bottom:64px;">
           <p class="eyebrow">WORKSHOPS</p>
           <h2 class="h2-i color-sc-100" style="margin-bottom:16px;">Experience Workshops</h2>
           <p class="h5-a color-sc-l3" style="max-width:680px;">Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.</p>
         </div>
-        <div class="workshop-zigzag" data-workshop-list="experience" aria-label="Experience workshops"></div>
+        <div class="shop-grid" data-workshop-list="experience" aria-label="Experience workshops"></div>
       </div>
     </section>
 
     <!-- Corporate Workshops -->
-    <section class="section" id="cat-corporate" style="background:var(--pr-l5);">
+    <section class="section" id="cat-corporate" style="background:var(--pr-l5);scroll-margin-top:24px;">
       <div class="container">
         <div style="margin-bottom:64px;">
           <p class="eyebrow">WORKSHOPS</p>
           <h2 class="h2-i color-sc-100" style="margin-bottom:16px;">Corporate Workshops</h2>
           <p class="h5-a color-sc-l3" style="max-width:680px;">Transform your workplace into a space of creativity, collaboration, and meaningful team experiences through engaging hands-on corporate workshops.</p>
         </div>
-        <div class="workshop-zigzag" data-workshop-list="corporate" aria-label="Corporate workshops"></div>
+        <div class="shop-grid" data-workshop-list="corporate" aria-label="Corporate workshops"></div>
       </div>
     </section>
 
     <!-- Curated Workshops -->
-    <section class="section" id="cat-curated" style="background:var(--pr-l5);">
+    <section class="section" id="cat-curated" style="background:var(--pr-l5);scroll-margin-top:24px;">
       <div class="container">
         <div style="margin-bottom:64px;">
           <p class="eyebrow">WORKSHOPS</p>
           <h2 class="h2-i color-sc-100" style="margin-bottom:16px;">Curated Workshops</h2>
           <p class="h5-a color-sc-l3" style="max-width:680px;">Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.</p>
         </div>
-        <div class="workshop-zigzag" data-workshop-list="curated" aria-label="Curated workshops"></div>
+        <div class="shop-grid" data-workshop-list="curated" aria-label="Curated workshops"></div>
       </div>
     </section>
 
@@ -155,51 +184,28 @@
     const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
 
     function workshopCardHTML(w) {
+      const priceLine = w.price
+        ? `₹${w.price.toLocaleString('en-IN')} · ${w.priceUnit}`
+        : (w.priceLabel || 'Contact for pricing');
       return `
-        <div class="workshop-zigzag__item">
-          <div class="workshop-card">
-            <div class="workshop-card__img-wrap">
-              <img
-                src="${w.image}"
-                alt="${w.title} workshop"
-                class="workshop-card__image"
-                loading="lazy"
-                width="520" height="650"
-                onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"
-              >
-              <span class="workshop-card__level-tag">${w.level}</span>
-            </div>
-            <div class="workshop-card__body">
-              <h3 class="workshop-card__title">${w.title}</h3>
-              <p class="workshop-card__desc">${w.description}</p>
-              <div class="workshop-card__meta">
-                <span>⏱ ${w.duration}</span>
-                <span class="workshop-card__meta-divider" aria-hidden="true"></span>
-                <span>👤 ${w.packageFor}</span>
-              </div>
-              <div class="workshop-card__chips">
-                ${w.tags.map(t => `<span class="workshop-card__chip">${t}</span>`).join('')}
-              </div>
-              <div class="workshop-card__footer">
-                <div>
-                  ${w.price
-                    ? `<p class="workshop-card__price-value">₹${w.price.toLocaleString('en-IN')}</p><p class="workshop-card__price-unit">${w.priceUnit}</p>`
-                    : `<p class="workshop-card__price-label">${w.priceLabel || 'Contact for pricing'}</p>`
-                  }
-                </div>
-                <button type="button" class="btn-primary pill workshop-card__book-btn" data-workshop-id="${w.id}" style="height:48px;padding-inline:24px;font-size:12px;">
-                  BOOK NOW →
-                </button>
-              </div>
-              <div class="workshop-card__progress-wrap">
-                <div class="workshop-card__progress-bar">
-                  <div class="workshop-card__progress-fill" style="width:${Math.round((w.seatsBooked / w.totalSeats) * 100)}%"></div>
-                </div>
-                <p class="workshop-card__progress-label">${w.seatsBooked} of ${w.totalSeats} seats booked</p>
-              </div>
-            </div>
+        <a href="workshop-detail.html?cat=${w.category}&slug=${w.slug}" class="shop-card" data-workshop-id="${w.id}">
+          <div class="shop-card__img-wrap">
+            <img
+              src="${w.image}"
+              alt="${w.title} workshop"
+              class="shop-card__image"
+              loading="lazy"
+              width="400" height="500"
+              onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"
+            >
+            <span class="shop-card__featured">${w.level}</span>
           </div>
-        </div>
+          <div class="shop-card__info">
+            <p class="shop-card__category">${w.duration} · ${w.packageFor}</p>
+            <h2 class="shop-card__name">${w.title}</h2>
+            <p class="shop-card__price">${priceLine}</p>
+          </div>
+        </a>
       `;
     }
 
@@ -212,7 +218,6 @@
           ? items.map(workshopCardHTML).join('')
           : `<p class="h5-a color-sc-l3">No workshops found.</p>`;
       });
-      bindBookButtons();
     }
 
     /* Enquire panel */
@@ -238,12 +243,6 @@
       closePanel();
       alert('Enquiry sent! We\'ll get back to you within 24 hours.');
     });
-
-    function bindBookButtons() {
-      document.querySelectorAll('.workshop-card__book-btn').forEach(btn => {
-        btn.addEventListener('click', () => openPanel(btn.dataset.workshopId));
-      });
-    }
 
     /* Search across all categories */
     document.getElementById('workshop-search')?.addEventListener('input', (e) => {

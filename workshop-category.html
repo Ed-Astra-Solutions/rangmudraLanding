@@ -213,10 +213,39 @@
     function closePanel() { panel?.classList.remove('open'); document.body.style.overflow = ''; }
 
     panelClose?.addEventListener('click', closePanel);
-    document.getElementById('enquire-form')?.addEventListener('submit', (e) => {
+    document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      closePanel();
-      alert('Enquiry sent! We\'ll get back to you within 24 hours.');
+      const form = e.target;
+      const btn = form.querySelector('[type=submit]');
+      const label = btn.textContent;
+      const select = form.querySelector('#eq-workshop');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/workshops/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('#eq-name').value,
+            email: form.querySelector('#eq-email').value,
+            phone: form.querySelector('#eq-phone').value,
+            workshopId: select ? select.value : '',
+            workshopTitle: select ? select.options[select.selectedIndex]?.text : '',
+            groupSize: form.querySelector('#eq-group').value,
+            date: form.querySelector('#eq-date').value,
+            message: form.querySelector('#eq-message').value,
+          }),
+        });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+        closePanel();
+        form.reset();
+        alert('Booking sent! We\'ll confirm the details within 24 hours.');
+      } catch (err) {
+        alert('Sorry, we couldn\'t send your booking. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
     });
 
     /* Workshop search */

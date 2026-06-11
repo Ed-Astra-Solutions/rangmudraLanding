@@ -231,7 +231,9 @@
 }
 
 @media (max-width: 767px) {
-  .testimonials-grid { grid-template-columns: 1fr; gap: 40px; }
+  /* minmax(0,…) stops the testimonial carousel's wide track from forcing the
+     single column past the viewport. */
+  .testimonials-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
 }
 
 /* Quick reads grid */
@@ -451,7 +453,25 @@
 @media (max-width: 1023px) { .shop-grid { grid-template-columns: repeat(2, 1fr); column-gap: 24px; row-gap: 40px; } }
 @media (max-width: 767px)  { .shop-grid { column-gap: 16px; row-gap: 32px; } }
 
+/* Workshops category chooser (3 anchor-linked cards) */
+.workshops-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 767px) {
+  .workshops-cat-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
 /* ─── Product detail ──────────────────────────────────────────────────────── */
+
+/* Similar-products filter row: on mobile take the full line so the inner
+   pill list shrinks and scrolls instead of widening the page. */
+@media (max-width: 767px) {
+  .similar-filter { width: 100%; min-width: 0; }
+  .similar-filter .filter-pills { width: 100%; min-width: 0; }
+}
 
 .product-layout {
   display: grid;
@@ -654,10 +674,15 @@
 }
 
 @media (max-width: 767px) {
-  .product-layout { grid-template-columns: 1fr; padding-top: 64px; }
-  .product-gallery { padding: 24px; }
+  .product-layout { grid-template-columns: minmax(0, 1fr); padding-top: 64px; }
+  .product-gallery { padding: 24px; min-width: 0; }
+  .product-info { min-width: 0; }
   .product-info { padding: 24px; max-height: none; overflow-y: visible; }
   .product-info__title { font-size: 30px; line-height: 38px; }
+  /* Tab bar scrolls horizontally rather than overflowing the panel. */
+  .product-tabs { gap: 20px; overflow-x: auto; scrollbar-width: none; }
+  .product-tabs::-webkit-scrollbar { display: none; }
+  .product-tab { flex-shrink: 0; white-space: nowrap; }
 }
 
 /* Process strip */
@@ -726,8 +751,12 @@
 }
 
 @media (max-width: 1023px) {
-  .checkout-grid { grid-template-columns: 1fr; padding: 24px; }
-  .checkout-sidebar { position: static; order: -1; }
+  /* minmax(0,1fr) lets the column shrink below its children's min-content,
+     preventing the sidebar (coupon field, stepper) from blowing past the
+     viewport and getting clipped on narrow screens. */
+  .checkout-grid { grid-template-columns: minmax(0, 1fr); padding: 24px; }
+  .checkout-sidebar { position: static; order: -1; min-width: 0; }
+  .checkout-main { min-width: 0; }
 }
 
 /* ─── Workshops ───────────────────────────────────────────────────────────── */
@@ -815,6 +844,11 @@
 @media (max-width: 767px) {
   .workshop-zigzag { grid-template-columns: 1fr; gap: 32px; }
   .workshop-zigzag__item { width: 100%; }
+  /* Stack the search + category button so the non-shrinking pill button
+     doesn't push the toolbar past the viewport. */
+  .workshops-toolbar { flex-wrap: wrap; }
+  .workshops-search { flex: 1 1 100%; min-width: 0; }
+  .workshops-toolbar > .btn-primary { width: 100%; justify-content: center; }
 }
 
 /* ─── Enquire page ────────────────────────────────────────────────────────── */

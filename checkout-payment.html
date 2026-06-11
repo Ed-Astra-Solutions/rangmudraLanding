@@ -59,62 +59,17 @@
 
       <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Payment</h2>
 
-      <!-- UPI -->
+      <!-- Razorpay (single payment option) -->
       <div style="margin-bottom:48px;">
-        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">UPI</p>
-        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="UPI options">
-          <button class="payment-row" aria-label="Pay with Apple Pay">
-            <div class="payment-row__logo" aria-hidden="true">
-              <span style="font-size:14px;font-family:var(--font-archivo);">⌘</span>
-            </div>
-            <span class="payment-row__label h5-a">Apple Pay</span>
-            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-          <button class="payment-row" aria-label="Pay with Google Pay">
-            <div class="payment-row__logo" aria-hidden="true">
-              <span style="font-size:11px;color:#4285F4;font-family:var(--font-archivo);">G</span>
-            </div>
-            <span class="payment-row__label h5-a">Gpay</span>
-            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
+        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Pay Securely</p>
+        <div class="payment-row payment-row--razorpay" aria-label="Pay securely with Razorpay" style="cursor:default;">
+          <div class="payment-row__logo" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pr-b2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <span class="payment-row__label h5-a">Razorpay</span>
+          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <button class="h5-a" style="display:block;text-align:center;width:100%;margin-top:12px;color:var(--sc-l3);background:none;border:none;cursor:pointer;" id="show-more-upi">Show More</button>
-      </div>
-
-      <!-- Cards -->
-      <div style="margin-bottom:48px;">
-        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Cards</p>
-        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="Saved cards">
-          <button class="payment-row" aria-label="Pay with Visa card ending 0981">
-            <div class="payment-row__logo" aria-hidden="true">
-              <span style="font-size:11px;color:#1A1F71;font-family:var(--font-archivo);font-style:italic;font-weight:bold;">VISA</span>
-            </div>
-            <span class="payment-row__label h5-a">4153 xxxx xxxxx 0981</span>
-            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-        <button class="h5-a" style="display:block;text-align:center;width:100%;margin-top:12px;color:var(--sc-l3);background:none;border:none;cursor:pointer;">Add new card +</button>
-      </div>
-
-      <!-- Banks -->
-      <div style="margin-bottom:48px;">
-        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Banks</p>
-        <div style="display:flex;flex-direction:column;gap:12px;" role="group" aria-label="Bank options">
-          <button class="payment-row" aria-label="Pay with HDFC Bank">
-            <div class="payment-row__logo" aria-hidden="true">
-              <span style="font-size:10px;color:#004C97;font-family:var(--font-archivo);font-weight:bold;">HDFC</span>
-            </div>
-            <span class="payment-row__label h5-a">HDFC Bank</span>
-            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-          <button class="payment-row" aria-label="Pay with SBI Bank">
-            <div class="payment-row__logo" aria-hidden="true">
-              <span style="font-size:10px;color:#1B4D8E;font-family:var(--font-archivo);font-weight:bold;">SBI</span>
-            </div>
-            <span class="payment-row__label h5-a">SBI Bank</span>
-            <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
+        <p class="h6-a color-sc-l3" style="margin-top:12px;">UPI, Cards, Net Banking &amp; Wallets — handled securely by Razorpay. Tap Proceed to pay.</p>
       </div>
 
       <button class="btn-proceed" id="proceed-btn">Proceed</button>
@@ -258,23 +213,6 @@
         proceedBtn.disabled = false;
         proceedBtn.textContent = originalLabel;
       }
-    });
-
-    document.getElementById('show-more-upi')?.addEventListener('click', function() {
-      this.style.display = 'none';
-      const parent = this.previousElementSibling;
-      if (parent) parent.insertAdjacentHTML('beforeend', `
-        <button class="payment-row" aria-label="Pay with PhonePe">
-          <div class="payment-row__logo" aria-hidden="true"><span style="font-size:10px;color:#5F259F;font-family:var(--font-archivo);">PP</span></div>
-          <span class="payment-row__label h5-a">PhonePe</span>
-          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-        <button class="payment-row" aria-label="Pay with Paytm">
-          <div class="payment-row__logo" aria-hidden="true"><span style="font-size:10px;color:#002970;font-family:var(--font-archivo);">PT</span></div>
-          <span class="payment-row__label h5-a">Paytm</span>
-          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      `);
     });
 
     document.addEventListener('DOMContentLoaded', renderOrderSummary);
