@@ -213,12 +213,29 @@
 }
 
 .blog-article__body figure {
-  margin: 32px 0;
+  margin: 40px auto;
+  /* Keep in-body images narrower than the text column for an editorial feel. */
+  max-width: 75%;
 }
 
 .blog-article__body figure img {
+  display: block;
   width: 100%;
   border-radius: 12px;
+}
+
+.blog-article__body figure figcaption {
+  margin-top: 12px;
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.1em;
+  color: var(--sc-l3);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .blog-article__body figure { max-width: 100%; }
 }
 
 .blog-article__share {

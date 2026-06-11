@@ -128,6 +128,8 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
+    import { getWorkshops } from '/js/data.js';
+
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'corporate';
     const slug = params.get('slug') || 'block-printing-workshop';
@@ -138,7 +140,7 @@
       curated: { title: 'Curated Workshops', desc: 'Immersive multi-week workshops for design students and creative learners.' },
     };
 
-    const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
+    const WORKSHOPS = await getWorkshops();
     const workshop = WORKSHOPS.find(w => w.slug === slug) || WORKSHOPS[0];
     const catMeta = CAT_META[cat] || CAT_META.corporate;
 

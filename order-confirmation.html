@@ -47,6 +47,7 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { isLoggedIn, getToken } from '/js/auth.js';
+    import { apiUrl } from '/js/config.js';
 
     function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 
@@ -57,7 +58,7 @@
 
       if (!isLoggedIn() || !receipt) return;
       try {
-        const orders = await fetch('/api/orders', { headers: { 'x-user-token': getToken() } }).then(r => r.json());
+        const orders = await fetch(apiUrl('/api/orders'), { headers: { 'x-user-token': getToken() } }).then(r => r.json());
         const order = orders.find(o => o.id === receipt);
         if (!order) return;
 

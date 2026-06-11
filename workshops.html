@@ -179,9 +179,11 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
+    import { getWorkshops } from '/js/data.js';
+
     const CATEGORIES = ['experience', 'corporate', 'curated'];
 
-    const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
+    const WORKSHOPS = await getWorkshops();
 
     function workshopCardHTML(w) {
       const priceLine = w.price

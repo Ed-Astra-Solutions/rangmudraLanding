@@ -1,5 +1,7 @@
 /* auth.js — Email OTP auth modal logic (talks to the server). */
 
+import { apiUrl } from '/js/config.js';
+
 const SESSION_KEY = 'rangmudra_session';
 
 function isLoggedIn() {
@@ -37,7 +39,7 @@ async function logout() {
   const token = getToken();
   if (token) {
     try {
-      await fetch('/api/auth/logout', { method: 'POST', headers: { 'x-user-token': token } });
+      await fetch(apiUrl('/api/auth/logout'), { method: 'POST', headers: { 'x-user-token': token } });
     } catch { /* ignore network errors on logout */ }
   }
   localStorage.removeItem(SESSION_KEY);
@@ -108,7 +110,7 @@ function startResendCountdown() {
 }
 
 async function requestOtp(email) {
-  const res = await fetch('/api/auth/request-otp', {
+  const res = await fetch(apiUrl('/api/auth/request-otp'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
@@ -206,7 +208,7 @@ function initAuthModal() {
 
       let data, res;
       try {
-        res = await fetch('/api/auth/verify-otp', {
+        res = await fetch(apiUrl('/api/auth/verify-otp'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: currentEmail, code: otp }),

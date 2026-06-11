@@ -1,16 +1,16 @@
-/* blog-detail.js — Renders a single blog post from data/blogs.json,
+/* blog-detail.js — Renders a single blog post (API → MongoDB, static fallback),
    keyed by ?slug=... in the URL. Falls back to the first post if no slug. */
+
+import { getBlogs } from '/js/data.js';
 
 async function loadPost() {
   const slug = new URLSearchParams(window.location.search).get('slug');
   try {
-    const res = await fetch('/data/blogs.json');
-    if (!res.ok) throw new Error('Failed to load blogs.json');
-    const posts = await res.json();
+    const posts = await getBlogs();
     const post = posts.find(p => p.slug === slug) || posts[0];
     return { post, posts };
   } catch (e) {
-    console.warn('Could not load blogs.json:', e);
+    console.warn('Could not load blogs:', e);
     return { post: null, posts: [] };
   }
 }
@@ -36,7 +36,8 @@ function renderBody(post) {
       return `<ul>${items}</ul>`;
     }
     if (block.type === 'img') {
-      return `<figure><img src="${block.src}" alt="${escapeAttr(block.alt || '')}" loading="lazy"></figure>`;
+      const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : '';
+      return `<figure><img src="${block.src}" alt="${escapeAttr(block.alt || '')}" loading="lazy">${caption}</figure>`;
     }
     return '';
   }).join('');

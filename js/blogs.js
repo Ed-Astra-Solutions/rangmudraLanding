@@ -1,5 +1,7 @@
 /* blogs.js — Journal index page: featured post, search, category filter, grid. */
 
+import { getBlogs } from '/js/data.js';
+
 const grid = document.getElementById('blogs-grid');
 const emptyState = document.getElementById('blogs-empty');
 const filterRow = document.getElementById('blog-filter-row');
@@ -11,11 +13,9 @@ let searchQuery = '';
 
 async function loadPosts() {
   try {
-    const res = await fetch('/data/blogs.json');
-    if (!res.ok) throw new Error('Failed to load blogs.json');
-    allPosts = await res.json();
+    allPosts = await getBlogs();
   } catch (e) {
-    console.warn('Could not load blogs.json:', e);
+    console.warn('Could not load blogs:', e);
     allPosts = [];
   }
 }

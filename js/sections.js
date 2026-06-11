@@ -2,10 +2,12 @@
 // pure-static hosting) and swap src on every <img data-section="page.slot">.
 // Also applies background-image to elements with data-section-bg="page.slot".
 
+import { apiUrl } from '/js/config.js';
+
 (async function applySections() {
   let sections = null;
   try {
-    const res = await fetch('/api/sections', { cache: 'no-store' });
+    const res = await fetch(apiUrl('/api/sections'), { cache: 'no-store' });
     if (res.ok) sections = await res.json();
   } catch (_) { /* fall through */ }
   if (!sections) {

@@ -56,11 +56,12 @@ const STATIC_TRAILS = {
   'components-test.html':  [{ label: 'Components' }],
 };
 
-async function fetchJSON(url) {
+// Load a resource via the data layer (API → MongoDB, with static fallback).
+// Returns null on failure so breadcrumbs degrade to a generic label.
+async function fetchData(resource) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    return await res.json();
+    const { getData } = await import('/js/data.js');
+    return await getData(resource);
   } catch { return null; }
 }
 
@@ -101,7 +102,7 @@ async function buildTrail() {
     trail.push({ label: 'Shop', href: 'shop.html' });
     const slug = params.get('slug');
     if (slug) {
-      const products = await fetchJSON('/data/products.json');
+      const products = await fetchData('products');
       const product = products?.find(p => p.slug === slug);
       if (product) {
         const printMeta = PRINT_TYPE_FROM_PRODUCT[product.printType];
@@ -137,7 +138,7 @@ async function buildTrail() {
       });
     }
     if (slug) {
-      const workshops = await fetchJSON('/data/workshops.json');
+      const workshops = await fetchData('workshops');
       const w = workshops?.find(x => x.slug === slug);
       trail.push({ label: w?.title || 'Workshop' });
     }
@@ -148,7 +149,7 @@ async function buildTrail() {
     trail.push({ label: 'Blogs', href: 'blogs.html' });
     const slug = params.get('slug');
     if (slug) {
-      const blogs = await fetchJSON('/data/blogs.json');
+      const blogs = await fetchData('blogs');
       const post = blogs?.find(b => b.slug === slug);
       trail.push({ label: post?.title || 'Article' });
     }

@@ -106,7 +106,8 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    const ADDRESSES = await fetch('/data/addresses.json').then(r => r.json());
+    import { getAddresses } from '/js/data.js';
+    const ADDRESSES = await getAddresses();
     let selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
 
     function renderAddresses() {

@@ -147,11 +147,12 @@
     import { addToCart, isInCart } from '/js/cart.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { initCarousel } from '/js/carousel.js';
+    import { getProducts } from '/js/data.js';
 
     const params = new URLSearchParams(location.search);
     const slug = params.get('slug') || 'flora-patterned-set';
 
-    const PRODUCTS = await fetch('/data/products.json').then(r => r.json());
+    const PRODUCTS = await getProducts();
     const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
 
     let selectedSize = product.sizes[0];

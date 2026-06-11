@@ -116,8 +116,9 @@
     import { initFilterPills } from '/js/filter-pills.js';
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
     import { isInCart, addToCart } from '/js/cart.js';
+    import { getProducts } from '/js/data.js';
 
-    const PRODUCTS = await fetch('/data/products.json').then(r => r.json());
+    const PRODUCTS = await getProducts();
 
     function renderProducts(products) {
       const grid = document.getElementById('product-grid');

@@ -85,6 +85,8 @@
   <script type="module">
     import { getCart, getCartTotal, clearCart } from '/js/cart.js';
     import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
+    import { getAddresses } from '/js/data.js';
+    import { apiUrl } from '/js/config.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
@@ -125,7 +127,7 @@
       const id = localStorage.getItem('rangmudra_delivery_address');
       if (!id) return null;
       try {
-        const addresses = await fetch('/data/addresses.json').then(r => r.json());
+        const addresses = await getAddresses();
         return addresses.find(a => a.id === id) || null;
       } catch {
         return null;
@@ -155,7 +157,7 @@
         const address = await resolveDeliveryAddress();
         const token = getToken();
 
-        const orderRes = await fetch('/api/checkout/create-order', {
+        const orderRes = await fetch(apiUrl('/api/checkout/create-order'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-user-token': token },
           body: JSON.stringify({
@@ -179,7 +181,7 @@
           order_id: order.orderId,
           handler: async (response) => {
             try {
-              const verifyRes = await fetch('/api/checkout/verify-payment', {
+              const verifyRes = await fetch(apiUrl('/api/checkout/verify-payment'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-user-token': token },
                 body: JSON.stringify(response),

@@ -119,6 +119,9 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
+    import { getWorkshops } from '/js/data.js';
+    import { apiUrl } from '/js/config.js';
+
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'experience';
 
@@ -145,7 +148,7 @@
     document.getElementById('category-desc').textContent = meta.desc;
     document.getElementById('category-pill').textContent = meta.title.toUpperCase();
 
-    const WORKSHOPS = await fetch('/data/workshops.json').then(r => r.json());
+    const WORKSHOPS = await getWorkshops();
     const filtered = WORKSHOPS.filter(w => w.category === cat);
 
     function renderWorkshops(list) {
@@ -222,7 +225,7 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
       try {
-        const res = await fetch('/api/workshops/book', {
+        const res = await fetch(apiUrl('/api/workshops/book'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

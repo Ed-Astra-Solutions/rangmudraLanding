@@ -37,7 +37,8 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { isLoggedIn, openAuthModal } from '/js/auth.js';
-    const ADDRESSES = await fetch('/data/addresses.json').then(r => r.json());
+    import { getAddresses } from '/js/data.js';
+    const ADDRESSES = await getAddresses();
     if (!isLoggedIn()) {
       openAuthModal(() => location.reload());
     } else {

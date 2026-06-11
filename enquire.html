@@ -188,6 +188,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { initCarousels } from '/js/carousel.js';
+    import { apiUrl } from '/js/config.js';
     document.addEventListener('DOMContentLoaded', () => {
       initCarousels();
 
@@ -199,7 +200,7 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
         try {
-          const res = await fetch('/api/enquiry', {
+          const res = await fetch(apiUrl('/api/enquiry'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
