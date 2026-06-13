@@ -1553,6 +1553,22 @@
 
 .coupon-input__field::placeholder { color: var(--pr-100); }
 
+.coupon-input__apply {
+  flex-shrink: 0;
+  padding-inline: 24px;
+  background: var(--sc-100);
+  color: var(--pr-l5);
+  font-family: var(--font-archivo);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.coupon-input__apply:hover { background: var(--sc-l1); }
+
 @media (max-width: 767px) {
   /* Give the input half more room so the "Enter code" placeholder isn't clipped. */
   .coupon-input__label { width: 48%; padding-inline: 16px; font-size: 12px; }

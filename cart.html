@@ -77,7 +77,9 @@
       <div class="coupon-input" style="margin:24px 0;" role="group" aria-label="Coupon code">
         <div class="coupon-input__label" aria-hidden="true">Coupon code</div>
         <input type="text" class="coupon-input__field" id="coupon-input" placeholder="Enter code" aria-label="Enter coupon code" autocomplete="off">
+        <button type="button" class="coupon-input__apply" id="coupon-apply">Apply</button>
       </div>
+      <p class="h7-a" id="coupon-feedback" style="margin:-16px 0 16px;display:none;" aria-live="polite"></p>
 
       <div class="cart-summary-row">
         <span class="h5-a">Discount</span>
@@ -110,9 +112,15 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { getCart, removeFromCart, getCartTotal } from '/js/cart.js';
+    import { apiUrl } from '/js/config.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
+    const COUPON_KEY = 'rangmudra_coupon';
+
+    // The currently applied coupon: { code, discount } or null. The discount is
+    // re-validated server-side at checkout, so this is a preview only.
+    let appliedCoupon = null;
 
     function formatPrice(n) {
       return '₹' + Math.round(n).toLocaleString('en-IN');
@@ -120,15 +128,80 @@
 
     function updateSummary() {
       const subtotal = getCartTotal();
-      const tax = subtotal * TAX_RATE;
-      const total = subtotal + tax + DELIVERY_FEE;
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      // Mirror the server: tax applies to the discounted subtotal.
+      const discountedSubtotal = Math.max(0, subtotal - discount);
+      const tax = Math.round(discountedSubtotal * TAX_RATE);
+      const total = discountedSubtotal + tax + DELIVERY_FEE;
 
       document.getElementById('summary-total').textContent = formatPrice(subtotal);
       document.getElementById('summary-tax').textContent = formatPrice(tax);
       document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
+      document.getElementById('summary-discount').textContent = '-' + formatPrice(discount);
       document.getElementById('summary-amount').textContent = formatPrice(total);
       const mobileAmt = document.getElementById('mobile-amount');
       if (mobileAmt) mobileAmt.textContent = formatPrice(total);
+    }
+
+    function setCouponFeedback(msg, ok) {
+      const el = document.getElementById('coupon-feedback');
+      if (!el) return;
+      el.textContent = msg || '';
+      el.style.display = msg ? 'block' : 'none';
+      el.style.color = ok ? 'var(--sc-l3)' : '#B44';
+    }
+
+    function clearCoupon(silent) {
+      appliedCoupon = null;
+      localStorage.removeItem(COUPON_KEY);
+      if (!silent) setCouponFeedback('', true);
+      updateSummary();
+    }
+
+    // Validate a code against the current subtotal and apply it (or surface an
+    // error). Empty input just clears any applied coupon.
+    async function applyCoupon(code) {
+      const trimmed = (code || '').trim().toUpperCase();
+      if (!trimmed) { clearCoupon(); return; }
+      const subtotal = getCartTotal();
+      if (subtotal <= 0) { setCouponFeedback('Add items to your cart first', false); return; }
+      try {
+        const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: trimmed, subtotal }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          appliedCoupon = null;
+          localStorage.removeItem(COUPON_KEY);
+          setCouponFeedback(data.error || 'Invalid coupon code', false);
+          updateSummary();
+          return;
+        }
+        appliedCoupon = { code: trimmed, discount: data.discount };
+        localStorage.setItem(COUPON_KEY, trimmed);
+        setCouponFeedback(`Code ${trimmed} applied — you save ${formatPrice(data.discount)}`, true);
+        updateSummary();
+      } catch {
+        setCouponFeedback('Could not check that code. Please try again.', false);
+      }
+    }
+
+    function initCoupon() {
+      const input = document.getElementById('coupon-input');
+      const applyBtn = document.getElementById('coupon-apply');
+      // Restore a previously entered code (e.g. user navigated back from checkout).
+      const saved = localStorage.getItem(COUPON_KEY);
+      if (saved && input) { input.value = saved; applyCoupon(saved); }
+      applyBtn?.addEventListener('click', () => applyCoupon(input.value));
+      input?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); applyCoupon(input.value); }
+      });
+      input?.addEventListener('input', () => {
+        // Editing the code invalidates the applied discount until re-applied.
+        if (appliedCoupon && input.value.trim().toUpperCase() !== appliedCoupon.code) clearCoupon(true);
+      });
     }
 
     function renderCart() {
@@ -199,12 +272,17 @@
       mobileBtn?.addEventListener('click', go);
     }
 
-    window.addEventListener('cart-updated', () => { renderCart(); updateSummary(); });
+    window.addEventListener('cart-updated', () => {
+      renderCart();
+      // Re-validate the coupon against the new subtotal (min-order / cap may shift).
+      if (appliedCoupon) applyCoupon(appliedCoupon.code); else updateSummary();
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
       renderCart();
       updateSummary();
       initProceed();
+      initCoupon();
     });
   </script>
 </body>

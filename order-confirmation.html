@@ -31,6 +31,7 @@
           <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="oc-subtotal">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a">Tax</span><span class="h5-a" id="oc-tax">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a" id="oc-delivery">₹0</span></div>
+          <div class="cart-summary-row" id="oc-discount-row" style="display:none;"><span class="h5-a" id="oc-discount-label">Discount</span><span class="h5-a" id="oc-discount">-₹0</span></div>
           <div class="cart-total-row"><span class="cart-total-label">Total Paid</span><span class="cart-total-value" id="oc-total">₹0</span></div>
         </div>
       </div>
@@ -70,6 +71,11 @@
         document.getElementById('oc-subtotal').textContent = fmt(order.subtotal);
         document.getElementById('oc-tax').textContent = fmt(order.tax);
         document.getElementById('oc-delivery').textContent = fmt(order.deliveryFee);
+        if (order.discount > 0) {
+          document.getElementById('oc-discount-label').textContent = `Discount${order.coupon ? ` (${order.coupon})` : ''}`;
+          document.getElementById('oc-discount').textContent = '-' + fmt(order.discount);
+          document.getElementById('oc-discount-row').style.display = '';
+        }
         document.getElementById('oc-total').textContent = fmt(order.amount);
         document.getElementById('order-detail').style.display = 'block';
       } catch { /* leave the simple thank-you view */ }

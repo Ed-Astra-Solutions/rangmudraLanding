@@ -34,6 +34,7 @@
           <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="review-subtotal">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a">Tax (8%)</span><span class="h5-a" id="review-tax">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a">₹99</span></div>
+          <div class="cart-summary-row" id="review-discount-row" style="display:none;"><span class="h5-a" id="review-discount-label">Discount</span><span class="h5-a" id="review-discount">-₹0</span></div>
           <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-value" id="review-total">₹0</span></div>
         </div>
       </div>
@@ -84,22 +85,54 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { getCart, getCartTotal, clearCart } from '/js/cart.js';
-    import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
-    import { getAddresses } from '/js/data.js';
+    import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
+    const COUPON_KEY = 'rangmudra_coupon';
 
     function formatPrice(n) {
       return '₹' + Math.round(n).toLocaleString('en-IN');
     }
 
-    function renderOrderSummary() {
+    // Re-check any applied coupon against the current cart for the summary preview.
+    // The authoritative discount is recomputed by create-order before charging.
+    async function getCouponDiscount(subtotal) {
+      const code = localStorage.getItem(COUPON_KEY);
+      if (!code || subtotal <= 0) return { code: null, discount: 0 };
+      try {
+        const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, subtotal }),
+        });
+        if (!res.ok) { localStorage.removeItem(COUPON_KEY); return { code: null, discount: 0 }; }
+        const data = await res.json();
+        return { code, discount: data.discount || 0 };
+      } catch {
+        return { code, discount: 0 };
+      }
+    }
+
+    async function renderOrderSummary() {
       const cart = getCart();
       const subtotal = getCartTotal();
-      const tax = subtotal * TAX_RATE;
-      const total = subtotal + tax + DELIVERY_FEE;
+      const { code, discount } = await getCouponDiscount(subtotal);
+      const discountedSubtotal = Math.max(0, subtotal - discount);
+      const tax = Math.round(discountedSubtotal * TAX_RATE);
+      const total = discountedSubtotal + tax + DELIVERY_FEE;
+
+      const discRow = document.getElementById('review-discount-row');
+      const discEl = document.getElementById('review-discount');
+      const discLabel = document.getElementById('review-discount-label');
+      if (discount > 0) {
+        if (discLabel) discLabel.textContent = `Discount${code ? ` (${code})` : ''}`;
+        if (discEl) discEl.textContent = '-' + formatPrice(discount);
+        if (discRow) discRow.style.display = '';
+      } else if (discRow) {
+        discRow.style.display = 'none';
+      }
 
       const preview = document.getElementById('order-items-preview');
       if (preview) {
@@ -127,7 +160,7 @@
       const id = localStorage.getItem('rangmudra_delivery_address');
       if (!id) return null;
       try {
-        const addresses = await getAddresses();
+        const addresses = await getUserAddresses();
         return addresses.find(a => a.id === id) || null;
       } catch {
         return null;
@@ -155,6 +188,11 @@
 
       try {
         const address = await resolveDeliveryAddress();
+        if (!address) {
+          alert('Please choose a delivery address before paying.');
+          window.location.href = 'checkout-address.html';
+          return;
+        }
         const token = getToken();
 
         const orderRes = await fetch(apiUrl('/api/checkout/create-order'), {
@@ -163,6 +201,7 @@
           body: JSON.stringify({
             items: cart.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty || 1, price: i.price })),
             address,
+            couponCode: localStorage.getItem(COUPON_KEY) || undefined,
           }),
         });
         const order = await orderRes.json().catch(() => ({}));
@@ -188,6 +227,7 @@
               });
               if (verifyRes.ok) {
                 clearCart();
+                localStorage.removeItem(COUPON_KEY);
                 window.location.href = `order-confirmation.html?order=${encodeURIComponent(order.receipt)}`;
               } else {
                 const v = await verifyRes.json().catch(() => ({}));

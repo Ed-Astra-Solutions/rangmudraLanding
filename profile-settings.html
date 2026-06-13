@@ -28,11 +28,11 @@
       <div style="background:var(--w1);border-radius:16px;padding:32px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:24px;">
         <div class="input-wrap">
           <label class="input-label" for="s-name">Full Name</label>
-          <input type="text" id="s-name" class="input-field" placeholder="Riya Sharma" value="Riya Sharma">
+          <input type="text" id="s-name" class="input-field" placeholder="Your name" maxlength="80">
         </div>
         <div class="input-wrap">
           <label class="input-label" for="s-email">Email Address</label>
-          <input type="email" id="s-email" class="input-field" placeholder="hello@you.com">
+          <input type="email" id="s-email" class="input-field" placeholder="hello@you.com" disabled>
         </div>
         <div class="auth-modal__whatsapp-row" style="justify-content:flex-start;gap:12px;">
           <input type="checkbox" class="auth-modal__checkbox" id="s-whatsapp" checked aria-label="Receive order updates on WhatsApp">
@@ -50,14 +50,42 @@
   <div data-partial="auth-modal"></div>
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { isLoggedIn, openAuthModal } from '/js/auth.js';
-    document.addEventListener('DOMContentLoaded', () => {
+    import { isLoggedIn, openAuthModal, getUserProfile, updateUserProfile, setSessionName } from '/js/auth.js';
+    document.addEventListener('DOMContentLoaded', async () => {
       if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
-      document.getElementById('save-btn')?.addEventListener('click', () => {
-        const btn = document.getElementById('save-btn');
-        btn.textContent = '✓ Saved!';
-        btn.style.background = 'var(--ac-100)';
-        setTimeout(() => { btn.textContent = 'SAVE SETTINGS'; btn.style.background = ''; }, 2000);
+
+      const nameEl = document.getElementById('s-name');
+      const emailEl = document.getElementById('s-email');
+      const waEl = document.getElementById('s-whatsapp');
+      const nlEl = document.getElementById('s-newsletter');
+      const btn = document.getElementById('save-btn');
+
+      try {
+        const p = await getUserProfile();
+        nameEl.value = p.name || '';
+        emailEl.value = p.email || '';
+        waEl.checked = !!p.whatsapp;
+        nlEl.checked = !!p.newsletter;
+      } catch { /* leave fields blank on error */ }
+
+      btn?.addEventListener('click', async () => {
+        const original = 'SAVE SETTINGS';
+        btn.textContent = '...';
+        btn.disabled = true;
+        try {
+          const p = await updateUserProfile({
+            name: nameEl.value.trim(),
+            whatsapp: waEl.checked,
+            newsletter: nlEl.checked,
+          });
+          setSessionName(p.name || '');
+          btn.textContent = '✓ Saved!';
+          btn.style.background = 'var(--ac-100)';
+        } catch (err) {
+          btn.textContent = err.message || 'Could not save';
+          btn.style.background = '#B44';
+        }
+        setTimeout(() => { btn.textContent = original; btn.style.background = ''; btn.disabled = false; }, 2000);
       });
     });
   </script>

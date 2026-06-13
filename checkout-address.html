@@ -91,6 +91,7 @@
 
       <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Delivery Address</h2>
 
+      <p class="h5-a color-sc-l3" id="address-empty" style="display:none;margin-bottom:24px;">No saved addresses yet — add one to continue.</p>
       <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="radiogroup" aria-label="Saved addresses">
         <!-- Populated by JS -->
       </div>
@@ -106,13 +107,20 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getAddresses } from '/js/data.js';
-    const ADDRESSES = await getAddresses();
+    import { isLoggedIn, openAuthModal, getUserAddresses, addUserAddress } from '/js/auth.js';
+
+    // Checkout is a protected route — addresses are per-account.
+    if (!isLoggedIn()) openAuthModal(() => location.reload());
+
+    let ADDRESSES = [];
+    try { ADDRESSES = await getUserAddresses(); } catch { ADDRESSES = []; }
     let selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
 
     function renderAddresses() {
       const list = document.getElementById('address-list');
       if (!list) return;
+      const emptyEl = document.getElementById('address-empty');
+      if (emptyEl) emptyEl.style.display = ADDRESSES.length ? 'none' : 'block';
       list.innerHTML = ADDRESSES.map(addr => `
         <div
           class="address-card ${addr.id === selectedId ? 'selected' : ''}"
@@ -140,16 +148,50 @@
       });
     }
 
+    const newAddressWrap = document.getElementById('new-address-form');
     document.getElementById('add-address-btn')?.addEventListener('click', () => {
-      const form = document.getElementById('new-address-form');
-      if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      if (newAddressWrap) newAddressWrap.style.display = newAddressWrap.style.display === 'none' ? 'block' : 'none';
+    });
+
+    /* Save a new address to the user's account, then show + select it */
+    newAddressWrap?.querySelector('form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!isLoggedIn()) { openAuthModal(); return; }
+      const form = e.target;
+      const btn = form.querySelector('[type=submit]');
+      const label = btn.textContent;
+      const val = (id) => (form.querySelector('#' + id)?.value || '').trim();
+      const name = val('addr-name');
+      const phone = val('addr-phone');
+      const lines = [val('addr-line1'), val('addr-line2'), [val('addr-city'), val('addr-pin')].filter(Boolean).join(' ')]
+        .filter(Boolean);
+      if (phone) lines.push('Phone: ' + phone);
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        const saved = await addUserAddress({ label: 'Home', title: name || 'New address', address: lines.join('\n') });
+        ADDRESSES.push(saved);
+        selectedId = saved.id;
+        renderAddresses();
+        form.reset();
+        if (newAddressWrap) newAddressWrap.style.display = 'none';
+      } catch (err) {
+        alert('Sorry, we couldn\'t save your address. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
     });
 
     document.getElementById('proceed-btn')?.addEventListener('click', () => {
-      if (selectedId) {
-        localStorage.setItem('rangmudra_delivery_address', selectedId);
-        window.location.href = 'checkout-payment.html';
+      if (!selectedId) {
+        alert('Please add and select a delivery address to continue.');
+        const wrap = document.getElementById('new-address-form');
+        if (wrap) wrap.style.display = 'block';
+        return;
       }
+      localStorage.setItem('rangmudra_delivery_address', selectedId);
+      window.location.href = 'checkout-payment.html';
     });
 
     renderAddresses();

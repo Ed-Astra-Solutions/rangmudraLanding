@@ -18,7 +18,7 @@ function getUser() {
   try {
     const session = JSON.parse(localStorage.getItem(SESSION_KEY));
     if (!session || Date.now() >= session.expiresAt) return null;
-    return { email: session.email, token: session.token };
+    return { email: session.email, token: session.token, name: session.name || '' };
   } catch {
     return null;
   }
@@ -29,11 +29,44 @@ function getToken() {
   return u ? u.token : null;
 }
 
-function saveSession(email, token, expiresAt) {
+function saveSession(email, token, expiresAt, name) {
   const exp = expiresAt || Date.now() + (30 * 24 * 60 * 60 * 1000);
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ email, token, expiresAt: exp }));
+  const prev = (() => { try { return JSON.parse(localStorage.getItem(SESSION_KEY)) || {}; } catch { return {}; } })();
+  const nextName = name !== undefined ? name : (prev.name || '');
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ email, token, expiresAt: exp, name: nextName }));
   window.dispatchEvent(new CustomEvent('auth-changed', { detail: { loggedIn: true } }));
 }
+
+// Cache the signed-in user's display name locally so headers/profile can show it
+// without a round-trip. Keeps the rest of the session intact.
+function setSessionName(name) {
+  try {
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+    if (!session) return;
+    session.name = name || '';
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    window.dispatchEvent(new CustomEvent('auth-changed', { detail: { loggedIn: true } }));
+  } catch { /* ignore */ }
+}
+
+// Authenticated fetch helper — attaches the user token and throws on non-2xx.
+async function authFetch(path, options = {}) {
+  const token = getToken();
+  const headers = { ...(options.headers || {}) };
+  if (token) headers['x-user-token'] = token;
+  if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+  const res = await fetch(apiUrl(path), { ...options, headers });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+  return data;
+}
+
+const getUserProfile = () => authFetch('/api/user');
+const updateUserProfile = (patch) => authFetch('/api/user', { method: 'PUT', body: JSON.stringify(patch) });
+const getUserAddresses = () => authFetch('/api/user/addresses');
+const addUserAddress = (addr) => authFetch('/api/user/addresses', { method: 'POST', body: JSON.stringify(addr) });
+const updateUserAddress = (id, patch) => authFetch(`/api/user/addresses/${id}`, { method: 'PUT', body: JSON.stringify(patch) });
+const deleteUserAddress = (id) => authFetch(`/api/user/addresses/${id}`, { method: 'DELETE' });
 
 async function logout() {
   const token = getToken();
@@ -71,12 +104,11 @@ function closeAuthModal() {
 function showScreen(screen) {
   const a = document.getElementById('auth-screen-a');
   const b = document.getElementById('auth-screen-b');
+  const c = document.getElementById('auth-screen-c');
   if (!a || !b) return;
-  if (screen === 'a') {
-    a.style.display = 'block'; b.style.display = 'none';
-  } else {
-    a.style.display = 'none'; b.style.display = 'block';
-  }
+  a.style.display = screen === 'a' ? 'block' : 'none';
+  b.style.display = screen === 'b' ? 'block' : 'none';
+  if (c) c.style.display = screen === 'c' ? 'block' : 'none';
 }
 
 function validateEmail(email) {
@@ -236,15 +268,65 @@ function initAuthModal() {
 
       boxes.forEach(b => b.classList.add('success'));
       await new Promise(r => setTimeout(r, 400));
-      saveSession(data.email, data.token, data.expiresAt);
-      closeAuthModal();
-
-      const onSuccess = backdrop._onSuccess;
+      saveSession(data.email, data.token, data.expiresAt, data.name);
       verifyBtn.textContent = 'VERIFY';
       verifyBtn.disabled = false;
-      if (onSuccess) onSuccess();
-      else window.location.href = 'profile.html';
+
+      // New accounts have no name yet — collect it before finishing.
+      if (data.isNew) {
+        showScreen('c');
+        const nameInput = document.getElementById('name-input');
+        if (nameInput) { nameInput.value = ''; setTimeout(() => nameInput.focus(), 100); }
+        const nameBtn = document.getElementById('name-btn');
+        if (nameBtn) nameBtn.disabled = true;
+        return;
+      }
+
+      finishAuth();
     });
+  }
+
+  // Name screen (Screen C) — only shown for brand-new accounts.
+  const nameInput = document.getElementById('name-input');
+  const nameBtn = document.getElementById('name-btn');
+  const nameError = document.getElementById('name-error');
+  const closeC = document.getElementById('auth-close-c');
+  if (closeC) closeC.addEventListener('click', () => { finishAuth(); });
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      if (nameBtn) nameBtn.disabled = nameInput.value.trim().length < 2;
+      if (nameError) nameError.style.display = 'none';
+    });
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && nameInput.value.trim().length >= 2) nameBtn?.click();
+    });
+  }
+  if (nameBtn) {
+    nameBtn.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      if (name.length < 2) return;
+      nameBtn.textContent = '...';
+      nameBtn.disabled = true;
+      try {
+        await updateUserProfile({ name });
+        setSessionName(name);
+      } catch (err) {
+        if (nameError) { nameError.textContent = err.message; nameError.style.display = 'block'; }
+        nameBtn.textContent = 'CONTINUE';
+        nameBtn.disabled = false;
+        return;
+      }
+      nameBtn.textContent = 'CONTINUE';
+      finishAuth();
+    });
+  }
+
+  function finishAuth() {
+    // Capture the callback before closeAuthModal() clears it.
+    const onSuccess = backdrop._onSuccess;
+    closeAuthModal();
+    if (onSuccess) onSuccess();
+    else window.location.href = 'profile.html';
   }
 
   if (resendBtn) {
@@ -275,4 +357,9 @@ function initAuthModal() {
   }
 }
 
-export { isLoggedIn, getUser, getToken, saveSession, logout, openAuthModal, closeAuthModal, initAuthModal };
+export {
+  isLoggedIn, getUser, getToken, saveSession, setSessionName, logout,
+  openAuthModal, closeAuthModal, initAuthModal,
+  authFetch, getUserProfile, updateUserProfile,
+  getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress,
+};

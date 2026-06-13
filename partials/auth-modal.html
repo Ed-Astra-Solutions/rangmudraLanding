@@ -69,5 +69,32 @@
       </p>
     </div>
 
+    <!-- Screen C: Name (new accounts only) -->
+    <div id="auth-screen-c" style="display:none;">
+      <button class="auth-modal__close" id="auth-close-c" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <span class="auth-modal__wordmark">RANGMUDRA</span>
+
+      <h2 class="auth-modal__heading">Welcome to Rangmudra</h2>
+      <p class="auth-modal__subtext">What should we call you?</p>
+
+      <div class="auth-modal__email-row">
+        <input
+          type="text"
+          class="auth-modal__email-input"
+          id="name-input"
+          placeholder="Your name"
+          maxlength="80"
+          autocomplete="name"
+          aria-label="Your name"
+        >
+      </div>
+      <div class="input-error" id="name-error" style="display:none;" aria-live="polite"></div>
+
+      <button class="auth-modal__continue-btn" id="name-btn" disabled>CONTINUE</button>
+    </div>
+
   </div>
 </div>

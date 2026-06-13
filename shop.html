@@ -50,6 +50,19 @@
     <section class="section" style="padding-top:48px;">
       <div class="container">
 
+        <!-- Search -->
+        <div class="shop-search-wrap">
+          <svg class="shop-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input
+            type="search"
+            class="shop-search"
+            id="product-search"
+            placeholder="Search the collection..."
+            aria-label="Search products"
+            autocomplete="off"
+          >
+        </div>
+
         <!-- Print-type tabs — primary categories -->
         <div class="filter-pills shop-print-tabs" id="print-tabs" role="group" aria-label="Print type" style="margin-bottom:24px;">
           <button class="filter-pill active" data-print="all">ALL</button>
@@ -168,7 +181,7 @@
       });
     }
 
-    function filterProducts(category, printType, sortBy) {
+    function filterProducts(category, printType, sortBy, search) {
       let products = [...PRODUCTS];
 
       if (category && category !== 'all') {
@@ -179,6 +192,17 @@
       if (printType && printType !== 'all') {
         const map = { block: 'Block Printed', eco: 'Eco Printed' };
         products = products.filter(p => p.printType === map[printType]);
+      }
+
+      const q = (search || '').trim().toLowerCase();
+      if (q) {
+        products = products.filter(p => [
+          p.name,
+          p.description,
+          p.category,
+          p.printType,
+          ...(p.tags || []),
+        ].filter(Boolean).join(' ').toLowerCase().includes(q));
       }
 
       if (sortBy === 'price-asc') products.sort((a, b) => a.price - b.price);
@@ -192,11 +216,13 @@
     let activeCategory = urlParams.get('category') || 'all';
     let activePrintType = urlParams.get('print') || 'all';
     let activeSort = 'featured';
+    let activeSearch = urlParams.get('q') || '';
 
     function syncURL() {
       const next = new URLSearchParams();
       if (activePrintType !== 'all') next.set('print', activePrintType);
       if (activeCategory !== 'all') next.set('category', activeCategory);
+      if (activeSearch.trim()) next.set('q', activeSearch.trim());
       const qs = next.toString();
       const newURL = qs ? `${location.pathname}?${qs}` : location.pathname;
       history.replaceState(null, '', newURL);
@@ -210,17 +236,36 @@
       });
     }
 
+    const pagination = document.querySelector('.pagination');
+
     function updateGrid() {
-      const filtered = filterProducts(activeCategory, activePrintType, activeSort);
-      renderProducts(filtered);
-      document.getElementById('result-count').textContent = `${filtered.length} Products`;
+      const filtered = filterProducts(activeCategory, activePrintType, activeSort, activeSearch);
+      const grid = document.getElementById('product-grid');
+      if (!filtered.length) {
+        grid.innerHTML = `<p class="h5-a color-sc-l3" style="grid-column:1/-1;padding:48px 0;">No products match your search${activeSearch.trim() ? ` for “${activeSearch.trim()}”` : ''}.</p>`;
+      } else {
+        renderProducts(filtered);
+      }
+      if (pagination) pagination.style.display = filtered.length ? '' : 'none';
+      const count = document.getElementById('result-count');
+      if (count) count.textContent = `${filtered.length} ${filtered.length === 1 ? 'Product' : 'Products'}`;
     }
 
-    /* Pre-activate pills from URL params */
+    /* Pre-activate pills + search box from URL params */
     setActivePill(document.getElementById('print-tabs'), 'print', activePrintType);
     setActivePill(document.getElementById('category-pills'), 'filter', activeCategory);
+    const searchInput = document.getElementById('product-search');
+    if (searchInput) searchInput.value = activeSearch;
     updateGrid();
     initDropdowns();
+
+    /* Search — debounced so we don't re-render on every keystroke */
+    let searchTimer;
+    searchInput?.addEventListener('input', (e) => {
+      activeSearch = e.target.value;
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { updateGrid(); syncURL(); }, 200);
+    });
 
     initFilterPills('#category-pills', (val) => {
       activeCategory = val || 'all';

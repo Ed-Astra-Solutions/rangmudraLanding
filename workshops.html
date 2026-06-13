@@ -180,6 +180,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { getWorkshops } from '/js/data.js';
+    import { apiUrl } from '/js/config.js';
 
     const CATEGORIES = ['experience', 'corporate', 'curated'];
 
@@ -240,10 +241,39 @@
 
     openBtn?.addEventListener('click', () => openPanel());
     panelClose?.addEventListener('click', closePanel);
-    document.getElementById('enquire-form')?.addEventListener('submit', (e) => {
+    document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      closePanel();
-      alert('Enquiry sent! We\'ll get back to you within 24 hours.');
+      const form = e.target;
+      const btn = form.querySelector('[type=submit]');
+      const label = btn.textContent;
+      const sel = form.querySelector('#eq-workshop');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await fetch(apiUrl('/api/workshops/book'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('#eq-name').value,
+            email: form.querySelector('#eq-email').value,
+            phone: form.querySelector('#eq-phone').value,
+            workshopId: sel ? sel.value : '',
+            workshopTitle: sel ? sel.options[sel.selectedIndex]?.text : '',
+            groupSize: form.querySelector('#eq-group').value,
+            date: form.querySelector('#eq-date').value,
+            message: form.querySelector('#eq-message').value,
+          }),
+        });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+        closePanel();
+        form.reset();
+        alert('Enquiry sent! We\'ll get back to you within 24 hours.');
+      } catch (err) {
+        alert('Sorry, we couldn\'t send your enquiry. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
     });
 
     /* Search across all categories */

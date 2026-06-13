@@ -25,33 +25,106 @@
         </a>
         <h1 class="h3-i color-sc-100">Saved Addresses</h1>
       </div>
+      <p class="h5-a color-sc-l3" id="address-empty" style="display:none;margin-bottom:24px;">You have no saved addresses yet. Add one below.</p>
       <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="list" aria-label="Saved addresses"></div>
       <button class="btn-gold" style="margin-top:32px;display:flex;align-items:center;gap:8px;" id="add-btn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Add New Address
       </button>
+
+      <!-- Add new address form (hidden by default) -->
+      <form id="new-address-form" style="display:none;margin-top:32px;max-width:520px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="input-wrap">
+            <label class="input-label" for="addr-label">Label</label>
+            <input type="text" id="addr-label" class="input-field" placeholder="Home" maxlength="24">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label" for="addr-title">Name / Building</label>
+            <input type="text" id="addr-title" class="input-field" placeholder="Brigade Millennium" required maxlength="80">
+          </div>
+        </div>
+        <div class="input-wrap" style="margin-bottom:24px;">
+          <label class="input-label" for="addr-body">Full Address</label>
+          <textarea id="addr-body" class="input-field" rows="3" placeholder="Street, area, city, state, PIN" required maxlength="300" style="resize:vertical;"></textarea>
+        </div>
+        <div class="input-error" id="addr-error" style="display:none;margin-bottom:16px;"></div>
+        <button type="submit" class="btn-gold" id="addr-save-btn">Save Address</button>
+      </form>
     </div>
   </main>
   <div data-partial="footer"></div>
   <div data-partial="auth-modal"></div>
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { isLoggedIn, openAuthModal } from '/js/auth.js';
-    import { getAddresses } from '/js/data.js';
-    const ADDRESSES = await getAddresses();
+    import { isLoggedIn, openAuthModal, getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress } from '/js/auth.js';
+
     if (!isLoggedIn()) {
       openAuthModal(() => location.reload());
     } else {
       const list = document.getElementById('address-list');
-      if (list) {
-        list.innerHTML = ADDRESSES.map(a => `
-          <div class="address-card ${a.default ? 'selected' : ''}" role="listitem">
-            <span class="address-card__label">${a.label}</span>
-            <p class="address-card__title">${a.title}</p>
-            <p class="address-card__body">${a.address.replace(/\n/g,'<br>')}</p>
+      const emptyEl = document.getElementById('address-empty');
+      const form = document.getElementById('new-address-form');
+      const errEl = document.getElementById('addr-error');
+
+      function escapeHtml(s) {
+        return (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      }
+
+      function render(addresses) {
+        emptyEl.style.display = addresses.length ? 'none' : 'block';
+        list.innerHTML = addresses.map(a => `
+          <div class="address-card ${a.default ? 'selected' : ''}" role="listitem" data-id="${a.id}">
+            <span class="address-card__label">${escapeHtml(a.label)}</span>
+            <p class="address-card__title">${escapeHtml(a.title)}</p>
+            <p class="address-card__body">${escapeHtml(a.address).replace(/\n/g,'<br>')}</p>
+            <div style="display:flex;gap:16px;margin-top:16px;">
+              ${a.default ? '<span class="h7-a" style="color:var(--pr-100);text-transform:uppercase;letter-spacing:0.15em;">Default</span>'
+                : `<button type="button" class="h7-a addr-default" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:var(--sc-l3);text-transform:uppercase;letter-spacing:0.15em;text-decoration:underline;">Set default</button>`}
+              <button type="button" class="h7-a addr-delete" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:#B44;text-transform:uppercase;letter-spacing:0.15em;text-decoration:underline;">Remove</button>
+            </div>
           </div>
         `).join('');
+
+        list.querySelectorAll('.addr-default').forEach(b => b.addEventListener('click', async () => {
+          try { await updateUserAddress(b.dataset.id, { default: true }); reload(); } catch (e) { alert(e.message); }
+        }));
+        list.querySelectorAll('.addr-delete').forEach(b => b.addEventListener('click', async () => {
+          try { await deleteUserAddress(b.dataset.id); reload(); } catch (e) { alert(e.message); }
+        }));
       }
+
+      async function reload() {
+        try { render(await getUserAddresses()); } catch { render([]); }
+      }
+
+      document.getElementById('add-btn').addEventListener('click', () => {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errEl.style.display = 'none';
+        const btn = document.getElementById('addr-save-btn');
+        const payload = {
+          label: document.getElementById('addr-label').value.trim() || 'Home',
+          title: document.getElementById('addr-title').value.trim(),
+          address: document.getElementById('addr-body').value.trim(),
+        };
+        btn.disabled = true;
+        try {
+          await addUserAddress(payload);
+          form.reset();
+          form.style.display = 'none';
+          reload();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.style.display = 'block';
+        }
+        btn.disabled = false;
+      });
+
+      reload();
     }
   </script>
 </body>

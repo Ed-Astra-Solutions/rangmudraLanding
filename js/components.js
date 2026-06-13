@@ -36,6 +36,37 @@ async function initComponents() {
   initReveal();
   initDummyImages();
   initBreadcrumbs();
+  initNewsletter();
+}
+
+async function initNewsletter() {
+  const form = document.querySelector('.footer__newsletter-form');
+  if (!form) return;
+  const { apiUrl } = await import('./config.js');
+  // Replace the no-op onsubmit="return false" with a real handler.
+  form.removeAttribute('onsubmit');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input[type=email]');
+    const btn = form.querySelector('button[type=submit]');
+    const email = (input?.value || '').trim();
+    if (!email) return;
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetch(apiUrl('/api/newsletter'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+      form.reset();
+      if (input) { input.placeholder = '✓ Subscribed!'; }
+    } catch (err) {
+      if (input) { input.value = ''; input.placeholder = 'Try again'; }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
 }
 
 function highlightActiveNavLink() {
