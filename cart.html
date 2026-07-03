@@ -82,7 +82,7 @@
       <p class="h7-a" id="coupon-feedback" style="margin:-16px 0 16px;display:none;" aria-live="polite"></p>
 
       <div class="cart-summary-row">
-        <span class="h5-a">Discount</span>
+        <span class="h5-a" id="summary-discount-label">Discount</span>
         <span class="h5-a" id="summary-discount">-₹0</span>
       </div>
 
@@ -113,6 +113,7 @@
   <script type="module">
     import { getCart, removeFromCart, getCartTotal } from '/js/cart.js';
     import { apiUrl } from '/js/config.js';
+    import { getSale, isSaleLive, priceHTML } from '/js/sale.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
@@ -121,19 +122,43 @@
     // The currently applied coupon: { code, discount } or null. The discount is
     // re-validated server-side at checkout, so this is a preview only.
     let appliedCoupon = null;
+    // The live store-wide sale (or an inactive placeholder). Loaded on init.
+    let SALE = { live: false, percent: 0 };
 
     function formatPrice(n) {
       return '₹' + Math.round(n).toLocaleString('en-IN');
     }
 
+    // The rupee discount the store-wide sale applies to a subtotal — mirrors the
+    // server's computeSaleDiscount so this preview matches what we actually charge.
+    function saleDiscountFor(subtotal) {
+      if (!isSaleLive(SALE)) return 0;
+      let d = Math.round((subtotal * SALE.percent) / 100);
+      if (SALE.maxDiscount != null) d = Math.min(d, SALE.maxDiscount);
+      return Math.max(0, Math.min(d, subtotal));
+    }
+
     function updateSummary() {
       const subtotal = getCartTotal();
-      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const saleDiscount = saleDiscountFor(subtotal);
+      const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
+      // Best one wins — the sale and a coupon never stack. Sale takes ties.
+      const saleWins = saleDiscount >= couponDiscount;
+      const discount = Math.max(saleDiscount, couponDiscount);
+
       // Mirror the server: tax applies to the discounted subtotal.
       const discountedSubtotal = Math.max(0, subtotal - discount);
       const tax = Math.round(discountedSubtotal * TAX_RATE);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
 
+      let label = 'Discount';
+      if (discount > 0) {
+        label = saleWins
+          ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)`
+          : `Coupon (${appliedCoupon.code})`;
+      }
+
+      document.getElementById('summary-discount-label').textContent = label;
       document.getElementById('summary-total').textContent = formatPrice(subtotal);
       document.getElementById('summary-tax').textContent = formatPrice(tax);
       document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
@@ -181,7 +206,12 @@
         }
         appliedCoupon = { code: trimmed, discount: data.discount };
         localStorage.setItem(COUPON_KEY, trimmed);
-        setCouponFeedback(`Code ${trimmed} applied — you save ${formatPrice(data.discount)}`, true);
+        // Best one wins: if the live sale already beats this code, say so.
+        if (saleDiscountFor(subtotal) >= data.discount) {
+          setCouponFeedback(`Code ${trimmed} added, but your store sale saves more — we'll keep the sale price.`, true);
+        } else {
+          setCouponFeedback(`Code ${trimmed} applied — you save ${formatPrice(data.discount)}`, true);
+        }
         updateSummary();
       } catch {
         setCouponFeedback('Could not check that code. Please try again.', false);
@@ -244,7 +274,7 @@
             <button class="cart-item__size-select" aria-label="Selected size: ${item.size}">
               ${item.size} ▾
             </button>
-            <span class="cart-item__price">${formatPrice(item.price)}</span>
+            <span class="cart-item__price">${priceHTML(item.price, SALE)}</span>
             <button class="cart-item__delete" data-id="${item.id}" data-size="${item.size}" aria-label="Remove ${item.name}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
             </button>
@@ -278,12 +308,19 @@
       if (appliedCoupon) applyCoupon(appliedCoupon.code); else updateSummary();
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
+    async function init() {
+      SALE = await getSale();
       renderCart();
       updateSummary();
       initProceed();
       initCoupon();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   </script>
 </body>
 </html>

@@ -34,8 +34,10 @@
   <script type="module">
     import { isLoggedIn, openAuthModal } from '/js/auth.js';
     import { getWishlist, removeFromWishlist } from '/js/wishlist.js';
-    document.addEventListener('DOMContentLoaded', () => {
+    import { getSale, priceHTML } from '/js/sale.js';
+    document.addEventListener('DOMContentLoaded', async () => {
       if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
+      const SALE = await getSale();
       const grid = document.getElementById('wishlist-grid');
       const items = getWishlist();
       if (!items.length) {
@@ -52,7 +54,7 @@
           </div>
           <div class="shop-card__info">
             <p class="shop-card__name">${p.name}</p>
-            <p class="shop-card__price">₹${p.price?.toLocaleString('en-IN') || ''}</p>
+            <p class="shop-card__price">${p.price != null ? priceHTML(p.price, SALE) : ''}</p>
           </div>
         </a>
       `).join('');

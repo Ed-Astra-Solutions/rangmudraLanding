@@ -148,11 +148,13 @@
     import { initFilterPills } from '/js/filter-pills.js';
     import { initCarousel } from '/js/carousel.js';
     import { getProducts } from '/js/data.js';
+    import { getSale, priceHTML } from '/js/sale.js';
 
     const params = new URLSearchParams(location.search);
     const slug = params.get('slug') || 'flora-patterned-set';
 
     const PRODUCTS = await getProducts();
+    const SALE = await getSale();
     const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
 
     let selectedSize = product.sizes[0];
@@ -167,7 +169,7 @@
 
       document.getElementById('product-category').textContent = product.tags.join(' · ');
       document.getElementById('product-title').textContent = product.name;
-      document.getElementById('product-price').textContent = formatPrice(product.price);
+      document.getElementById('product-price').innerHTML = priceHTML(product.price, SALE);
       document.getElementById('product-desc').textContent = product.description;
 
       const meas = document.getElementById('product-meas');
@@ -225,7 +227,7 @@
       const mobileName = document.getElementById('mobile-product-name');
       if (mobileName) mobileName.textContent = product.name;
       const mobilePrice = document.getElementById('mobile-product-price');
-      if (mobilePrice) mobilePrice.textContent = formatPrice(product.price);
+      if (mobilePrice) mobilePrice.innerHTML = priceHTML(product.price, SALE);
 
       renderCTA();
       renderSimilarProducts();
@@ -283,11 +285,12 @@
           <div class="shop-card__img-wrap">
             <img src="${p.images[0]}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
+            ${SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''}
           </div>
           <div class="shop-card__info">
             <p class="shop-card__category">${p.tags.join(' · ')}</p>
             <h3 class="shop-card__name">${p.name}</h3>
-            <p class="shop-card__price">₹${p.price.toLocaleString('en-IN')}</p>
+            <p class="shop-card__price">${priceHTML(p.price, SALE)}</p>
           </div>
         </a>
       `).join('');

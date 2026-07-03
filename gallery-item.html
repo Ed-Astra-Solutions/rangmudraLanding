@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Gallery — Rangmudra</title>
+  <!--SEO_META-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/gallery.css">
+  <!--SEO_JSONLD-->
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <main>
+    <section class="gallery-detail">
+      <div class="container">
+
+        <a href="gallery.html" class="btn-ghost" style="margin-bottom:32px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to gallery
+        </a>
+
+        <div class="gallery-detail__grid" id="gallery-detail" hidden>
+          <div>
+            <img class="gallery-detail__img" id="detail-img" src="" alt="" width="900" height="1200">
+          </div>
+          <div>
+            <p class="h6-a color-pr-100" id="detail-tags-eyebrow" style="text-transform:uppercase;margin-bottom:16px;"></p>
+            <h1 class="h2-i gallery-detail__title" id="detail-title"></h1>
+            <p class="h5-a gallery-detail__desc" id="detail-desc"></p>
+            <div class="gallery-detail__tags" id="detail-tags"></div>
+            <a href="shop.html" class="btn-primary pill" style="height:52px;padding-inline:40px;display:inline-flex;align-items:center;">Shop the collection</a>
+          </div>
+        </div>
+
+        <div id="detail-missing" class="gallery-empty" hidden>
+          <p class="h5-a color-sc-l3">This design could not be found. <a href="gallery.html" style="color:var(--sc-100);text-decoration:underline;">Return to the gallery.</a></p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- More from the gallery -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <p class="eyebrow" style="margin-bottom:24px;">MORE FROM THE GALLERY</p>
+        <div class="gallery-masonry" data-gallery-mosaic data-limit="8"></div>
+      </div>
+    </section>
+  </main>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/gallery-item.js"></script>
+
+</body>
+</html>

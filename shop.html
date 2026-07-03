@@ -130,8 +130,10 @@
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
     import { isInCart, addToCart } from '/js/cart.js';
     import { getProducts } from '/js/data.js';
+    import { getSale, priceHTML } from '/js/sale.js';
 
     const PRODUCTS = await getProducts();
+    const SALE = await getSale();
 
     function renderProducts(products) {
       const grid = document.getElementById('product-grid');
@@ -148,6 +150,7 @@
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
             >
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
+            ${SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''}
             <button
               class="shop-card__wishlist ${isInWishlist(p.id) ? 'active' : ''}"
               data-id="${p.id}"
@@ -159,7 +162,7 @@
           <div class="shop-card__info">
             <p class="shop-card__category">${p.tags.join(' · ')}</p>
             <h2 class="shop-card__name">${p.name}</h2>
-            <p class="shop-card__price">₹${p.price.toLocaleString('en-IN')}</p>
+            <p class="shop-card__price">${priceHTML(p.price, SALE)}</p>
           </div>
         </a>
       `).join('');

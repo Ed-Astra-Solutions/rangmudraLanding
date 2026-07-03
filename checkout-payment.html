@@ -87,10 +87,20 @@
     import { getCart, getCartTotal, clearCart } from '/js/cart.js';
     import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
+    import { getSale, isSaleLive } from '/js/sale.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
     const COUPON_KEY = 'rangmudra_coupon';
+    let SALE = { live: false, percent: 0 };
+
+    // The store-wide sale discount for a subtotal — mirrors the server.
+    function saleDiscountFor(subtotal) {
+      if (!isSaleLive(SALE)) return 0;
+      let d = Math.round((subtotal * SALE.percent) / 100);
+      if (SALE.maxDiscount != null) d = Math.min(d, SALE.maxDiscount);
+      return Math.max(0, Math.min(d, subtotal));
+    }
 
     function formatPrice(n) {
       return '₹' + Math.round(n).toLocaleString('en-IN');
@@ -118,7 +128,11 @@
     async function renderOrderSummary() {
       const cart = getCart();
       const subtotal = getCartTotal();
-      const { code, discount } = await getCouponDiscount(subtotal);
+      const { code, discount: couponDiscount } = await getCouponDiscount(subtotal);
+      const saleDiscount = saleDiscountFor(subtotal);
+      // Best one wins — sale and coupon never stack; sale takes ties.
+      const saleWins = saleDiscount >= couponDiscount;
+      const discount = Math.max(saleDiscount, couponDiscount);
       const discountedSubtotal = Math.max(0, subtotal - discount);
       const tax = Math.round(discountedSubtotal * TAX_RATE);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
@@ -127,7 +141,9 @@
       const discEl = document.getElementById('review-discount');
       const discLabel = document.getElementById('review-discount-label');
       if (discount > 0) {
-        if (discLabel) discLabel.textContent = `Discount${code ? ` (${code})` : ''}`;
+        if (discLabel) discLabel.textContent = saleWins
+          ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)`
+          : `Coupon (${code})`;
         if (discEl) discEl.textContent = '-' + formatPrice(discount);
         if (discRow) discRow.style.display = '';
       } else if (discRow) {
@@ -257,7 +273,15 @@
       }
     });
 
-    document.addEventListener('DOMContentLoaded', renderOrderSummary);
+    async function initSummary() {
+      SALE = await getSale();
+      renderOrderSummary();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSummary);
+    } else {
+      initSummary();
+    }
   </script>
 </body>
 </html>

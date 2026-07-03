@@ -26,7 +26,9 @@ async function initComponents() {
   const { initReveal } = await import('./reveal.js');
   const { initDummyImages } = await import('./dummy-images.js');
   const { initBreadcrumbs } = await import('./breadcrumbs.js');
+  const { mountSaleBanner } = await import('./sale.js');
 
+  mountSaleBanner();
   initMobileMenu();
   initAuthModal();
   initOTPInput();

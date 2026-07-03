@@ -778,7 +778,7 @@
   border-radius: 20px;
   padding: 40px 32px;
   position: sticky;
-  top: calc(88px + 24px);
+  top: calc(88px + var(--banner-h, 0px) + 24px);
 }
 
 @media (max-width: 1023px) {

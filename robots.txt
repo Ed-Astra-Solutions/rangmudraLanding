@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Google image sitemap for the design gallery (served by the Express backend).
+Sitemap: https://rangmudra.com/gallery-sitemap.xml
