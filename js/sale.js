@@ -74,6 +74,37 @@ export function priceHTML(price, sale) {
          `<span class="price-now">${formatPrice(salePrice(price, sale))}</span>`;
 }
 
+// A normalized per-product discount ({type:'percent'|'flat', value}) or null.
+// Reads `.discount` off a product or cart item.
+export function productDiscount(item) {
+  const d = item && item.discount;
+  if (!d || !(Number(d.value) > 0)) return null;
+  return { type: d.type === 'flat' ? 'flat' : 'percent', value: Number(d.value) };
+}
+
+// The effective per-unit price for a product/cart item after promotions. A
+// product's OWN discount takes priority over the store-wide sale — when a
+// product is discounted, the sale is ignored for it (mirrors the server).
+export function effectivePrice(item, sale) {
+  const price = Number(item && item.price) || 0;
+  const d = productDiscount(item);
+  if (d) {
+    const cut = d.type === 'flat' ? d.value : Math.round((price * d.value) / 100);
+    return Math.max(0, price - cut);
+  }
+  return salePrice(price, sale);
+}
+
+// Inner HTML for a price element given a product/cart item. Strikes through the
+// original when any discount (product-level or store sale) applies.
+export function itemPriceHTML(item, sale) {
+  const price = Number(item && item.price) || 0;
+  const now = effectivePrice(item, sale);
+  if (now >= price) return formatPrice(price);
+  return `<span class="price-original">${formatPrice(price)}</span>` +
+         `<span class="price-now">${formatPrice(now)}</span>`;
+}
+
 // Inject the announcement strip at the very top of the page when a sale is live.
 // Sets `has-sale-banner` on <html> so the fixed header + layout offset by
 // --banner-h (see components.css). Dismissable per sale text (sessionStorage).

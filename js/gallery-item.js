@@ -27,10 +27,25 @@ async function init() {
   if (!item) { missing.hidden = false; return; }
 
   const img = document.getElementById('detail-img');
-  img.src = item.url;
-  img.alt = item.alt || item.title;
-  if (item.width) img.width = item.width;
-  if (item.height) img.height = item.height;
+  const isVideo = item.type === 'video' || /\.(mp4|webm|mov|ogg|ogv|mkv)$/i.test(item.url || '');
+  if (isVideo) {
+    // Swap the <img> placeholder for a playable <video>, keeping its styling.
+    const video = document.createElement('video');
+    video.className = img.className;
+    video.id = img.id;
+    video.src = item.url;
+    video.controls = true;
+    video.playsInline = true;
+    video.setAttribute('preload', 'metadata');
+    if (item.width) video.width = item.width;
+    if (item.height) video.height = item.height;
+    img.replaceWith(video);
+  } else {
+    img.src = item.url;
+    img.alt = item.alt || item.title;
+    if (item.width) img.width = item.width;
+    if (item.height) img.height = item.height;
+  }
 
   document.getElementById('detail-title').textContent = item.title;
   document.getElementById('detail-desc').textContent = item.description || '';

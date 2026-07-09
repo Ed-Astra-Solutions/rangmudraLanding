@@ -97,6 +97,26 @@
 }
 .gallery-tile:hover .gallery-tile__img { transform: scale(1.04); }
 
+/* Play badge for video tiles — centered over the first frame. */
+.gallery-tile__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sc-100) 62%, transparent);
+  color: var(--pr-l5);
+  font-size: 20px;
+  padding-left: 3px;
+  pointer-events: none;
+  transition: background 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gallery-tile:hover .gallery-tile__play { background: color-mix(in srgb, var(--sc-100) 80%, transparent); }
+
 .gallery-tile__cap {
   position: absolute;
   inset: auto 0 0 0;

@@ -34,7 +34,7 @@
   <script type="module">
     import { isLoggedIn, openAuthModal } from '/js/auth.js';
     import { getWishlist, removeFromWishlist } from '/js/wishlist.js';
-    import { getSale, priceHTML } from '/js/sale.js';
+    import { getSale, itemPriceHTML } from '/js/sale.js';
     document.addEventListener('DOMContentLoaded', async () => {
       if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
       const SALE = await getSale();
@@ -54,7 +54,7 @@
           </div>
           <div class="shop-card__info">
             <p class="shop-card__name">${p.name}</p>
-            <p class="shop-card__price">${p.price != null ? priceHTML(p.price, SALE) : ''}</p>
+            <p class="shop-card__price">${p.price != null ? itemPriceHTML(p, SALE) : ''}</p>
           </div>
         </a>
       `).join('');

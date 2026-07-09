@@ -16,14 +16,24 @@ function esc(s) {
 
 // Build one masonry tile. Width/height set explicit attributes so the browser
 // reserves the right aspect ratio in each column (no layout shift).
+function isVideo(item) {
+  return (item && item.type === 'video') || /\.(mp4|webm|mov|ogg|ogv|mkv)$/i.test((item && item.url) || '');
+}
+
 export function tileHTML(item) {
   const href = `gallery-item.html?id=${encodeURIComponent(item.id)}`;
   const dims = item.width && item.height ? `width="${item.width}" height="${item.height}"` : '';
   const tags = (item.tags || []).slice(0, 3).map((t) => esc(t)).join(' · ');
+  // Videos show their first frame (the #t=0.1 fragment nudges browsers to paint
+  // it) plus a play badge; the linked detail page plays them with controls.
+  const media = isVideo(item)
+    ? `<video class="gallery-tile__img" src="${esc(item.url)}#t=0.1" muted loop playsinline preload="metadata" ${dims}></video>
+       <span class="gallery-tile__play" aria-hidden="true">▶</span>`
+    : `<img class="gallery-tile__img" src="${esc(item.url)}" alt="${esc(item.alt || item.title)}"
+           loading="lazy" ${dims}>`;
   return `
     <a class="gallery-tile" href="${href}" aria-label="${esc(item.title)}">
-      <img class="gallery-tile__img" src="${esc(item.url)}" alt="${esc(item.alt || item.title)}"
-           loading="lazy" ${dims}>
+      ${media}
       <span class="gallery-tile__cap">
         <span class="gallery-tile__title">${esc(item.title)}</span>
         ${tags ? `<span class="gallery-tile__tags">${tags}</span>` : ''}

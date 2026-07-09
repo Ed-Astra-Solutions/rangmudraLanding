@@ -130,7 +130,7 @@
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
     import { isInCart, addToCart } from '/js/cart.js';
     import { getProducts } from '/js/data.js';
-    import { getSale, priceHTML } from '/js/sale.js';
+    import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
 
     const PRODUCTS = await getProducts();
     const SALE = await getSale();
@@ -150,7 +150,7 @@
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
             >
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
-            ${SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''}
+            ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
             <button
               class="shop-card__wishlist ${isInWishlist(p.id) ? 'active' : ''}"
               data-id="${p.id}"
@@ -162,7 +162,7 @@
           <div class="shop-card__info">
             <p class="shop-card__category">${p.tags.join(' · ')}</p>
             <h2 class="shop-card__name">${p.name}</h2>
-            <p class="shop-card__price">${priceHTML(p.price, SALE)}</p>
+            <p class="shop-card__price">${itemPriceHTML(p, SALE)}</p>
           </div>
         </a>
       `).join('');
@@ -175,7 +175,7 @@
           const id = btn.dataset.id;
           const product = PRODUCTS.find(p => p.id === id);
           if (!product) return;
-          const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: product.images[0] });
+          const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: product.images[0], discount: product.discount || null });
           btn.classList.toggle('active', added);
           btn.setAttribute('aria-label', added ? 'Remove from wishlist' : 'Add to wishlist');
           const icon = btn.querySelector('path');

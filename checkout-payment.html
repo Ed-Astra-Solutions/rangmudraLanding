@@ -84,10 +84,10 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getCart, getCartTotal, clearCart } from '/js/cart.js';
+    import { getCart, clearCart } from '/js/cart.js';
     import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
-    import { getSale, isSaleLive } from '/js/sale.js';
+    import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
@@ -104,6 +104,23 @@
 
     function formatPrice(n) {
       return '₹' + Math.round(n).toLocaleString('en-IN');
+    }
+
+    // Break the cart into the numbers the server uses: per-product discounts are
+    // netted into `serverSubtotal`; only items without their own discount are
+    // eligible for the store-wide sale (a product discount takes priority).
+    const NO_SALE = { live: false, percent: 0 };
+    function cartSubtotals() {
+      let listSubtotal = 0, serverSubtotal = 0, saleEligible = 0;
+      getCart().forEach((item) => {
+        const qty = item.qty || 1;
+        const list = Number(item.price) || 0;
+        const productUnit = effectivePrice(item, NO_SALE); // product discount only
+        listSubtotal += list * qty;
+        serverSubtotal += productUnit * qty;
+        if (productUnit >= list) saleEligible += list * qty;
+      });
+      return { listSubtotal, serverSubtotal, productDiscount: listSubtotal - serverSubtotal, saleEligible };
     }
 
     // Re-check any applied coupon against the current cart for the summary preview.
@@ -127,12 +144,14 @@
 
     async function renderOrderSummary() {
       const cart = getCart();
-      const subtotal = getCartTotal();
-      const { code, discount: couponDiscount } = await getCouponDiscount(subtotal);
-      const saleDiscount = saleDiscountFor(subtotal);
-      // Best one wins — sale and coupon never stack; sale takes ties.
+      const sub = cartSubtotals();
+      const { code, discount: couponDiscount } = await getCouponDiscount(sub.serverSubtotal);
+      const saleDiscount = saleDiscountFor(sub.saleEligible);
+      // Best promo wins — sale and coupon never stack; sale takes ties.
       const saleWins = saleDiscount >= couponDiscount;
-      const discount = Math.max(saleDiscount, couponDiscount);
+      const promoDiscount = Math.max(saleDiscount, couponDiscount);
+      const discount = sub.productDiscount + promoDiscount;
+      const subtotal = sub.listSubtotal;
       const discountedSubtotal = Math.max(0, subtotal - discount);
       const tax = Math.round(discountedSubtotal * TAX_RATE);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
@@ -141,9 +160,11 @@
       const discEl = document.getElementById('review-discount');
       const discLabel = document.getElementById('review-discount-label');
       if (discount > 0) {
-        if (discLabel) discLabel.textContent = saleWins
-          ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)`
-          : `Coupon (${code})`;
+        if (discLabel) discLabel.textContent = (promoDiscount > 0 && sub.productDiscount > 0)
+          ? 'Discounts'
+          : promoDiscount > 0
+            ? (saleWins ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)` : `Coupon (${code})`)
+            : 'Product discounts';
         if (discEl) discEl.textContent = '-' + formatPrice(discount);
         if (discRow) discRow.style.display = '';
       } else if (discRow) {
@@ -159,7 +180,7 @@
               <p class="h5-a color-sc-100">${item.name}</p>
               <p class="h6-a color-sc-l3" style="text-transform:uppercase;">Size: ${item.size}</p>
             </div>
-            <p class="h5-a color-sc-100">${formatPrice(item.price)}</p>
+            <p class="h5-a color-sc-100">${formatPrice(effectivePrice(item, SALE))}</p>
           </div>
         `).join('');
       }

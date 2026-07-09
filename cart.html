@@ -111,9 +111,9 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getCart, removeFromCart, getCartTotal } from '/js/cart.js';
+    import { getCart, removeFromCart } from '/js/cart.js';
     import { apiUrl } from '/js/config.js';
-    import { getSale, isSaleLive, priceHTML } from '/js/sale.js';
+    import { getSale, isSaleLive, itemPriceHTML, effectivePrice } from '/js/sale.js';
 
     const DELIVERY_FEE = 99;
     const TAX_RATE = 0.08;
@@ -138,28 +138,60 @@
       return Math.max(0, Math.min(d, subtotal));
     }
 
+    // Break the cart into the numbers the server uses. Per-product discounts are
+    // netted into `serverSubtotal`; only items WITHOUT their own discount are
+    // eligible for the store-wide sale (a product discount takes priority).
+    const NO_SALE = { live: false, percent: 0 };
+    function cartSubtotals() {
+      const cart = getCart();
+      let listSubtotal = 0, serverSubtotal = 0, saleEligible = 0;
+      cart.forEach((item) => {
+        const qty = item.qty || 1;
+        const list = Number(item.price) || 0;
+        const productUnit = effectivePrice(item, NO_SALE); // product discount only
+        listSubtotal += list * qty;
+        serverSubtotal += productUnit * qty;
+        if (productUnit >= list) saleEligible += list * qty; // no own discount
+      });
+      return {
+        listSubtotal,
+        serverSubtotal,
+        productDiscount: listSubtotal - serverSubtotal,
+        saleEligible,
+      };
+    }
+
     function updateSummary() {
-      const subtotal = getCartTotal();
-      const saleDiscount = saleDiscountFor(subtotal);
+      const sub = cartSubtotals();
+      // Store-wide sale only touches items without their own discount; a coupon
+      // is checked against the product-discounted subtotal. Best promo wins —
+      // the sale and a coupon never stack. Sale takes ties.
+      const saleDiscount = saleDiscountFor(sub.saleEligible);
       const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
-      // Best one wins — the sale and a coupon never stack. Sale takes ties.
       const saleWins = saleDiscount >= couponDiscount;
-      const discount = Math.max(saleDiscount, couponDiscount);
+      const promoDiscount = Math.max(saleDiscount, couponDiscount);
+      // Per-product discounts + the winning promo (product discounts never
+      // compete with promos — they apply to different items / order-wide).
+      const discount = sub.productDiscount + promoDiscount;
 
       // Mirror the server: tax applies to the discounted subtotal.
-      const discountedSubtotal = Math.max(0, subtotal - discount);
+      const discountedSubtotal = Math.max(0, sub.listSubtotal - discount);
       const tax = Math.round(discountedSubtotal * TAX_RATE);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
 
       let label = 'Discount';
-      if (discount > 0) {
+      if (promoDiscount > 0 && sub.productDiscount > 0) {
+        label = 'Discounts';
+      } else if (promoDiscount > 0) {
         label = saleWins
           ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)`
           : `Coupon (${appliedCoupon.code})`;
+      } else if (sub.productDiscount > 0) {
+        label = 'Product discounts';
       }
 
       document.getElementById('summary-discount-label').textContent = label;
-      document.getElementById('summary-total').textContent = formatPrice(subtotal);
+      document.getElementById('summary-total').textContent = formatPrice(sub.listSubtotal);
       document.getElementById('summary-tax').textContent = formatPrice(tax);
       document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
       document.getElementById('summary-discount').textContent = '-' + formatPrice(discount);
@@ -188,7 +220,9 @@
     async function applyCoupon(code) {
       const trimmed = (code || '').trim().toUpperCase();
       if (!trimmed) { clearCoupon(); return; }
-      const subtotal = getCartTotal();
+      // Validate against the product-discounted subtotal — matches what the
+      // server uses when it recomputes the coupon at checkout.
+      const subtotal = cartSubtotals().serverSubtotal;
       if (subtotal <= 0) { setCouponFeedback('Add items to your cart first', false); return; }
       try {
         const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
@@ -274,7 +308,7 @@
             <button class="cart-item__size-select" aria-label="Selected size: ${item.size}">
               ${item.size} ▾
             </button>
-            <span class="cart-item__price">${priceHTML(item.price, SALE)}</span>
+            <span class="cart-item__price">${itemPriceHTML(item, SALE)}</span>
             <button class="cart-item__delete" data-id="${item.id}" data-size="${item.size}" aria-label="Remove ${item.name}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
             </button>
