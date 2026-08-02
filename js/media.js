@@ -55,15 +55,6 @@ export function primaryImage(entity, legacyKey = 'images') {
   return first ? first.url : '';
 }
 
-// Inline style carrying the primary photo's framing, for card templates whose
-// image is built as a markup string. Keeps a card's crop consistent with how the
-// same photo is framed on the detail page.
-export function coverStyle(entity, legacyKey = 'images') {
-  const first = entityMedia(entity, legacyKey).find((m) => m.type === 'image');
-  if (!first) return '';
-  return `object-fit:${first.fit};object-position:${first.position};`;
-}
-
 function escapeAttr(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -94,6 +85,14 @@ export function mediaHTML(raw, opts = {}) {
 export function applyMedia(el, raw, opts = {}) {
   const m = normalizeMedia(raw);
   if (!el || !m) return el;
+  // Product and workshop imagery is never auto-cropped: the caller passes
+  // fit:'contain' so the whole photo is shown, letterboxed by the CSS backdrop.
+  // A stored `position` still means something under 'contain' (it aligns the
+  // letterboxed image), so it is only discarded when the caller's override is
+  // what changed the fit — a focal point chosen for a crop is meaningless once
+  // nothing is being cropped.
+  const fit = opts.fit || m.fit;
+  const fitOverridden = !!opts.fit && opts.fit !== m.fit;
   const wantVideo = m.type === 'video';
   const isVideo = el.tagName === 'VIDEO';
   let target = el;
@@ -128,7 +127,7 @@ export function applyMedia(el, raw, opts = {}) {
     el.replaceWith(target);
   }
   target.src = m.url;
-  target.style.objectFit = m.fit;
-  target.style.objectPosition = m.position;
+  target.style.objectFit = fit;
+  target.style.objectPosition = fitOverridden ? '50% 50%' : m.position;
   return target;
 }

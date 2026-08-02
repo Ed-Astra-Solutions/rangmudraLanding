@@ -121,7 +121,7 @@
   <script type="module">
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
-    import { primaryImage, coverStyle } from '/js/media.js';
+    import { primaryImage } from '/js/media.js';
 
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'experience';
@@ -169,7 +169,6 @@
                 src="${primaryImage(w, 'image')}"
                 alt="${w.title} workshop"
                 class="workshop-card__image"
-                style="${coverStyle(w, 'image')}"
                 loading="lazy"
                 width="520" height="650"
                 onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"

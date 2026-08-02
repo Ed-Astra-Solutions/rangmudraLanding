@@ -131,7 +131,7 @@
     import { isInCart, addToCart } from '/js/cart.js';
     import { getProducts } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
-    import { primaryImage, coverStyle } from '/js/media.js';
+    import { primaryImage } from '/js/media.js';
 
     const PRODUCTS = await getProducts();
     const SALE = await getSale();
@@ -146,7 +146,6 @@
               src="${primaryImage(p)}"
               alt="${p.name} — ${p.description}"
               class="shop-card__image"
-              style="${coverStyle(p)}"
               loading="lazy"
               width="400" height="500"
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"

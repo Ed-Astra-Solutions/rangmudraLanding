@@ -70,7 +70,8 @@
           id="workshop-banner-img"
           src="/images/uploads/wshop-corporate-block.jpg"
           alt="Workshop environment"
-          style="width:100%;max-height:400px;object-fit:cover;border-radius:8px;margin-bottom:80px;"
+          class="detail-banner"
+          style="margin-bottom:80px;"
           loading="lazy"
           width="1280" height="400"
         >
@@ -209,8 +210,11 @@
     // workshop with several uploads doesn't show the same shot twice.
     const media = entityMedia(workshop, 'image');
     if (media.length) {
+      // The hero is a full-bleed decorative band, not the workshop's photo — it
+      // keeps its stored fit, since letterboxing a viewport-wide band would leave
+      // enormous bars. The banner below shows the whole image.
       applyMedia(document.getElementById('workshop-hero-img'), media[0], { controls: false });
-      applyMedia(document.getElementById('workshop-banner-img'), media[1] || media[0]);
+      applyMedia(document.getElementById('workshop-banner-img'), media[1] || media[0], { fit: 'contain' });
     }
 
     // Mosaic wall (corporate workshops use this for past-session photos).

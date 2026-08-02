@@ -192,14 +192,14 @@
       let mainEl = document.getElementById('main-product-img');
       if (mainEl && MEDIA.length) {
         mainEl.alt = `${product.name} — block-printed artisanal piece`;
-        mainEl = applyMedia(mainEl, MEDIA[0], { controls: true });
+        mainEl = applyMedia(mainEl, MEDIA[0], { controls: true, fit: 'contain' });
       }
 
       const thumbContainer = document.getElementById('thumbnails');
       if (thumbContainer && MEDIA.length > 1) {
         thumbContainer.innerHTML = MEDIA.map((m, i) => `
           <button class="product-gallery__thumb ${i === 0 ? 'active' : ''}" aria-label="View ${m.type === 'video' ? 'video' : 'image'} ${i + 1}" role="listitem">
-            ${mediaHTML(m, {
+            ${mediaHTML({ ...m, fit: 'contain' }, {
               alt: `${product.name} view ${i + 1}`, width: 80, height: 80, controls: false,
             })}
             ${m.type === 'video' ? '<span class="product-gallery__thumb-play" aria-hidden="true">▶</span>' : ''}
@@ -209,7 +209,7 @@
           btn.addEventListener('click', () => {
             thumbContainer.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            mainEl = applyMedia(mainEl, MEDIA[i], { controls: true });
+            mainEl = applyMedia(mainEl, MEDIA[i], { controls: true, fit: 'contain' });
           });
         });
       }
@@ -291,7 +291,7 @@
       track.innerHTML = similar.map(p => `
         <a href="product.html?slug=${p.slug}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
           <div class="shop-card__img-wrap">
-            <img src="${primaryImage(p)}" alt="${p.name}" class="shop-card__image" style="${coverStyle(p)}" loading="lazy" width="300" height="375">
+            <img src="${primaryImage(p)}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
             ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
           </div>

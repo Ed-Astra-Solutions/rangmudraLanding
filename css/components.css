@@ -2757,3 +2757,29 @@ main {
 @media (prefers-reduced-motion: reduce) {
   .media-mosaic__tile:hover .media-mosaic__media { transform: none; }
 }
+
+/* ---------- Uncropped merchandise imagery ---------- */
+/* Product and workshop photography is shown whole: the frame keeps its shape,
+   and whatever the photo doesn't fill is left as clean white space rather than
+   cropping the piece. Applies to listing cards and to the detail views.
+   Full-bleed decorative bands (page heroes, section backdrops) are unaffected —
+   those still fill their band, framed from the admin panel. */
+.shop-card__image,
+.workshop-card__image,
+.detail-banner {
+  object-fit: contain;
+  background: var(--w1);
+}
+
+.detail-banner {
+  width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+}
+
+/* The hover zoom would push a letterboxed photo past its white field and reveal
+   the crop we just removed, so cards lift instead of scaling. */
+.shop-card:hover .shop-card__image,
+.workshop-card:hover .workshop-card__image {
+  transform: none;
+}

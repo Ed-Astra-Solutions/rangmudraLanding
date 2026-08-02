@@ -181,7 +181,7 @@
   <script type="module">
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
-    import { primaryImage, coverStyle } from '/js/media.js';
+    import { primaryImage } from '/js/media.js';
 
     const CATEGORIES = ['experience', 'corporate', 'curated'];
 
@@ -198,7 +198,6 @@
               src="${primaryImage(w, 'image')}"
               alt="${w.title} workshop"
               class="shop-card__image"
-              style="${coverStyle(w, 'image')}"
               loading="lazy"
               width="400" height="500"
               onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"
