@@ -149,6 +149,7 @@
     import { initCarousel } from '/js/carousel.js';
     import { getProducts } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
+    import { entityMedia, primaryImage, mediaHTML, applyMedia } from '/js/media.js';
 
     const params = new URLSearchParams(location.search);
     const slug = params.get('slug') || 'flora-patterned-set';
@@ -156,6 +157,10 @@
     const PRODUCTS = await getProducts();
     const SALE = await getSale();
     const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
+
+    /* Full gallery (photos + videos) and the single still used for the cart. */
+    const MEDIA = entityMedia(product);
+    const COVER = primaryImage(product);
 
     let selectedSize = product.sizes[0];
 
@@ -182,26 +187,29 @@
         featList.innerHTML = product.features.map(f => `<li style="margin-bottom:8px;">${f}</li>`).join('');
       }
 
-      /* Main image */
-      const mainImg = document.getElementById('main-product-img');
-      if (mainImg) {
-        mainImg.src = product.images[0];
-        mainImg.alt = `${product.name} — block-printed artisanal piece`;
+      /* Gallery — an ordered mix of photos and videos. The main stage swaps
+         between <img> and <video> as the selected entry's type changes. */
+      let mainEl = document.getElementById('main-product-img');
+      if (mainEl && MEDIA.length) {
+        mainEl.alt = `${product.name} — block-printed artisanal piece`;
+        mainEl = applyMedia(mainEl, MEDIA[0], { controls: true });
       }
 
-      /* Thumbnails */
       const thumbContainer = document.getElementById('thumbnails');
-      if (thumbContainer) {
-        thumbContainer.innerHTML = product.images.map((img, i) => `
-          <button class="product-gallery__thumb ${i === 0 ? 'active' : ''}" aria-label="View image ${i+1}" role="listitem">
-            <img src="${img}" alt="${product.name} view ${i+1}" loading="lazy" width="80" height="80">
+      if (thumbContainer && MEDIA.length > 1) {
+        thumbContainer.innerHTML = MEDIA.map((m, i) => `
+          <button class="product-gallery__thumb ${i === 0 ? 'active' : ''}" aria-label="View ${m.type === 'video' ? 'video' : 'image'} ${i + 1}" role="listitem">
+            ${mediaHTML(m, {
+              alt: `${product.name} view ${i + 1}`, width: 80, height: 80, controls: false,
+            })}
+            ${m.type === 'video' ? '<span class="product-gallery__thumb-play" aria-hidden="true">▶</span>' : ''}
           </button>
         `).join('');
         thumbContainer.querySelectorAll('.product-gallery__thumb').forEach((btn, i) => {
           btn.addEventListener('click', () => {
             thumbContainer.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            if (mainImg) { mainImg.src = product.images[i]; }
+            mainEl = applyMedia(mainEl, MEDIA[i], { controls: true });
           });
         });
       }
@@ -261,7 +269,7 @@
           </button>
         `;
         document.getElementById('add-to-cart-btn')?.addEventListener('click', () => {
-          addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: product.images[0], discount: product.discount || null });
+          addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null });
           renderCTA();
         });
       }
@@ -272,7 +280,7 @@
         mobileBtn.textContent = inCart ? 'GO TO CART' : 'ADD TO CART';
         mobileBtn.onclick = inCart
           ? () => window.location.href = 'cart.html'
-          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: product.images[0], discount: product.discount || null }); renderCTA(); };
+          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null }); renderCTA(); };
       }
     }
 
@@ -283,7 +291,7 @@
       track.innerHTML = similar.map(p => `
         <a href="product.html?slug=${p.slug}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
           <div class="shop-card__img-wrap">
-            <img src="${p.images[0]}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
+            <img src="${primaryImage(p)}" alt="${p.name}" class="shop-card__image" style="${coverStyle(p)}" loading="lazy" width="300" height="375">
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
             ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
           </div>

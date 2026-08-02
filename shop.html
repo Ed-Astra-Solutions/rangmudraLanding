@@ -131,6 +131,7 @@
     import { isInCart, addToCart } from '/js/cart.js';
     import { getProducts } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
+    import { primaryImage, coverStyle } from '/js/media.js';
 
     const PRODUCTS = await getProducts();
     const SALE = await getSale();
@@ -142,9 +143,10 @@
         <a href="product.html?slug=${p.slug}" class="shop-card" data-product-id="${p.id}">
           <div class="shop-card__img-wrap">
             <img
-              src="${p.images[0]}"
+              src="${primaryImage(p)}"
               alt="${p.name} — ${p.description}"
               class="shop-card__image"
+              style="${coverStyle(p)}"
               loading="lazy"
               width="400" height="500"
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
@@ -175,7 +177,7 @@
           const id = btn.dataset.id;
           const product = PRODUCTS.find(p => p.id === id);
           if (!product) return;
-          const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: product.images[0], discount: product.discount || null });
+          const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: primaryImage(product), discount: product.discount || null });
           btn.classList.toggle('active', added);
           btn.setAttribute('aria-label', added ? 'Remove from wishlist' : 'Add to wishlist');
           const icon = btn.querySelector('path');

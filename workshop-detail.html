@@ -87,6 +87,13 @@
           </div>
         </div>
 
+        <!-- Photo/video wall — rendered from the workshop's gallery, hidden when empty -->
+        <section id="workshop-gallery-section" style="margin-bottom:80px;" hidden>
+          <p class="eyebrow">THE GALLERY</p>
+          <h4 class="h3-i color-sc-100" style="margin-bottom:32px;">Moments from past sessions</h4>
+          <div id="workshop-gallery"></div>
+        </section>
+
         <!-- Tertiary image + play -->
         <div style="position:relative;margin-bottom:64px;">
           <img
@@ -129,6 +136,8 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { getWorkshops } from '/js/data.js';
+    import { entityMedia, applyMedia } from '/js/media.js';
+    import { renderMediaMosaic } from '/js/media-mosaic.js';
 
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'corporate';
@@ -195,12 +204,18 @@
       document.getElementById('includes-section').style.gridTemplateColumns = '1fr';
     }
 
-    if (workshop.image) {
-      const heroImg = document.getElementById('workshop-hero-img');
-      const bannerImg = document.getElementById('workshop-banner-img');
-      if (heroImg) heroImg.src = workshop.image;
-      if (bannerImg) bannerImg.src = workshop.image;
+    // Hero + banner are driven by the workshop's media reel: the first entry
+    // heads the page, the second (when there is one) fills the banner so a
+    // workshop with several uploads doesn't show the same shot twice.
+    const media = entityMedia(workshop, 'image');
+    if (media.length) {
+      applyMedia(document.getElementById('workshop-hero-img'), media[0], { controls: false });
+      applyMedia(document.getElementById('workshop-banner-img'), media[1] || media[0]);
     }
+
+    // Mosaic wall (corporate workshops use this for past-session photos).
+    const mosaicCount = renderMediaMosaic(document.getElementById('workshop-gallery'), workshop.gallery);
+    document.getElementById('workshop-gallery-section').hidden = mosaicCount === 0;
 
     document.getElementById('book-cta')?.addEventListener('click', (e) => {
       e.preventDefault();

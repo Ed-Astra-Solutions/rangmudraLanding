@@ -2639,3 +2639,121 @@ main {
     transform: none;
   }
 }
+
+/* ---------- Media mosaic (§workshop photo walls) ---------- */
+/* A dense grid: tiles carry their own span so a flat list of uploads reads as a
+   composed wall. Row height is fixed so spans translate to real proportions. */
+.media-mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 180px;
+  grid-auto-flow: dense;
+  gap: 16px;
+}
+.media-mosaic__tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--pr-l2);
+  cursor: zoom-in;
+}
+.media-mosaic__media {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.media-mosaic__tile:hover .media-mosaic__media { transform: scale(1.03); }
+.media-mosaic__play {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--pr-l5);
+  color: var(--sc-100);
+  font-size: 13px;
+}
+
+@media (max-width: 1023px) {
+  .media-mosaic { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 150px; }
+}
+@media (max-width: 767px) {
+  /* Two columns and a uniform span — a mosaic rhythm reads as noise this narrow. */
+  .media-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; gap: 12px; }
+  .media-mosaic__tile { grid-column: span 1 !important; grid-row: span 1 !important; }
+}
+
+/* ---------- Media lightbox ---------- */
+.media-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  background: rgba(44, 26, 16, 0.9);
+}
+.media-lightbox[hidden] { display: none; }
+.media-lightbox__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+}
+.media-lightbox__media {
+  max-width: 100%;
+  max-height: calc(100vh - 80px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+.media-lightbox__close,
+.media-lightbox__nav {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(236, 227, 215, 0.4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pr-l5);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.media-lightbox__close { position: absolute; top: 24px; right: 24px; font-size: 24px; }
+.media-lightbox__close:hover,
+.media-lightbox__nav:hover { background: rgba(236, 227, 215, 0.15); }
+.media-lightbox__nav[hidden] { display: none; }
+
+@media (max-width: 767px) {
+  .media-lightbox { padding: 16px; gap: 8px; }
+  .media-lightbox__close, .media-lightbox__nav { width: 40px; height: 40px; }
+}
+
+/* Play badge on a product gallery thumbnail that holds a video */
+.product-gallery__thumb { position: relative; }
+.product-gallery__thumb-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--w1);
+  font-size: 14px;
+  text-shadow: 0 1px 4px rgba(44, 26, 16, 0.6);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-mosaic__tile:hover .media-mosaic__media { transform: none; }
+}
