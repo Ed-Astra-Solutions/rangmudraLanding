@@ -4,6 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workshops — Rangmudra</title>
+  <meta name="description" content="Explore Rangmudra block printing and eco printing workshops by category.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/workshop-category.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Workshops — Rangmudra">
+  <meta property="og:description" content="Browse Rangmudra block printing and eco printing workshops by category.">
+  <meta property="og:url" content="https://rangmudra.com/workshop-category.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <meta property="og:image:alt" content="Workshops — Rangmudra">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Workshops — Rangmudra">
+  <meta name="twitter:description" content="Browse Rangmudra block printing and eco printing workshops by category.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
@@ -53,6 +76,10 @@
           >
           <button class="btn-primary" id="category-pill" style="white-space:nowrap;">
             WORKSHOP CATEGORY
+          </button>
+          <button class="btn-primary" id="open-enquire-btn" style="white-space:nowrap;display:flex;align-items:center;gap:8px;" aria-label="Open enquiry form">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            ENQUIRE NOW
           </button>
         </div>
 
@@ -217,6 +244,10 @@
     function closePanel() { panel?.classList.remove('open'); document.body.style.overflow = ''; }
 
     panelClose?.addEventListener('click', closePanel);
+    document.getElementById('open-enquire-btn')?.addEventListener('click', () => openPanel());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
+    });
     document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;

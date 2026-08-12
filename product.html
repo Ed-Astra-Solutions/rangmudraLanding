@@ -5,6 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product — Rangmudra</title>
   <meta name="description" content="Hand block-printed artisanal product from Rangmudra.">
+  <!--SEO_DEFAULTS_START-->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/product.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Rangmudra">
+  <meta property="og:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
+  <meta property="og:url" content="https://rangmudra.com/product.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <meta property="og:image:alt" content="Rangmudra">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rangmudra">
+  <meta name="twitter:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <!--SEO_DEFAULTS_END-->
+
+  <!--SEO_META-->
+  <!--SEO_JSONLD-->
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
@@ -245,6 +272,30 @@
       const area = document.getElementById('cta-area');
       if (!area) return;
       const inCart = isInCart(product.id, selectedSize);
+
+      /* Sold-out items stay browsable but must not be addable — the checkout
+         rejects them server-side, so letting one into the cart only surfaces
+         the problem at payment time. */
+      const soldOut = product.available === false;
+      const chip = document.getElementById('availability-chip');
+      if (chip) {
+        chip.textContent = soldOut ? 'SOLD OUT' : 'AVAILABLE';
+        chip.classList.toggle('available-chip--sold-out', soldOut);
+      }
+
+      if (soldOut) {
+        area.innerHTML = `
+          <button class="btn-add-to-cart" disabled aria-disabled="true">SOLD OUT</button>
+          <p class="h6-a color-sc-l3" style="margin-top:12px;text-align:center;">This piece is currently unavailable. <a href="enquire.html" style="text-decoration:underline;">Enquire about a restock</a>.</p>
+        `;
+        const mobileSoldOut = document.getElementById('mobile-add-btn');
+        if (mobileSoldOut) {
+          mobileSoldOut.textContent = 'SOLD OUT';
+          mobileSoldOut.disabled = true;
+          mobileSoldOut.onclick = null;
+        }
+        return;
+      }
 
       if (inCart) {
         area.innerHTML = `

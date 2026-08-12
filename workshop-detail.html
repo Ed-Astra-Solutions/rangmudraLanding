@@ -4,6 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workshop Detail — Rangmudra</title>
+  <meta name="description" content="Workshop details, inclusions and booking for a Rangmudra hands-on printing session.">
+  <!--SEO_DEFAULTS_START-->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/workshop-detail.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Rangmudra Workshops">
+  <meta property="og:description" content="Hands-on block printing and eco printing workshops in Bangalore.">
+  <meta property="og:url" content="https://rangmudra.com/workshop-detail.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <meta property="og:image:alt" content="Rangmudra Workshops">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rangmudra Workshops">
+  <meta name="twitter:description" content="Hands-on block printing and eco printing workshops in Bangalore.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <!--SEO_DEFAULTS_END-->
+
+  <!--SEO_META-->
+  <!--SEO_JSONLD-->
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
@@ -131,12 +159,55 @@
 
   </main>
 
+  <!-- Enquire side panel — same form as the workshops landing and category pages,
+       opened by the BOOK NOW bar with this workshop preselected. -->
+  <div class="enquire-panel" id="enquire-panel" role="dialog" aria-modal="true" aria-labelledby="enquire-panel-title">
+    <button class="enquire-panel__close" id="enquire-panel-close" aria-label="Close enquiry form">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 class="h3-i color-sc-100" id="enquire-panel-title" style="margin-bottom:32px;">Reach out to us</h2>
+    <form id="enquire-form">
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-name">Name</label>
+        <input type="text" id="eq-name" class="input-field" placeholder="Your name" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-email">Email</label>
+        <input type="email" id="eq-email" class="input-field" placeholder="hello@you.com" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-phone">Phone</label>
+        <input type="tel" id="eq-phone" class="input-field" placeholder="+91 98765 43210">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-group">Group Size</label>
+        <input type="number" id="eq-group" class="input-field" placeholder="Number of people" min="1">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-date">Preferred Date</label>
+        <input type="date" id="eq-date" class="input-field">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-workshop">Workshop</label>
+        <select id="eq-workshop" class="input-field" style="cursor:pointer;appearance:auto;">
+          <option value="">Select a workshop...</option>
+        </select>
+      </div>
+      <div class="input-wrap" style="margin-bottom:32px;">
+        <label class="input-label" for="eq-message">Message</label>
+        <textarea id="eq-message" class="textarea-field" placeholder="Tell us more about your requirements..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary full-width">Submit</button>
+    </form>
+  </div>
+
   <div data-partial="footer"></div>
   <div data-partial="auth-modal"></div>
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { getWorkshops } from '/js/data.js';
+    import { apiUrl } from '/js/config.js';
     import { entityMedia, applyMedia } from '/js/media.js';
     import { renderMediaMosaic } from '/js/media-mosaic.js';
 
@@ -221,9 +292,73 @@
     const mosaicCount = renderMediaMosaic(document.getElementById('workshop-gallery'), workshop.gallery);
     document.getElementById('workshop-gallery-section').hidden = mosaicCount === 0;
 
+    /* Enquire panel — BOOK NOW opens the same booking form the landing and
+       category pages use, with this workshop already chosen. */
+    const panel = document.getElementById('enquire-panel');
+    const workshopSelect = document.getElementById('eq-workshop');
+
+    WORKSHOPS.forEach((w) => {
+      const opt = document.createElement('option');
+      opt.value = w.id;
+      opt.textContent = w.title;
+      workshopSelect?.appendChild(opt);
+    });
+    if (workshopSelect) workshopSelect.value = workshop.id;
+
+    function openPanel() {
+      panel?.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('eq-name')?.focus();
+    }
+    function closePanel() {
+      panel?.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     document.getElementById('book-cta')?.addEventListener('click', (e) => {
       e.preventDefault();
-      alert('Booking flow coming soon! Please enquire via the Enquire page.');
+      openPanel();
+    });
+    document.getElementById('enquire-panel-close')?.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
+    });
+
+    document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('[type=submit]');
+      const label = btn.textContent;
+      const sel = form.querySelector('#eq-workshop');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await fetch(apiUrl('/api/workshops/book'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('#eq-name').value,
+            email: form.querySelector('#eq-email').value,
+            phone: form.querySelector('#eq-phone').value,
+            workshopId: sel ? sel.value : workshop.id,
+            workshopTitle: sel ? sel.options[sel.selectedIndex]?.text : workshop.title,
+            groupSize: form.querySelector('#eq-group').value,
+            date: form.querySelector('#eq-date').value,
+            message: form.querySelector('#eq-message').value,
+          }),
+        });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+        closePanel();
+        form.reset();
+        // The form resets to the blank option — put this workshop back.
+        if (sel) sel.value = workshop.id;
+        alert('Booking sent! We\'ll confirm the details within 24 hours.');
+      } catch (err) {
+        alert('Sorry, we couldn\'t send your booking. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
     });
 
     /* Responsive */

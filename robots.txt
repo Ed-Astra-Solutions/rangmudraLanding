@@ -1,5 +1,21 @@
 User-agent: *
 Allow: /
 
-# Google image sitemap for the design gallery (served by the Express backend).
+# Transactional and account pages hold nothing useful to a search index, and
+# crawling them just burns budget on states a bot can never reach.
+Disallow: /cart.html
+Disallow: /checkout-address.html
+Disallow: /checkout-payment.html
+Disallow: /order-confirmation.html
+Disallow: /profile.html
+Disallow: /profile-addresses.html
+Disallow: /profile-orders.html
+Disallow: /profile-settings.html
+Disallow: /profile-wishlist.html
+Disallow: /components-test.html
+Disallow: /admin/
+
+# Full site sitemap (static pages + products + workshops + posts).
+Sitemap: https://rangmudra.com/sitemap.xml
+# Google image sitemap for the design gallery.
 Sitemap: https://rangmudra.com/gallery-sitemap.xml

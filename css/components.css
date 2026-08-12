@@ -324,6 +324,16 @@
   border-bottom: 1px solid rgba(236, 227, 215, 0.2);
 }
 
+/* Brand mark above the footer wordmark. Rounded so the logo's cream plate
+   reads as an intentional tile against the chocolate footer. */
+.footer__logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
 .footer__wordmark {
   font-family: var(--font-italiana);
   font-size: 32px;
@@ -1219,8 +1229,14 @@
               transform var(--dur-micro) var(--ease-standard);
 }
 
-.btn-add-to-cart:hover { background: var(--sc-l1); }
-.btn-add-to-cart:active { transform: scale(0.99); }
+.btn-add-to-cart:hover:not(:disabled) { background: var(--sc-l1); }
+.btn-add-to-cart:active:not(:disabled) { transform: scale(0.99); }
+
+.btn-add-to-cart:disabled {
+  background: var(--sc-l4x);
+  color: rgba(236, 227, 215, 0.6);
+  cursor: not-allowed;
+}
 
 /* Go to Cart CTA (§5.8c) */
 .btn-go-to-cart {
@@ -1516,12 +1532,12 @@
   transition: background var(--dur-micro) var(--ease-standard);
 }
 
-/* Invisible 32px hit area around each 8px dot — keeps the visual unchanged
-   while making the dot comfortably tappable on touch screens. */
+/* Invisible 44px hit area around each 8px dot — keeps the visual unchanged
+   while meeting the 44px minimum tap target (spec §6.4). */
 .carousel__dot::after {
   content: "";
   position: absolute;
-  inset: -12px;
+  inset: -18px;
 }
 
 .carousel__dot.active { background: var(--sc-100); }
@@ -1734,6 +1750,15 @@
   background: transparent;
   border: none;
   cursor: pointer;
+}
+
+/* Brand moment at the top of the auth modal (spec §4.11). */
+.auth-modal__logo {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  margin: 0 auto 12px;
 }
 
 .auth-modal__wordmark {
@@ -1990,9 +2015,65 @@
               color var(--dur-micro) var(--ease-standard);
 }
 
-.pagination__btn:hover { background: rgba(44, 26, 16, 0.08); }
+.pagination__btn:hover:not(:disabled) { background: rgba(44, 26, 16, 0.08); }
 .pagination__btn.active { background: var(--sc-100); color: var(--pr-l5); }
 .pagination__btn.prev-next { width: auto; padding-inline: 16px; gap: 8px; }
+
+.pagination__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* The … standing in for a run of skipped page numbers. */
+.pagination__gap {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--sc-l3);
+  user-select: none;
+}
+
+/* Mobile collapses the numbered pager to "← 2 / 6 →" (spec §6.3). */
+.pagination__mobile {
+  display: none;
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.15em;
+  color: var(--sc-100);
+  padding-inline: 12px;
+}
+
+@media (max-width: 767px) {
+  .pagination__btn:not(.prev-next),
+  .pagination__gap { display: none; }
+  .pagination__mobile { display: inline-flex; }
+}
+
+/* Sold-out products stay browsable but are clearly marked and never buyable. */
+.shop-card--sold-out .shop-card__image { opacity: 0.55; }
+
+.shop-card__soldout {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--sc-100);
+  color: var(--pr-l5);
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 24px;
+  border-radius: 999px;
+  z-index: 3;
+}
 
 /* ─── Breadcrumb ──────────────────────────────────────────────────────────── */
 
@@ -2203,7 +2284,55 @@
   letter-spacing: 0.15em;
   border-radius: 20px;
   border: none;
+  /* A read-only chip, not a control — the size is chosen on the product page. */
+  cursor: default;
+}
+
+/* Quantity stepper — the only place a shopper can change how many they want. */
+.cart-qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--sc-100);
+  border-radius: 20px;
+  padding: 2px;
+}
+
+.cart-qty__btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  color: var(--sc-100);
+  font-family: var(--font-archivo);
+  font-size: 18px;
+  line-height: 1;
   cursor: pointer;
+  transition: background var(--dur-micro) var(--ease-standard);
+}
+
+.cart-qty__btn:hover:not(:disabled) { background: rgba(44, 26, 16, 0.08); }
+.cart-qty__btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.cart-qty__value {
+  min-width: 24px;
+  text-align: center;
+  font-family: var(--font-archivo);
+  font-size: 16px;
+  letter-spacing: 0.15em;
+  color: var(--sc-100);
+}
+
+/* "× 3" beside the unit price, so a multi-unit line can't read as a single. */
+.cart-item__line-total {
+  font-family: var(--font-archivo);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  color: var(--sc-l3);
 }
 
 .cart-item__price {
@@ -2782,4 +2911,98 @@ main {
 .shop-card:hover .shop-card__image,
 .workshop-card:hover .workshop-card__image {
   transform: none;
+}
+
+/* ─── Mobile tap targets (spec §6.4) ──────────────────────────────────────── */
+/*
+ * Everything tappable needs ~44x44 on touch. These rules only widen the hit
+ * area — type sizes, colours and the visual rhythm are untouched, so the
+ * desktop design is unaffected.
+ */
+@media (max-width: 767px) {
+  /* Footer nav + policy links sit at 10–12px type, measuring ~30–34px tall. */
+  .footer__link,
+  .footer__legal-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Newsletter signup row. */
+  .footer__newsletter-input,
+  #newsletter-email,
+  .footer__newsletter-btn {
+    min-height: 44px;
+  }
+
+  .footer__newsletter-btn { min-width: 44px; }
+
+  /* Header wordmark is a wide but short link. */
+  .header__wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Product size chips, image zoom, and the translucent Back pill. */
+  .size-chip,
+  .btn-ghost {
+    min-height: 44px;
+  }
+
+  /* Cart line: thumbnail + title on the first row, controls wrapped onto a
+     second. The single desktop row (image · info · size · qty · price · bin)
+     is far too wide for a phone and would scroll the page sideways. */
+  .cart-item {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .cart-item__image { width: 72px; height: 72px; }
+
+  .cart-item__info { flex: 1 1 auto; min-width: 0; }
+
+  .cart-item__controls {
+    flex: 1 0 100%;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cart-item__price { font-size: 24px; line-height: 32px; }
+
+  .product-gallery__zoom {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Product detail tabs. */
+  .product-tab {
+    min-height: 44px;
+    padding-block: 10px;
+  }
+
+  /* Gallery tag chips. */
+  .gallery-chip { min-height: 44px; }
+
+  /* Small inline "Edit" / "Add new address" style text buttons. */
+  .profile-header__edit,
+  #add-address-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Checkbox rows: the 20px box keeps its look, the label carries the target
+     (it is a <label for>, so tapping it toggles the box). */
+  .auth-modal__whatsapp-row {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .auth-modal__whatsapp-row label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }

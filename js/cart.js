@@ -70,6 +70,9 @@ function updateCartBadge() {
 }
 
 window.addEventListener('cart-updated', updateCartBadge);
+// The header is fetch-injected by components.js, which finishes AFTER
+// DOMContentLoaded — so this pass usually finds no badge yet. components.js
+// calls updateCartBadge() again once the partials are in place.
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 
-export { getCart, addToCart, removeFromCart, updateQty, clearCart, getCartTotal, getCartCount, isInCart };
+export { getCart, addToCart, removeFromCart, updateQty, clearCart, getCartTotal, getCartCount, isInCart, updateCartBadge };

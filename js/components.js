@@ -27,6 +27,11 @@ async function initComponents() {
   const { initDummyImages } = await import('./dummy-images.js');
   const { initBreadcrumbs } = await import('./breadcrumbs.js');
   const { mountSaleBanner } = await import('./sale.js');
+  const { updateCartBadge } = await import('./cart.js');
+
+  /* The header only exists now that the partial is injected, so this is the
+     first point at which the cart badge can show a real count. */
+  updateCartBadge();
 
   mountSaleBanner();
   initMobileMenu();

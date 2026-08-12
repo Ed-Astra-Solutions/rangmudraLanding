@@ -25,6 +25,74 @@ export async function getData(resource) {
 }
 
 export const getProducts = () => getData('products');
+
+// Server-side search / filter / sort / pagination for the shop grid.
+// Mirrors getGallery: hits the API first and replicates the same logic against
+// the static snapshot when there's no backend (GitHub Pages hosting).
+const PRODUCT_CATEGORIES = {
+  mens: "Men's Wear",
+  womens: "Women's Wear",
+  decor: 'Home Decor',
+  accessories: 'Accessories',
+};
+const PRODUCT_PRINT_TYPES = { block: 'Block Printed', eco: 'Eco Printed' };
+
+// Keep in step with the server's discountedUnitPrice so both sides sort alike.
+function effectiveUnitPrice(p) {
+  const price = Math.max(0, Number(p && p.price) || 0);
+  const d = p && p.discount;
+  if (!d || !d.value) return price;
+  const cut = d.type === 'flat' ? Number(d.value) : Math.round((price * Number(d.value)) / 100);
+  return Math.max(0, price - cut);
+}
+
+export async function getProductsPage({
+  q = '', category = 'all', print = 'all', sort = 'featured', page = 1, pageSize = 12,
+} = {}) {
+  const params = new URLSearchParams();
+  if (q.trim()) params.set('q', q.trim());
+  if (category && category !== 'all') params.set('category', category);
+  if (print && print !== 'all') params.set('print', print);
+  params.set('sort', sort);
+  params.set('page', String(page));
+  params.set('pageSize', String(pageSize));
+  try {
+    const res = await fetch(apiUrl(`/api/products?${params.toString()}`), { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      // A backend predating this endpoint still answers with a bare array —
+      // fall through to the local path rather than rendering nothing.
+      if (data && Array.isArray(data.items)) return data;
+    }
+  } catch (_) {
+    // API unreachable — fall through to the static snapshot.
+  }
+
+  const all = await getProducts();
+  let items = all;
+  const cat = PRODUCT_CATEGORIES[category];
+  if (cat) items = items.filter((p) => p.category === cat);
+  const pt = PRODUCT_PRINT_TYPES[print];
+  if (pt) items = items.filter((p) => p.printType === pt);
+  const ql = q.trim().toLowerCase();
+  if (ql) {
+    items = items.filter((p) => [p.name, p.description, p.category, p.printType, ...(p.tags || [])]
+      .filter(Boolean).join(' ').toLowerCase().includes(ql));
+  }
+  items = [...items].sort((a, b) => {
+    if ((a.available !== false) !== (b.available !== false)) return a.available === false ? 1 : -1;
+    if (sort === 'price-asc') return effectiveUnitPrice(a) - effectiveUnitPrice(b);
+    if (sort === 'price-desc') return effectiveUnitPrice(b) - effectiveUnitPrice(a);
+    if (sort === 'newest') return String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
+    if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
+    return String(a.name || '').localeCompare(String(b.name || ''));
+  });
+  const total = items.length;
+  const pages = Math.max(Math.ceil(total / pageSize), 1);
+  const safePage = Math.min(Math.max(page, 1), pages);
+  const start = (safePage - 1) * pageSize;
+  return { items: items.slice(start, start + pageSize), total, page: safePage, pageSize, pages };
+}
 export const getWorkshops = () => getData('workshops');
 export const getBlogs = () => getData('blogs');
 export const getAddresses = () => getData('addresses');

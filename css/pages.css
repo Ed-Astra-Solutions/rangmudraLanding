@@ -661,6 +661,11 @@
   margin-bottom: 24px;
 }
 
+.available-chip--sold-out {
+  background: var(--sc-l4x);
+  color: var(--w1);
+}
+
 .product-tabs {
   display: flex;
   gap: 32px;

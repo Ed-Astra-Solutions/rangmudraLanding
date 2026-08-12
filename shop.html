@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Collection — Rangmudra</title>
   <meta name="description" content="Each piece hand-printed on natural fabrics with wooden blocks and plant-based dyes.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/shop.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="The Collection — Rangmudra">
+  <meta property="og:description" content="Hand block-printed and eco-printed apparel, sarees, dupattas and home décor, made on natural fabrics with plant-based dyes.">
+  <meta property="og:url" content="https://rangmudra.com/shop.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/wshop-corporate-block.jpg">
+  <meta property="og:image:alt" content="The Collection — Rangmudra">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Collection — Rangmudra">
+  <meta name="twitter:description" content="Hand block-printed and eco-printed apparel, sarees, dupattas and home décor, made on natural fabrics with plant-based dyes.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/wshop-corporate-block.jpg">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
@@ -102,17 +124,8 @@
           <!-- Populated by JS -->
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination" style="margin-top:64px;" role="navigation" aria-label="Product pages">
-          <button class="pagination__btn prev-next" id="prev-page" aria-label="Previous page">← Previous</button>
-          <button class="pagination__btn active" aria-current="page">1</button>
-          <button class="pagination__btn">2</button>
-          <button class="pagination__btn">3</button>
-          <span class="pagination__btn" style="border:none;cursor:default;" aria-hidden="true">…</span>
-          <button class="pagination__btn">5</button>
-          <button class="pagination__btn">6</button>
-          <button class="pagination__btn prev-next" id="next-page" aria-label="Next page">Next →</button>
-        </div>
+        <!-- Pagination — rendered by JS from the server's page metadata -->
+        <nav class="pagination" id="pagination" style="margin-top:64px;" aria-label="Product pages" hidden></nav>
 
       </div>
     </section>
@@ -129,18 +142,21 @@
     import { initFilterPills } from '/js/filter-pills.js';
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
     import { isInCart, addToCart } from '/js/cart.js';
-    import { getProducts } from '/js/data.js';
+    import { getProductsPage } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
     import { primaryImage } from '/js/media.js';
 
-    const PRODUCTS = await getProducts();
     const SALE = await getSale();
+    const PAGE_SIZE = 12;
+    /* The products on screen right now — the wishlist buttons look up here
+       instead of a full catalogue, since we only ever hold one page. */
+    let pageItems = [];
 
     function renderProducts(products) {
       const grid = document.getElementById('product-grid');
       if (!grid) return;
       grid.innerHTML = products.map(p => `
-        <a href="product.html?slug=${p.slug}" class="shop-card" data-product-id="${p.id}">
+        <a href="product.html?slug=${p.slug}" class="shop-card${p.available === false ? ' shop-card--sold-out' : ''}" data-product-id="${p.id}">
           <div class="shop-card__img-wrap">
             <img
               src="${primaryImage(p)}"
@@ -150,6 +166,7 @@
               width="400" height="500"
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
             >
+            ${p.available === false ? `<span class="shop-card__soldout">Sold out</span>` : ''}
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
             ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
             <button
@@ -174,7 +191,7 @@
           e.preventDefault();
           e.stopPropagation();
           const id = btn.dataset.id;
-          const product = PRODUCTS.find(p => p.id === id);
+          const product = pageItems.find(p => p.id === id);
           if (!product) return;
           const added = toggleWishlist({ id: product.id, name: product.name, price: product.price, image: primaryImage(product), discount: product.discount || null });
           btn.classList.toggle('active', added);
@@ -185,48 +202,20 @@
       });
     }
 
-    function filterProducts(category, printType, sortBy, search) {
-      let products = [...PRODUCTS];
-
-      if (category && category !== 'all') {
-        const map = { mens: "Men's Wear", womens: "Women's Wear", decor: "Home Decor", accessories: "Accessories" };
-        products = products.filter(p => p.category === map[category]);
-      }
-
-      if (printType && printType !== 'all') {
-        const map = { block: 'Block Printed', eco: 'Eco Printed' };
-        products = products.filter(p => p.printType === map[printType]);
-      }
-
-      const q = (search || '').trim().toLowerCase();
-      if (q) {
-        products = products.filter(p => [
-          p.name,
-          p.description,
-          p.category,
-          p.printType,
-          ...(p.tags || []),
-        ].filter(Boolean).join(' ').toLowerCase().includes(q));
-      }
-
-      if (sortBy === 'price-asc') products.sort((a, b) => a.price - b.price);
-      if (sortBy === 'price-desc') products.sort((a, b) => b.price - a.price);
-      if (sortBy === 'featured') products.sort((a, b) => b.featured - a.featured);
-
-      return products;
-    }
-
     const urlParams = new URLSearchParams(location.search);
     let activeCategory = urlParams.get('category') || 'all';
     let activePrintType = urlParams.get('print') || 'all';
-    let activeSort = 'featured';
+    let activeSort = urlParams.get('sort') || 'featured';
     let activeSearch = urlParams.get('q') || '';
+    let activePage = Math.max(parseInt(urlParams.get('page'), 10) || 1, 1);
 
     function syncURL() {
       const next = new URLSearchParams();
       if (activePrintType !== 'all') next.set('print', activePrintType);
       if (activeCategory !== 'all') next.set('category', activeCategory);
       if (activeSearch.trim()) next.set('q', activeSearch.trim());
+      if (activeSort !== 'featured') next.set('sort', activeSort);
+      if (activePage > 1) next.set('page', String(activePage));
       const qs = next.toString();
       const newURL = qs ? `${location.pathname}?${qs}` : location.pathname;
       history.replaceState(null, '', newURL);
@@ -240,50 +229,152 @@
       });
     }
 
-    const pagination = document.querySelector('.pagination');
+    const pagination = document.getElementById('pagination');
+    const grid = document.getElementById('product-grid');
+    const count = document.getElementById('result-count');
 
-    function updateGrid() {
-      const filtered = filterProducts(activeCategory, activePrintType, activeSort, activeSearch);
-      const grid = document.getElementById('product-grid');
-      if (!filtered.length) {
+    /* The page numbers to show: always first + last, plus a window around the
+       current page, with … standing in for the gaps. */
+    function pageWindow(current, pages) {
+      const nums = new Set([1, pages, current, current - 1, current + 1]);
+      const list = [...nums].filter(n => n >= 1 && n <= pages).sort((a, b) => a - b);
+      const out = [];
+      list.forEach((n, i) => {
+        if (i && n - list[i - 1] > 1) out.push('…');
+        out.push(n);
+      });
+      return out;
+    }
+
+    function renderPagination({ page, pages, total }) {
+      /* One page of results needs no pager — this is what used to render as a
+         hardcoded 1..6 regardless of how many products existed. */
+      if (pages <= 1) { pagination.hidden = true; pagination.innerHTML = ''; return; }
+      pagination.hidden = false;
+      pagination.innerHTML = `
+        <button class="pagination__btn prev-next" data-page="${page - 1}" ${page <= 1 ? 'disabled' : ''} aria-label="Previous page">← Previous</button>
+        <span class="pagination__mobile" aria-hidden="true">${page} / ${pages}</span>
+        ${pageWindow(page, pages).map(n => n === '…'
+          ? `<span class="pagination__gap" aria-hidden="true">…</span>`
+          : `<button class="pagination__btn${n === page ? ' active' : ''}" data-page="${n}" ${n === page ? 'aria-current="page"' : ''} aria-label="Page ${n}">${n}</button>`
+        ).join('')}
+        <button class="pagination__btn prev-next" data-page="${page + 1}" ${page >= pages ? 'disabled' : ''} aria-label="Next page">Next →</button>
+      `;
+      pagination.setAttribute('aria-label', `Product pages, page ${page} of ${pages} (${total} products)`);
+    }
+
+    let requestSeq = 0;
+
+    async function updateGrid({ scroll = false } = {}) {
+      const seq = ++requestSeq;
+      grid.setAttribute('aria-busy', 'true');
+      let data;
+      try {
+        data = await getProductsPage({
+          q: activeSearch, category: activeCategory, print: activePrintType,
+          sort: activeSort, page: activePage, pageSize: PAGE_SIZE,
+        });
+      } catch (_) {
+        if (seq !== requestSeq) return;
+        grid.setAttribute('aria-busy', 'false');
+        grid.innerHTML = `<p class="h5-a color-sc-l3" style="grid-column:1/-1;padding:48px 0;">We couldn't load the collection just now. Please refresh to try again.</p>`;
+        pagination.hidden = true;
+        return;
+      }
+      /* A slower earlier request must not overwrite a newer one's results. */
+      if (seq !== requestSeq) return;
+      grid.setAttribute('aria-busy', 'false');
+
+      pageItems = data.items;
+      /* The server clamps the page when filters shrink the result set. */
+      activePage = data.page;
+
+      if (!data.total) {
         grid.innerHTML = `<p class="h5-a color-sc-l3" style="grid-column:1/-1;padding:48px 0;">No products match your search${activeSearch.trim() ? ` for “${activeSearch.trim()}”` : ''}.</p>`;
       } else {
-        renderProducts(filtered);
+        renderProducts(data.items);
       }
-      if (pagination) pagination.style.display = filtered.length ? '' : 'none';
-      const count = document.getElementById('result-count');
-      if (count) count.textContent = `${filtered.length} ${filtered.length === 1 ? 'Product' : 'Products'}`;
+      renderPagination(data);
+
+      if (count) {
+        const shownFrom = (data.page - 1) * data.pageSize + 1;
+        const shownTo = shownFrom + data.items.length - 1;
+        count.textContent = !data.total
+          ? 'No products'
+          : data.pages > 1
+            ? `Showing ${shownFrom}–${shownTo} of ${data.total} Products`
+            : `${data.total} ${data.total === 1 ? 'Product' : 'Products'}`;
+      }
+
+      if (scroll) {
+        document.querySelector('.shop-toolbar')?.scrollIntoView({
+          behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      }
     }
+
+    /* Any filter/search/sort change invalidates the current page number. */
+    function resetToFirstPage() { activePage = 1; }
 
     /* Pre-activate pills + search box from URL params */
     setActivePill(document.getElementById('print-tabs'), 'print', activePrintType);
     setActivePill(document.getElementById('category-pills'), 'filter', activeCategory);
     const searchInput = document.getElementById('product-search');
     if (searchInput) searchInput.value = activeSearch;
+    /* Reflect a sort carried in on the URL in the dropdown's label */
+    const sortDropdown = document.getElementById('sort-dropdown');
+    if (activeSort !== 'featured') {
+      const opt = sortDropdown?.querySelector(`.dropdown__option[data-value="${activeSort}"]`);
+      if (opt) {
+        sortDropdown.querySelectorAll('.dropdown__option').forEach(o => o.classList.toggle('active', o === opt));
+        const label = sortDropdown.querySelector('[data-label]');
+        if (label) label.textContent = opt.textContent;
+      } else {
+        activeSort = 'featured';
+      }
+    }
     updateGrid();
     initDropdowns();
 
-    /* Search — debounced so we don't re-render on every keystroke */
+    pagination.addEventListener('click', (e) => {
+      const btn = e.target.closest('.pagination__btn');
+      if (!btn || btn.disabled) return;
+      const next = parseInt(btn.dataset.page, 10);
+      if (!next || next === activePage) return;
+      activePage = next;
+      updateGrid({ scroll: true });
+      syncURL();
+    });
+
+    /* Search — debounced so we don't hit the API on every keystroke */
     let searchTimer;
     searchInput?.addEventListener('input', (e) => {
       activeSearch = e.target.value;
       clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => { updateGrid(); syncURL(); }, 200);
+      searchTimer = setTimeout(() => { resetToFirstPage(); updateGrid(); syncURL(); }, 250);
     });
 
     initFilterPills('#category-pills', (val) => {
       activeCategory = val || 'all';
+      resetToFirstPage();
       updateGrid();
       syncURL();
     });
 
     initFilterPills('#print-tabs', (val) => {
       activePrintType = val || 'all';
+      resetToFirstPage();
       updateGrid();
       syncURL();
     }, 'print');
 
-    document.getElementById('sort-dropdown')?.addEventListener('dropdown-select', (e) => { activeSort = e.detail.value; updateGrid(); });
+    sortDropdown?.addEventListener('dropdown-select', (e) => {
+      activeSort = e.detail.value;
+      resetToFirstPage();
+      updateGrid();
+      syncURL();
+    });
   </script>
 </body>
 </html>
