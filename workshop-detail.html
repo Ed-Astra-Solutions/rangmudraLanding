@@ -121,19 +121,25 @@
           <div id="workshop-gallery"></div>
         </section>
 
-        <!-- Tertiary image + play -->
-        <div style="position:relative;margin-bottom:64px;">
+        <!-- Feature media + PLAY NOW. Filled from the workshop's own reel by the
+             script below (a video when one was uploaded, otherwise a spare
+             photo) and hidden when there is nothing left to show. -->
+        <div id="workshop-feature" style="position:relative;margin-bottom:64px;" hidden>
           <img
-            src="/images/uploads/wshop-eco-print.jpg"
-            alt="Artisan holding a carved block over fabric"
-            style="width:100%;max-height:480px;object-fit:cover;border-radius:8px;"
+            id="workshop-feature-media"
+            class="workshop-feature__media"
+            src=""
+            alt="Moment from the workshop"
             loading="lazy"
             width="1280" height="480"
           >
           <button
+            type="button"
+            id="workshop-play-btn"
             class="btn-primary pill"
             style="position:absolute;bottom:32px;left:32px;display:flex;align-items:center;gap:8px;"
             aria-label="Play workshop video"
+            hidden
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             PLAY NOW
@@ -207,7 +213,7 @@
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
     import { entityMedia, applyMedia } from '/js/media.js';
-    import { renderMediaMosaic } from '/js/media-mosaic.js';
+    import { renderMediaMosaic, openMediaLightbox } from '/js/media-mosaic.js';
 
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'corporate';
@@ -284,6 +290,28 @@
       // enormous bars. The banner below shows the whole image.
       applyMedia(document.getElementById('workshop-hero-img'), media[0], { controls: false });
       applyMedia(document.getElementById('workshop-banner-img'), media[1] || media[0], { fit: 'contain' });
+    }
+
+    // Feature block: the PLAY NOW panel. It shows the first uploaded video that
+    // the hero and banner above haven't already taken, and the button opens it
+    // with sound in the shared lightbox. With no spare video it falls back to a
+    // spare photo (button hidden), and with neither the block is dropped — the
+    // slot used to hold a hard-coded stock photo behind a dead button.
+    const usedUrls = new Set(media.slice(0, 2).map((m) => m.url));
+    const spare = media.filter((m) => !usedUrls.has(m.url));
+    const feature = spare.find((m) => m.type === 'video') || spare.find((m) => m.type === 'image');
+    if (feature) {
+      applyMedia(document.getElementById('workshop-feature-media'), feature, {
+        fit: 'contain',
+        // Silent, looping preview behind the button — PLAY NOW is the player.
+        controls: feature.type !== 'video',
+      });
+      document.getElementById('workshop-feature').hidden = false;
+      const playBtn = document.getElementById('workshop-play-btn');
+      if (feature.type === 'video') {
+        playBtn.hidden = false;
+        playBtn.addEventListener('click', () => openMediaLightbox([feature]));
+      }
     }
 
     // Mosaic wall (corporate workshops use this for past-session photos).

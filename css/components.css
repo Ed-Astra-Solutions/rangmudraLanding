@@ -2951,6 +2951,17 @@ main {
   border-radius: 8px;
 }
 
+/* Feature panel on the workshop detail page (the PLAY NOW block). A class, not
+   inline styles: the slot swaps <img>→<video> when the workshop's reel has a
+   video, and that swap rebuilds the element without its authored style attr. */
+.workshop-feature__media {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  border-radius: 8px;
+  background: var(--w1);
+}
+
 /* The hover zoom would push a letterboxed photo past its white field and reveal
    the crop we just removed, so cards lift instead of scaling. */
 .shop-card:hover .shop-card__image,

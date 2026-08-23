@@ -55,6 +55,13 @@ function ensureLightbox() {
   return lightbox;
 }
 
+// Exported so a page with a single feature video (the workshop PLAY NOW block)
+// can open the same viewer instead of rolling its own.
+export function openMediaLightbox(raw, startIndex = 0) {
+  const items = normalizeMediaList(raw);
+  if (items.length) openLightbox(items, Math.min(startIndex, items.length - 1));
+}
+
 function openLightbox(items, startIndex) {
   const box = ensureLightbox();
   const stage = box.querySelector('.media-lightbox__stage');

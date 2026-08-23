@@ -24,12 +24,16 @@ export function normalizeMedia(raw) {
   const o = typeof raw === 'string' ? { url: raw } : raw;
   const url = String(o.url || '').trim();
   if (!url) return null;
+  const aspect = Number(o.aspect);
   return {
     url,
     type: o.type === 'video' || (!o.type && isVideoUrl(url)) ? 'video' : 'image',
     fit: o.fit === 'contain' ? 'contain' : 'cover',
     position: o.position || '50% 50%',
     alt: o.alt || '',
+    // Width ÷ height, set only on slots that let the admin choose a shape
+    // (the homepage testimonials panel). null = use the page's own CSS ratio.
+    aspect: Number.isFinite(aspect) && aspect > 0 ? aspect : null,
   };
 }
 
@@ -71,8 +75,12 @@ export function mediaHTML(raw, opts = {}) {
   const style = `object-fit:${m.fit};object-position:${m.position};`;
   const dims = `${width ? ` width="${width}"` : ''}${height ? ` height="${height}"` : ''}`;
   if (m.type === 'video') {
+    // Only a decorative (loop/autoplay) player is force-muted — browsers block
+    // unmuted autoplay. A player with controls keeps its sound, or pressing play
+    // would give the viewer a silent video with no obvious way to fix it.
+    const silent = loop || !controls;
     return `<video class="${escapeAttr(className)}" src="${escapeAttr(m.url)}" style="${style}"${dims}`
-      + `${controls ? ' controls' : ''}${loop ? ' loop autoplay muted' : ''} playsinline muted`
+      + `${controls ? ' controls' : ''}${loop ? ' loop autoplay' : ''}${silent ? ' muted' : ''} playsinline`
       + ` preload="${eager ? 'auto' : 'metadata'}"></video>`;
   }
   return `<img class="${escapeAttr(className)}" src="${escapeAttr(m.url)}" alt="${escapeAttr(m.alt || alt)}"`
@@ -112,8 +120,10 @@ export function applyMedia(el, raw, opts = {}) {
     if (wantVideo) {
       target.controls = opts.controls !== false;
       target.playsInline = true;
-      target.muted = true;
       target.preload = 'metadata';
+      // Muted only where it is required for autoplay (see mediaHTML above) — a
+      // player the viewer presses play on should have sound.
+      target.muted = opts.controls === false;
       // A slot with no controls is decorative (a hero band, a section image), so
       // it behaves like a moving photograph rather than a player.
       if (opts.controls === false) {

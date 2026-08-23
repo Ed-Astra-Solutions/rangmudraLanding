@@ -33,7 +33,11 @@ import { normalizeMedia, applyMedia } from '/js/media.js';
 
   document.querySelectorAll('[data-section]').forEach((el) => {
     const m = resolve(el.getAttribute('data-section'));
-    if (m) applyMedia(el, m, { controls: false });
+    if (!m) return;
+    const target = applyMedia(el, m, { controls: false });
+    // Slots that offer a choice of shapes carry the chosen one; the page's CSS
+    // ratio is the default for every slot that doesn't.
+    if (m.aspect) target.style.aspectRatio = String(m.aspect);
   });
 
   // A background slot can't host a <video>, so a video-backed slot gets a muted
