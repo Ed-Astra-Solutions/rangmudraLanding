@@ -80,12 +80,13 @@ async function logout() {
   window.location.href = 'index.html';
 }
 
-function openAuthModal(onSuccess) {
+function openAuthModal(onSuccess, onCancel) {
   const backdrop = document.getElementById('auth-modal-backdrop');
   if (!backdrop) return;
   backdrop.classList.add('open');
   document.body.style.overflow = 'hidden';
   if (onSuccess) backdrop._onSuccess = onSuccess;
+  if (onCancel) backdrop._onCancel = onCancel;
   showScreen('a');
 
   const emailInput = document.getElementById('email-input');
@@ -97,8 +98,35 @@ function closeAuthModal() {
   if (!backdrop) return;
   backdrop.classList.remove('open');
   document.body.style.overflow = '';
+  // finishAuth() clears _onCancel first, so this only fires when the visitor
+  // dismissed the modal without signing in.
+  const onCancel = backdrop._onCancel;
   backdrop._onSuccess = null;
+  backdrop._onCancel = null;
   showScreen('a');
+  if (onCancel) onCancel();
+}
+
+// The auth modal is injected as a partial after this module loads, so anything
+// that wants to open it on page load has to wait for that markup to land.
+function whenAuthModalReady() {
+  if (document.getElementById('auth-modal-backdrop')) return Promise.resolve();
+  return new Promise(resolve => {
+    window.addEventListener('auth-modal-ready', () => resolve(), { once: true });
+  });
+}
+
+/* Gate an action behind a signed-in session. Runs onSuccess straight away when
+   the visitor is already signed in; otherwise opens the modal and runs it once
+   they verify. onCancel fires if they dismiss the modal instead. */
+async function requireAuth({ onSuccess, onCancel } = {}) {
+  if (isLoggedIn()) {
+    if (onSuccess) onSuccess();
+    return true;
+  }
+  await whenAuthModalReady();
+  openAuthModal(onSuccess, onCancel);
+  return false;
 }
 
 function showScreen(screen) {
@@ -322,8 +350,10 @@ function initAuthModal() {
   }
 
   function finishAuth() {
-    // Capture the callback before closeAuthModal() clears it.
+    // Capture the callback before closeAuthModal() clears it, and drop the
+    // cancel handler so closing the modal doesn't read as a dismissal.
     const onSuccess = backdrop._onSuccess;
+    backdrop._onCancel = null;
     closeAuthModal();
     if (onSuccess) onSuccess();
     else window.location.href = 'profile.html';
@@ -359,7 +389,7 @@ function initAuthModal() {
 
 export {
   isLoggedIn, getUser, getToken, saveSession, setSessionName, logout,
-  openAuthModal, closeAuthModal, initAuthModal,
+  openAuthModal, closeAuthModal, initAuthModal, requireAuth,
   authFetch, getUserProfile, updateUserProfile,
   getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress,
 };

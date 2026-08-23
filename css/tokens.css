@@ -1,6 +1,22 @@
 /* tokens.css — Design tokens and typography utility classes */
 
-@import url('https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap');
+/* Maiandra Black, self-hosted. Registered across the whole weight range so the
+   black cut answers every font-weight the type classes ask for (they all set
+   400) — there is no lighter cut in the family on purpose. */
+@font-face {
+  font-family: 'Maiandra Black';
+  src: url('/fonts/maiandra-black.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Maiandra Black';
+  src: url('/fonts/maiandra-black-italic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
 
 :root {
   /* Primary (tan / gold) */
@@ -38,9 +54,13 @@
   /* Error (TBD — temporary) */
   --error: #B44444;
 
-  /* Typography families */
-  --font-italiana: 'Italiana', serif;
-  --font-archivo:  'Archivo', sans-serif;
+  /* Typography families.
+     Both roles are Maiandra Black — the token names are kept as-is because the
+     whole stylesheet and the spec in CLAUDE.md reference them. The fallbacks
+     are what actually renders the rupee sign, arrows and check marks, which
+     Maiandra Black has no glyphs for. */
+  --font-italiana: 'Maiandra Black', Helvetica, Arial, sans-serif;
+  --font-archivo:  'Maiandra Black', Helvetica, Arial, sans-serif;
 
   /* Layout */
   --max-content: 1280px;

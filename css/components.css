@@ -1142,6 +1142,11 @@
 }
 
 .btn-proceed:hover { background: var(--pr-b3); }
+.btn-proceed:disabled,
+.btn-proceed[disabled] {
+  background: var(--sc-l4x);
+  cursor: not-allowed;
+}
 
 /* Back button */
 .btn-back {
@@ -2261,6 +2266,30 @@
   line-height: 32px;
   letter-spacing: 0.02em;
   color: var(--sc-100);
+}
+
+/* A line whose piece sold out while it sat in the cart — one unit per piece, so
+   someone else's payment can clear it at any moment. Muted, not hidden: the
+   shopper has to see it to remove it, and checkout stays blocked until they do. */
+.cart-item--sold-out {
+  border-color: var(--sc-l4x);
+  opacity: 0.6;
+}
+
+.cart-item--sold-out .cart-item__image {
+  filter: grayscale(1);
+}
+
+.cart-item__soldout {
+  text-transform: uppercase;
+  color: var(--sc-l3);
+  margin-top: 4px;
+}
+
+.cart-stock-note {
+  color: var(--sc-l3);
+  text-align: center;
+  margin-bottom: 12px;
 }
 
 .cart-item__controls {

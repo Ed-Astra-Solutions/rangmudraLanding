@@ -9,9 +9,7 @@
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/components.css">
@@ -50,7 +48,7 @@
             </div>
             <div class="input-wrap">
               <label class="input-label" for="addr-phone">Phone</label>
-              <input type="tel" id="addr-phone" class="input-field" placeholder="+91 98765 43210" required>
+              <input type="tel" id="addr-phone" class="input-field" placeholder="+91 98765 43210" required autocomplete="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other">
             </div>
           </div>
           <div class="input-wrap" style="margin-bottom:16px;">
@@ -112,14 +110,25 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { isLoggedIn, openAuthModal, getUserAddresses, addUserAddress } from '/js/auth.js';
-
-    // Checkout is a protected route — addresses are per-account.
-    if (!isLoggedIn()) openAuthModal(() => location.reload());
+    import { isLoggedIn, openAuthModal, requireAuth, getUserAddresses, addUserAddress } from '/js/auth.js';
 
     let ADDRESSES = [];
-    try { ADDRESSES = await getUserAddresses(); } catch { ADDRESSES = []; }
-    let selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
+    let selectedId;
+
+    /* Addresses are per-account, so they can only be fetched once the shopper
+       is signed in. Sign-in normally already happened on the cart page; this
+       covers a direct landing on the URL. */
+    async function loadAddresses() {
+      try { ADDRESSES = await getUserAddresses(); } catch { ADDRESSES = []; }
+      selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
+      renderAddresses();
+    }
+
+    requireAuth({
+      onSuccess: loadAddresses,
+      // Nothing on this page works signed out — send them back to the cart.
+      onCancel: () => { window.location.href = 'cart.html'; },
+    });
 
     function renderAddresses() {
       const list = document.getElementById('address-list');
@@ -199,7 +208,6 @@
       window.location.href = 'checkout-payment.html';
     });
 
-    renderAddresses();
   </script>
 </body>
 </html>

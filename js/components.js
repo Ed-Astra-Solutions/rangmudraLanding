@@ -27,16 +27,23 @@ async function initComponents() {
   const { initDummyImages } = await import('./dummy-images.js');
   const { initBreadcrumbs } = await import('./breadcrumbs.js');
   const { mountSaleBanner } = await import('./sale.js');
-  const { updateCartBadge } = await import('./cart.js');
+  const { updateCartBadge, syncCart } = await import('./cart.js');
+  const { isLoggedIn } = await import('./auth.js');
 
   /* The header only exists now that the partial is injected, so this is the
      first point at which the cart badge can show a real count. */
   updateCartBadge();
 
+  /* Signed-in shoppers get their account cart merged in behind the badge — the
+     local copy has already rendered, so this only ever adds to it. */
+  if (isLoggedIn()) syncCart();
+
   mountSaleBanner();
   initMobileMenu();
   initAuthModal();
   initOTPInput();
+  // Page scripts that gate on sign-in wait for this before opening the modal.
+  window.dispatchEvent(new CustomEvent('auth-modal-ready'));
 
   highlightActiveNavLink();
   initScrollHeader();

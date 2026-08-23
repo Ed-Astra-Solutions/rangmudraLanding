@@ -9,9 +9,7 @@
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/components.css">
@@ -70,7 +68,7 @@
         <span class="h5-a" id="summary-total">₹0</span>
       </div>
       <div class="cart-summary-row">
-        <span class="h5-a">Tax <span class="h7-a" style="vertical-align:middle;">. 8%</span></span>
+        <span class="h5-a">Tax <span class="h7-a" style="vertical-align:middle;" id="summary-tax-rate">. 8%</span></span>
         <span class="h5-a" id="summary-tax">₹0</span>
       </div>
       <div class="cart-summary-row">
@@ -96,6 +94,7 @@
         <span class="cart-total-value" id="summary-amount">₹0</span>
       </div>
 
+      <p class="h6-a cart-stock-note" id="stock-note" role="status" hidden></p>
       <button class="btn-proceed" id="proceed-btn">Proceed</button>
       <button class="btn-back" style="margin-top:12px;" onclick="history.back()">Back</button>
 
@@ -116,15 +115,13 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getCart, removeFromCart, updateQty } from '/js/cart.js';
+    import { getCart, removeFromCart } from '/js/cart.js';
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, itemPriceHTML, effectivePrice } from '/js/sale.js';
+    import { computeCartTax, taxPercentFor } from '/js/tax.js';
+    import { getProducts } from '/js/data.js';
 
-    /* Upper bound per line — keeps a stray click (or a held key) from building
-       an order the studio can't actually fulfil by hand. */
-    const MAX_QTY = 10;
     const DELIVERY_FEE = 99;
-    const TAX_RATE = 0.08;
     const COUPON_KEY = 'rangmudra_coupon';
 
     // The currently applied coupon: { code, discount } or null. The discount is
@@ -182,9 +179,10 @@
       // compete with promos — they apply to different items / order-wide).
       const discount = sub.productDiscount + promoDiscount;
 
-      // Mirror the server: tax applies to the discounted subtotal.
+      // Mirror the server: each line is taxed at its product's own rate, on
+      // its share of the subtotal after the promo discount.
       const discountedSubtotal = Math.max(0, sub.listSubtotal - discount);
-      const tax = Math.round(discountedSubtotal * TAX_RATE);
+      const tax = computeCartTax(getCart(), promoDiscount);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
 
       let label = 'Discount';
@@ -201,6 +199,12 @@
       document.getElementById('summary-discount-label').textContent = label;
       document.getElementById('summary-total').textContent = formatPrice(sub.listSubtotal);
       document.getElementById('summary-tax').textContent = formatPrice(tax);
+      // The rate is only nameable when every line shares one.
+      const rateEl = document.getElementById('summary-tax-rate');
+      if (rateEl) {
+        const rates = [...new Set(getCart().map(taxPercentFor))];
+        rateEl.textContent = rates.length === 1 ? `. ${+rates[0].toFixed(2)}%` : '';
+      }
       document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
       document.getElementById('summary-discount').textContent = '-' + formatPrice(discount);
       document.getElementById('summary-amount').textContent = formatPrice(total);
@@ -276,6 +280,46 @@
       });
     }
 
+    /* Every piece is one-of-a-kind — one unit of stock — and it goes out of stock
+       the moment someone else's payment clears. A cart line therefore only holds
+       a snapshot, so on load we re-check the catalogue and flag anything that has
+       sold out (or been withdrawn) since it was added. Checkout stays blocked
+       until those lines are removed; the server enforces the same rule. */
+    let soldOutIds = new Set();
+
+    async function refreshStock() {
+      try {
+        const cart = getCart();
+        if (!cart.length) { soldOutIds = new Set(); return; }
+        const products = await getProducts();
+        const byId = new Map(products.map((p) => [p.id, p]));
+        soldOutIds = new Set(
+          cart.filter((i) => {
+            const p = byId.get(i.id);
+            return !p || p.available === false;
+          }).map((i) => i.id)
+        );
+      } catch (_) {
+        // Catalogue unreachable — leave the cart as-is; create-order will catch it.
+        soldOutIds = new Set();
+      }
+    }
+
+    function syncProceedState() {
+      const blocked = soldOutIds.size > 0 || getCart().length === 0;
+      ['proceed-btn', 'mobile-proceed-btn'].forEach((id) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.disabled = blocked;
+      });
+      const note = document.getElementById('stock-note');
+      if (note) {
+        note.hidden = soldOutIds.size === 0;
+        note.textContent = soldOutIds.size === 1
+          ? 'One piece in your cart has sold out. Please remove it to continue.'
+          : `${soldOutIds.size} pieces in your cart have sold out. Please remove them to continue.`;
+      }
+    }
+
     function renderCart() {
       const cart = getCart();
       const list = document.getElementById('cart-items-list');
@@ -300,7 +344,7 @@
       }
 
       list.innerHTML = cart.map(item => `
-        <div class="cart-item" data-id="${item.id}" data-size="${item.size}">
+        <div class="cart-item${soldOutIds.has(item.id) ? ' cart-item--sold-out' : ''}" data-id="${item.id}" data-size="${item.size}">
           <img
             src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}"
             alt="${item.name}"
@@ -311,15 +355,11 @@
           <div class="cart-item__info">
             <p class="cart-item__category">${item.category || 'RANGMUDRA'}</p>
             <h3 class="cart-item__name">${item.name}</h3>
+            ${soldOutIds.has(item.id) ? '<p class="h6-a cart-item__soldout">Sold out</p>' : ''}
           </div>
           <div class="cart-item__controls">
             <span class="cart-item__size-select" aria-label="Size: ${item.size}">${item.size}</span>
-            <div class="cart-qty" role="group" aria-label="Quantity for ${item.name}">
-              <button class="cart-qty__btn" data-qty-step="-1" data-id="${item.id}" data-size="${item.size}" aria-label="Decrease quantity of ${item.name}">−</button>
-              <span class="cart-qty__value" aria-live="polite">${item.qty || 1}</span>
-              <button class="cart-qty__btn" data-qty-step="1" data-id="${item.id}" data-size="${item.size}" aria-label="Increase quantity of ${item.name}">+</button>
-            </div>
-            <span class="cart-item__price">${itemPriceHTML(item, SALE)}${(item.qty || 1) > 1 ? `<span class="cart-item__line-total"> × ${item.qty} </span>` : ''}</span>
+            <span class="cart-item__price">${itemPriceHTML(item, SALE)}</span>
             <button class="cart-item__delete" data-id="${item.id}" data-size="${item.size}" aria-label="Remove ${item.name}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
             </button>
@@ -335,29 +375,17 @@
         });
       });
 
-      /* Quantity steppers. Stepping below 1 removes the line (updateQty's own
-         rule), so the − button is disabled at 1 to make that explicit rather
-         than surprising the shopper. */
-      list.querySelectorAll('[data-qty-step]').forEach(btn => {
-        const line = cart.find(i => i.id === btn.dataset.id && i.size === btn.dataset.size);
-        const current = line ? (line.qty || 1) : 1;
-        const step = Number(btn.dataset.qtyStep);
-        if (step === -1 && current <= 1) btn.disabled = true;
-        if (step === 1 && current >= MAX_QTY) btn.disabled = true;
-        btn.addEventListener('click', () => {
-          updateQty(btn.dataset.id, btn.dataset.size, Math.min(current + step, MAX_QTY));
-          renderCart();
-          updateSummary();
-        });
-      });
     }
 
     function initProceed() {
       const btn = document.getElementById('proceed-btn');
       const mobileBtn = document.getElementById('mobile-proceed-btn');
-      const go = () => {
-        if (getCart().length === 0) return;
-        window.location.href = 'checkout-address.html';
+      /* Sign-in happens here, before the address step — so the address page
+         opens with the shopper's saved addresses already available. */
+      const go = async () => {
+        if (getCart().length === 0 || soldOutIds.size > 0) return;
+        const { requireAuth } = await import('/js/auth.js');
+        requireAuth({ onSuccess: () => { window.location.href = 'checkout-address.html'; } });
       };
       btn?.addEventListener('click', go);
       mobileBtn?.addEventListener('click', go);
@@ -365,6 +393,7 @@
 
     window.addEventListener('cart-updated', () => {
       renderCart();
+      syncProceedState();
       // Re-validate the coupon against the new subtotal (min-order / cap may shift).
       if (appliedCoupon) applyCoupon(appliedCoupon.code); else updateSummary();
     });
@@ -375,6 +404,9 @@
       updateSummary();
       initProceed();
       initCoupon();
+      await refreshStock();
+      renderCart();
+      syncProceedState();
     }
 
     if (document.readyState === 'loading') {

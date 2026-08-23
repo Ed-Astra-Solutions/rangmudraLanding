@@ -9,9 +9,7 @@
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Archivo:wght@400&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/components.css">
@@ -37,7 +35,7 @@
         <div id="order-items-preview" style="display:flex;flex-direction:column;gap:16px;"></div>
         <div style="border-top:1px solid rgba(44,26,16,0.12);margin-top:24px;padding-top:24px;">
           <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="review-subtotal">₹0</span></div>
-          <div class="cart-summary-row"><span class="h5-a">Tax (8%)</span><span class="h5-a" id="review-tax">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a" id="review-tax-label">Tax</span><span class="h5-a" id="review-tax">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a">₹99</span></div>
           <div class="cart-summary-row" id="review-discount-row" style="display:none;"><span class="h5-a" id="review-discount-label">Discount</span><span class="h5-a" id="review-discount">-₹0</span></div>
           <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-value" id="review-total">₹0</span></div>
@@ -65,18 +63,8 @@
 
       <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Payment</h2>
 
-      <!-- Razorpay (single payment option) -->
-      <div style="margin-bottom:48px;">
-        <p class="h4-a color-sc-100" style="text-transform:uppercase;margin-bottom:16px;">Pay Securely</p>
-        <div class="payment-row payment-row--razorpay" aria-label="Pay securely with Razorpay" style="cursor:default;">
-          <div class="payment-row__logo" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pr-b2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-          </div>
-          <span class="payment-row__label h5-a">Razorpay</span>
-          <svg class="payment-row__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <p class="h6-a color-sc-l3" style="margin-top:12px;">UPI, Cards, Net Banking &amp; Wallets — handled securely by Razorpay. Tap Proceed to pay.</p>
-      </div>
+      <!-- No payment-method choice: Razorpay is the only gateway, so Proceed opens it directly -->
+      <p class="h5-a color-sc-l3" style="margin-bottom:48px;">Pay securely by UPI, Cards, Net Banking or Wallets. Tap Proceed to complete your payment.</p>
 
       <button class="btn-proceed" id="proceed-btn">Proceed</button>
       <a href="checkout-address.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
@@ -93,9 +81,9 @@
     import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
+    import { computeCartTax, taxRowLabel } from '/js/tax.js';
 
     const DELIVERY_FEE = 99;
-    const TAX_RATE = 0.08;
     const COUPON_KEY = 'rangmudra_coupon';
     let SALE = { live: false, percent: 0 };
 
@@ -158,7 +146,8 @@
       const discount = sub.productDiscount + promoDiscount;
       const subtotal = sub.listSubtotal;
       const discountedSubtotal = Math.max(0, subtotal - discount);
-      const tax = Math.round(discountedSubtotal * TAX_RATE);
+      // Per-product tax rates, mirroring the server's line-by-line maths.
+      const tax = computeCartTax(cart, promoDiscount);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
 
       const discRow = document.getElementById('review-discount-row');
@@ -195,6 +184,8 @@
       const tot = document.getElementById('review-total');
       if (s) s.textContent = formatPrice(subtotal);
       if (t) t.textContent = formatPrice(tax);
+      const tLabel = document.getElementById('review-tax-label');
+      if (tLabel) tLabel.textContent = taxRowLabel(cart);
       if (tot) tot.textContent = formatPrice(total);
     }
 
