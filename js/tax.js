@@ -18,8 +18,15 @@ export const DEFAULT_TAX_PERCENT = 8;
 // that gets allocated across lines below.
 const NO_SALE = { live: false, percent: 0 };
 
+// Mirrors the server's normalizeTaxPercent(): only null/undefined/'' mean "the
+// admin set no rate", and those fall back to the store default. Coercing with
+// Number() alone is wrong — Number(null) is 0, so a product with no rate set
+// (the cart line stores taxPercent: null) would preview at 0% tax while the
+// server charged the 8% default. A deliberate 0 is still honoured.
 export function taxPercentFor(item) {
-  const n = Number(item && item.taxPercent);
+  const raw = item ? item.taxPercent : null;
+  if (raw === null || raw === undefined || raw === '') return DEFAULT_TAX_PERCENT;
+  const n = Number(raw);
   return Number.isFinite(n) && n >= 0 ? Math.min(100, n) : DEFAULT_TAX_PERCENT;
 }
 
