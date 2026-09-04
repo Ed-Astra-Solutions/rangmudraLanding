@@ -10,18 +10,29 @@
 import { apiUrl } from '/js/config.js';
 import { normalizeMedia, applyMedia } from '/js/media.js';
 
-(async function applySections() {
-  let sections = null;
+// The fetched map, kept so a second pass (a page that only learns which slot it
+// wants after reading the URL — see workshop-category.html) costs no request.
+let cached = null;
+
+async function loadSections() {
+  if (cached) return cached;
   try {
     const res = await fetch(apiUrl('/api/sections'), { cache: 'no-store' });
-    if (res.ok) sections = await res.json();
+    if (res.ok) cached = await res.json();
   } catch (_) { /* fall through */ }
-  if (!sections) {
+  if (!cached) {
     try {
       const res = await fetch('/data/sections.json', { cache: 'no-store' });
-      if (res.ok) sections = await res.json();
-    } catch (_) { return; }
+      if (res.ok) cached = await res.json();
+    } catch (_) { return null; }
   }
+  return cached;
+}
+
+// Exported so a page can set data-section from a query param and re-apply.
+// Re-running is safe: applyMedia() swaps the element in place.
+export async function applySections() {
+  const sections = await loadSections();
   if (!sections) return;
 
   const resolve = (ref) => {
@@ -68,4 +79,6 @@ import { normalizeMedia, applyMedia } from '/js/media.js';
     el.style.backgroundPosition = m.position;
     el.style.backgroundRepeat = 'no-repeat';
   });
-})();
+}
+
+applySections();

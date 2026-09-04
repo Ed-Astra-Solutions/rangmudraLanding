@@ -445,6 +445,14 @@
   margin-bottom: 16px;
 }
 
+.footer__contact-link {
+  text-decoration: none;
+  transition: opacity var(--dur-micro) var(--ease-standard);
+}
+
+.footer__contact-link:hover,
+.footer__contact-link:focus-visible { opacity: 1; }
+
 .footer__contact-icon {
   flex-shrink: 0;
   width: 16px;

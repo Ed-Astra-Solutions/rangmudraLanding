@@ -50,6 +50,12 @@ function setSessionName(name) {
 }
 
 // Authenticated fetch helper — attaches the user token and throws on non-2xx.
+//
+// A 401 means the server no longer honours this token while the browser still
+// holds it. Clearing the stored session here is what stops the silent-failure
+// mode: without it a page would just render "nothing saved yet" and the shopper
+// would think their data had been lost. The thrown error is tagged so callers
+// can re-open the sign-in modal instead of showing an empty state.
 async function authFetch(path, options = {}) {
   const token = getToken();
   const headers = { ...(options.headers || {}) };
@@ -57,6 +63,13 @@ async function authFetch(path, options = {}) {
   if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
   const res = await fetch(apiUrl(path), { ...options, headers });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    localStorage.removeItem(SESSION_KEY);
+    window.dispatchEvent(new CustomEvent('auth-changed', { detail: { loggedIn: false } }));
+    const err = new Error('Your session has expired. Please sign in again.');
+    err.authExpired = true;
+    throw err;
+  }
   if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
   return data;
 }

@@ -47,6 +47,8 @@
         src="/images/uploads/wshop-block-print-party.jpg"
         alt="Block printing workshop in progress"
         class="page-hero__bg"
+        id="category-hero-img"
+        data-section="workshops.category-hero-experience"
         loading="eager"
         fetchpriority="high"
         width="1440" height="320"
@@ -147,9 +149,19 @@
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
     import { primaryImage } from '/js/media.js';
+    import { applySections } from '/js/sections.js';
 
     const params = new URLSearchParams(location.search);
     const cat = params.get('cat') || 'experience';
+
+    // Each category page has its own banner slot in the admin. The markup ships
+    // with the Experience slot; point it at this category's before the section
+    // pass paints, then re-run in case that pass already went by.
+    const heroImg = document.getElementById('category-hero-img');
+    if (heroImg && ['experience', 'corporate', 'curated'].includes(cat)) {
+      heroImg.setAttribute('data-section', `workshops.category-hero-${cat}`);
+    }
+    applySections();
 
     const CAT_META = {
       experience: {

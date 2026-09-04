@@ -44,12 +44,12 @@
           </div>
           <div class="input-wrap">
             <label class="input-label" for="addr-title">Name / Building</label>
-            <input type="text" id="addr-title" class="input-field" placeholder="Brigade Millennium" required maxlength="80">
+            <input type="text" id="addr-title" class="input-field" placeholder="Rangmudra Studio" required maxlength="80">
           </div>
         </div>
         <div class="input-wrap" style="margin-bottom:24px;">
           <label class="input-label" for="addr-body">Full Address</label>
-          <textarea id="addr-body" class="input-field" rows="3" placeholder="Street, area, city, state, PIN" required maxlength="300" style="resize:vertical;"></textarea>
+          <textarea id="addr-body" class="input-field" rows="3" placeholder="Doddakalasandra, Bangalore, Karnataka — 560062" required maxlength="300" style="resize:vertical;"></textarea>
         </div>
         <div class="input-error" id="addr-error" style="display:none;margin-bottom:16px;"></div>
         <button type="submit" class="btn-gold" id="addr-save-btn">Save Address</button>
@@ -98,7 +98,17 @@
       }
 
       async function reload() {
-        try { render(await getUserAddresses()); } catch { render([]); }
+        try {
+          render(await getUserAddresses());
+        } catch (err) {
+          // An expired session must not look like an empty address book — the
+          // shopper's addresses are still on their account, they just need to
+          // sign in again.
+          if (err.authExpired) { openAuthModal(() => location.reload()); return; }
+          emptyEl.textContent = 'We could not load your saved addresses. Please refresh and try again.';
+          emptyEl.style.display = 'block';
+          list.innerHTML = '';
+        }
       }
 
       document.getElementById('add-btn').addEventListener('click', () => {

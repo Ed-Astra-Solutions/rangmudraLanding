@@ -22,7 +22,10 @@
     "hero": "/images/uploads/workshops-hero.jpg",
     "category-experience": "/images/uploads/workshops-cat-experience.jpg",
     "category-corporate": "/images/uploads/workshops-cat-corporate.jpg",
-    "category-curated": "/images/uploads/workshops-cat-curated.jpg"
+    "category-curated": "/images/uploads/workshops-cat-curated.jpg",
+    "category-hero-experience": "/images/uploads/workshops-cat-experience.jpg",
+    "category-hero-corporate": "/images/uploads/workshops-cat-corporate.jpg",
+    "category-hero-curated": "/images/uploads/workshops-cat-curated.jpg"
   },
   "shop": {
     "hero": "/images/uploads/shop-hero.jpg"
@@ -32,5 +35,11 @@
     "carousel-1": "/images/uploads/enquire-carousel-1.jpg",
     "carousel-2": "/images/uploads/enquire-carousel-2.jpg",
     "carousel-3": "/images/uploads/enquire-carousel-3.jpg"
+  },
+  "blogs": {
+    "hero": "/images/uploads/process-dyeing.jpg"
+  },
+  "gallery": {
+    "hero": "/images/uploads/home-gallery.jpg"
   }
 }
