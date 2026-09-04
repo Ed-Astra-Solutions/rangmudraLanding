@@ -36,7 +36,8 @@
         <div style="border-top:1px solid rgba(44,26,16,0.12);margin-top:24px;padding-top:24px;">
           <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="review-subtotal">₹0</span></div>
           <div class="cart-summary-row"><span class="h5-a" id="review-tax-label">Tax</span><span class="h5-a" id="review-tax">₹0</span></div>
-          <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a">₹99</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a" id="review-delivery">—</span></div>
+          <p class="h7-a color-sc-l3" id="review-delivery-note" style="margin:-8px 0 0;"></p>
           <div class="cart-summary-row" id="review-discount-row" style="display:none;"><span class="h5-a" id="review-discount-label">Discount</span><span class="h5-a" id="review-discount">-₹0</span></div>
           <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-value" id="review-total">₹0</span></div>
         </div>
@@ -82,8 +83,12 @@
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxRowLabel } from '/js/tax.js';
+    import { quoteDelivery, addressPincode, deliveryNote, FALLBACK_DELIVERY_FEE } from '/js/shipping.js';
 
-    const DELIVERY_FEE = 99;
+    // Priced from the chosen address's PIN — see refreshDelivery(). The server
+    // recomputes the same number in create-order before charging.
+    let DELIVERY_FEE = FALLBACK_DELIVERY_FEE;
+    let DELIVERY_QUOTE = null;
     const COUPON_KEY = 'rangmudra_coupon';
     let SALE = { live: false, percent: 0 };
 
@@ -135,6 +140,17 @@
       }
     }
 
+    /* The Speed Post fee for the address this order ships to. Runs before the
+       summary is drawn so the customer never sees the fee change under them. */
+    async function refreshDelivery() {
+      const cart = getCart();
+      if (!cart.length) return;
+      const address = await resolveDeliveryAddress();
+      const quote = await quoteDelivery(addressPincode(address), cart);
+      DELIVERY_QUOTE = quote;
+      DELIVERY_FEE = quote ? quote.deliveryFee : FALLBACK_DELIVERY_FEE;
+    }
+
     async function renderOrderSummary() {
       const cart = getCart();
       const sub = cartSubtotals();
@@ -149,6 +165,11 @@
       // Per-product tax rates, mirroring the server's line-by-line maths.
       const tax = computeCartTax(cart, promoDiscount);
       const total = discountedSubtotal + tax + DELIVERY_FEE;
+
+      const deliveryEl = document.getElementById('review-delivery');
+      if (deliveryEl) deliveryEl.textContent = formatPrice(DELIVERY_FEE);
+      const deliveryNoteEl = document.getElementById('review-delivery-note');
+      if (deliveryNoteEl) deliveryNoteEl.textContent = deliveryNote(DELIVERY_QUOTE);
 
       const discRow = document.getElementById('review-discount-row');
       const discEl = document.getElementById('review-discount');
@@ -292,6 +313,7 @@
 
     async function initSummary() {
       SALE = await getSale();
+      await refreshDelivery();
       renderOrderSummary();
     }
     if (document.readyState === 'loading') {

@@ -73,8 +73,9 @@
       </div>
       <div class="cart-summary-row">
         <span class="h5-a">Delivery fee</span>
-        <span class="h5-a" id="summary-delivery">₹99</span>
+        <span class="h5-a" id="summary-delivery">—</span>
       </div>
+      <p class="h7-a color-sc-l3" id="summary-delivery-note" style="margin:-8px 0 0;" aria-live="polite"></p>
 
       <!-- Coupon -->
       <div class="coupon-input" style="margin:24px 0;" role="group" aria-label="Coupon code">
@@ -120,8 +121,15 @@
     import { getSale, isSaleLive, itemPriceHTML, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxPercentFor } from '/js/tax.js';
     import { getProducts } from '/js/data.js';
+    import { quoteDelivery, addressPincode, deliveryNote } from '/js/shipping.js';
 
-    const DELIVERY_FEE = 99;
+    // Delivery is priced by India Post Speed Post from the studio's PIN to the
+    // shopper's, so it is only knowable once we have a destination. Until then
+    // DELIVERY_FEE stays null: the summary shows no figure and the total is the
+    // items alone. Inventing a placeholder fee here would only mean quoting a
+    // number we then have to change at the address step.
+    let DELIVERY_FEE = null;
+    let DELIVERY_QUOTE = null;
     const COUPON_KEY = 'rangmudra_coupon';
 
     // The currently applied coupon: { code, discount } or null. The discount is
@@ -183,7 +191,7 @@
       // its share of the subtotal after the promo discount.
       const discountedSubtotal = Math.max(0, sub.listSubtotal - discount);
       const tax = computeCartTax(getCart(), promoDiscount);
-      const total = discountedSubtotal + tax + DELIVERY_FEE;
+      const total = discountedSubtotal + tax + (DELIVERY_FEE || 0);
 
       let label = 'Discount';
       if (promoDiscount > 0 && sub.productDiscount > 0) {
@@ -205,7 +213,12 @@
         const rates = [...new Set(getCart().map(taxPercentFor))];
         rateEl.textContent = rates.length === 1 ? `. ${+rates[0].toFixed(2)}%` : '';
       }
-      document.getElementById('summary-delivery').textContent = formatPrice(DELIVERY_FEE);
+      // An em dash, not a figure, until we know where the parcel is going.
+      document.getElementById('summary-delivery').textContent =
+        DELIVERY_FEE === null ? '—' : formatPrice(DELIVERY_FEE);
+      const deliveryNoteEl = document.getElementById('summary-delivery-note');
+      // Nothing to explain about the delivery of an empty cart.
+      if (deliveryNoteEl) deliveryNoteEl.textContent = getCart().length ? deliveryNote(DELIVERY_QUOTE) : '';
       document.getElementById('summary-discount').textContent = '-' + formatPrice(discount);
       document.getElementById('summary-amount').textContent = formatPrice(total);
       const mobileAmt = document.getElementById('mobile-amount');
@@ -264,6 +277,37 @@
       }
     }
 
+    /* Price the delivery against wherever this shopper is most likely sending it:
+       the address they picked on a previous pass through checkout, else their
+       default saved address. A guest, or someone with no saved address yet, has
+       no destination to price — they see no delivery line until the address step
+       rather than a placeholder figure we would then have to revise. */
+    async function refreshDelivery() {
+      DELIVERY_QUOTE = null;
+      DELIVERY_FEE = null;
+      const cart = getCart();
+      // Nothing to ship, nothing to price — and no reason to hit the API.
+      if (!cart.length) return;
+      let pincode = null;
+      try {
+        const { isLoggedIn, getUserAddresses } = await import('/js/auth.js');
+        if (isLoggedIn()) {
+          const addresses = await getUserAddresses();
+          const chosenId = localStorage.getItem('rangmudra_delivery_address');
+          const address = addresses.find((a) => a.id === chosenId)
+            || addresses.find((a) => a.default)
+            || addresses[0];
+          pincode = addressPincode(address);
+        }
+      } catch (_) {
+        // Not signed in, or addresses unreachable — leave the fee unknown.
+      }
+      if (!pincode) return;
+      const quote = await quoteDelivery(pincode, cart);
+      DELIVERY_QUOTE = quote;
+      DELIVERY_FEE = quote ? quote.deliveryFee : null;
+    }
+
     function initCoupon() {
       const input = document.getElementById('coupon-input');
       const applyBtn = document.getElementById('coupon-apply');
@@ -306,7 +350,11 @@
     }
 
     function syncProceedState() {
-      const blocked = soldOutIds.size > 0 || getCart().length === 0;
+      const empty = getCart().length === 0;
+      const blocked = soldOutIds.size > 0 || empty;
+      // "Amount to be paid ₹0" above a dead button helps nobody.
+      const mobileBar = document.querySelector('.mobile-cta-bar');
+      if (mobileBar) mobileBar.hidden = empty;
       ['proceed-btn', 'mobile-proceed-btn'].forEach((id) => {
         const btn = document.getElementById(id);
         if (btn) btn.disabled = blocked;
@@ -394,19 +442,27 @@
     window.addEventListener('cart-updated', () => {
       renderCart();
       syncProceedState();
-      // Re-validate the coupon against the new subtotal (min-order / cap may shift).
-      if (appliedCoupon) applyCoupon(appliedCoupon.code); else updateSummary();
+      // A changed cart changes the parcel weight, and so the Speed Post slab.
+      refreshDelivery().then(() => {
+        // Re-validate the coupon against the new subtotal (min-order / cap may shift).
+        if (appliedCoupon) applyCoupon(appliedCoupon.code); else updateSummary();
+      });
     });
 
     async function init() {
       SALE = await getSale();
       renderCart();
       updateSummary();
+      // Settle the empty/blocked state on first paint, not only after the
+      // stock re-check — otherwise an empty cart flashes a live CTA bar.
+      syncProceedState();
       initProceed();
       initCoupon();
       await refreshStock();
       renderCart();
       syncProceedState();
+      await refreshDelivery();
+      updateSummary();
     }
 
     if (document.readyState === 'loading') {

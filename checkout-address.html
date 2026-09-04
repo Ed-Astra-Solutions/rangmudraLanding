@@ -111,9 +111,27 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { isLoggedIn, openAuthModal, requireAuth, getUserAddresses, addUserAddress } from '/js/auth.js';
+    import { getCart } from '/js/cart.js';
+    import { quoteDelivery, addressPincode } from '/js/shipping.js';
 
     let ADDRESSES = [];
     let selectedId;
+
+    /* Delivery is priced by India Post Speed Post from the studio to the
+       destination PIN, so it differs per address — show it on each card rather
+       than surprising the shopper with the number on the payment step. Quotes
+       fill in as they arrive; a card whose PIN we cannot price just stays
+       blank rather than showing a wrong figure. */
+    async function showDeliveryFees() {
+      const cart = getCart();
+      if (!cart.length) return;
+      await Promise.all(ADDRESSES.map(async (addr) => {
+        const quote = await quoteDelivery(addressPincode(addr), cart);
+        const el = document.querySelector(`[data-delivery-for="${addr.id}"]`);
+        if (!el || !quote) return;
+        el.textContent = `Delivery ₹${quote.deliveryFee.toLocaleString('en-IN')} · Speed Post, ${quote.zoneLabel.toLowerCase()}`;
+      }));
+    }
 
     /* Addresses are per-account, so they can only be fetched once the shopper
        is signed in. Sign-in normally already happened on the cart page; this
@@ -154,8 +172,11 @@
           <span class="address-card__label">${addr.label}</span>
           <p class="address-card__title">${addr.title}</p>
           <p class="address-card__body">${addr.address.replace(/\n/g, '<br>')}</p>
+          <p class="address-card__body" data-delivery-for="${addr.id}" style="margin-top:12px;opacity:0.75;"></p>
         </div>
       `).join('');
+
+      showDeliveryFees();
 
       list.querySelectorAll('.address-card').forEach(card => {
         const select = () => {
@@ -191,7 +212,12 @@
       btn.disabled = true;
       btn.textContent = 'Saving…';
       try {
-        const saved = await addUserAddress({ label: 'Home', title: name || 'New address', address: lines.join('\n') });
+        const saved = await addUserAddress({
+          label: 'Home',
+          title: name || 'New address',
+          address: lines.join('\n'),
+          pincode: val('addr-pin'),
+        });
         ADDRESSES.push(saved);
         selectedId = saved.id;
         renderAddresses();

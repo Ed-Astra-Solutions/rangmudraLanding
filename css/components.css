@@ -2604,7 +2604,7 @@
 /* Lift the FAB clear of the sticky bottom CTA bar on pages that have one
    (cart, product) so it never covers the Proceed / Add-to-cart button. */
 @media (max-width: 767px) {
-  body:has(.mobile-cta-bar) .whatsapp-fab { bottom: calc(24px + 88px); }
+  body:has(.mobile-cta-bar:not([hidden])) .whatsapp-fab { bottom: calc(24px + 88px); }
 }
 
 /* ─── Sticky mobile CTA bar ───────────────────────────────────────────────── */
@@ -2632,6 +2632,7 @@
 }
 
 @media (max-width: 767px) { .mobile-cta-bar { display: flex; } }
+.mobile-cta-bar[hidden] { display: none; }
 
 /* ─── Utility classes ─────────────────────────────────────────────────────── */
 
