@@ -185,94 +185,15 @@
       </div>
     </section>
 
-    <!-- Section 5: Testimonials.
-         The photo lives INSIDE each slide, so the quote and its picture move
-         together and every patron can have their own image (or video) — set
-         per slide from Admin → Section Images. -->
+    <!-- Section 5: Patron testimonials.
+         Rendered by js/testimonials.js from the shared patron list, which is
+         managed in Admin -> Home -> Patron testimonials and is the same list the
+         About page uses. Each patron's photo/video lives inside their slide, so
+         the picture moves with the quote. -->
     <section class="section bg-chocolate" aria-labelledby="testimonials-heading">
       <div class="container">
         <h2 class="testimonials-eyebrow" id="testimonials-heading" data-content-lines="homepage.testimonials-heading">WHAT OUR<br>PATRONS SAY</h2>
-
-        <div class="carousel" id="testimonials-carousel" aria-live="polite" aria-label="Customer testimonials">
-          <div class="carousel__track">
-            <div class="carousel__slide testimonial-slide" style="width:100%;flex-shrink:0;">
-              <div class="testimonials-grid">
-                <div>
-                  <div class="stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  </div>
-                  <blockquote class="testimonial-quote" data-content="homepage.testimonial-1-quote">"The workshop was absolutely magical. I came with no experience and left with a beautifully printed scarf I made myself."</blockquote>
-                  <p class="testimonial-author" data-content="homepage.testimonial-1-author">— Priya M., Bangalore</p>
-                </div>
-                <div>
-                  <img
-                    data-section="homepage.testimonial-1"
-                    src="/images/uploads/home-testimonials.jpg"
-                    alt="Delicate eco-print artwork — dried flowers pressed onto natural fabric"
-                    class="testimonials-image"
-                    loading="lazy"
-                    width="480" height="576"
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="carousel__slide testimonial-slide" style="width:100%;flex-shrink:0;">
-              <div class="testimonials-grid">
-                <div>
-                  <div class="stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  </div>
-                  <blockquote class="testimonial-quote" data-content="homepage.testimonial-2-quote">&quot;Rangmudra's sarees are simply stunning. The quality and craftsmanship are unlike anything I've seen. Each print is unique.&quot;</blockquote>
-                  <p class="testimonial-author" data-content="homepage.testimonial-2-author">— Kavitha R., Chennai</p>
-                </div>
-                <div>
-                  <img
-                    data-section="homepage.testimonial-2"
-                    src="/images/uploads/home-testimonials.jpg"
-                    alt="Hand block-printed saree detail in indigo and madder"
-                    class="testimonials-image"
-                    loading="lazy"
-                    width="480" height="576"
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="carousel__slide testimonial-slide" style="width:100%;flex-shrink:0;">
-              <div class="testimonials-grid">
-                <div>
-                  <div class="stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  </div>
-                  <blockquote class="testimonial-quote" data-content="homepage.testimonial-3-quote">"Our corporate team workshop was phenomenal. Everyone left feeling inspired and connected. Highly recommend for team bonding!"</blockquote>
-                  <p class="testimonial-author" data-content="homepage.testimonial-3-author">— Arjun S., Hyderabad</p>
-                </div>
-                <div>
-                  <img
-                    data-section="homepage.testimonial-3"
-                    src="/images/uploads/home-testimonials.jpg"
-                    alt="A corporate team at a Rangmudra block-printing session"
-                    class="testimonials-image"
-                    loading="lazy"
-                    width="480" height="576"
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="carousel__dots" aria-label="Testimonial indicators"></div>
-        </div>
+        <div data-testimonials></div>
       </div>
     </section>
 
@@ -317,6 +238,7 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module" src="/js/sections.js"></script>
   <script type="module" src="/js/quick-reads.js"></script>
+  <script type="module" src="/js/testimonials.js"></script>
   <script type="module">
     import { initCarousels } from '/js/carousel.js';
     document.addEventListener('DOMContentLoaded', () => {

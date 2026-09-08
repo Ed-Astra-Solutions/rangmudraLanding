@@ -1705,28 +1705,11 @@
   overflow: hidden;
 }
 
-/* The label used to take a fixed 55% of a ~360px sidebar, which left the input
-   too narrow to show "Enter code" at all once the Apply button had its share.
-   It now shrinks to its text and the input takes the space that is left. */
-.coupon-input__label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 1 auto;
-  min-width: 0;
-  padding-inline: 20px;
-  background: var(--pr-b2);
-  font-family: var(--font-archivo);
-  font-size: 13px;
-  line-height: 20px;
-  letter-spacing: 0.15em;
-  color: var(--w1);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
+/* The field is the whole pill now — the "Coupon code" label that used to take
+   the left half is gone and its wording moved into the placeholder, so the
+   shopper gets the full width to type into. */
 .coupon-input__field {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
   padding-inline: 20px;
   background: var(--w1);
@@ -1736,7 +1719,6 @@
   letter-spacing: 0.02em;
   color: var(--sc-100);
   border: none;
-  min-width: 0;
 }
 
 /* pr-100 tan on white is about 2:1 — the placeholder was there but unreadable. */
@@ -1759,17 +1741,8 @@
 .coupon-input__apply:hover { background: var(--sc-l1); }
 
 @media (max-width: 767px) {
-  .coupon-input__label { padding-inline: 14px; font-size: 12px; }
-  .coupon-input__field { padding-inline: 14px; font-size: 15px; }
-  .coupon-input__apply { padding-inline: 16px; }
-}
-
-/* On a phone the label and the Apply button together leave the input barely
-   wide enough for "Enter code" — trim both so the field stays readable. */
-@media (max-width: 480px) {
-  .coupon-input__label { padding-inline: 12px; font-size: 11px; letter-spacing: 0.1em; }
-  .coupon-input__field { padding-inline: 12px; font-size: 14px; letter-spacing: 0.02em; }
-  .coupon-input__apply { padding-inline: 12px; font-size: 11px; letter-spacing: 0.1em; }
+  .coupon-input__field { padding-inline: 16px; font-size: 15px; }
+  .coupon-input__apply { padding-inline: 18px; }
 }
 
 /* ─── Auth Modal ──────────────────────────────────────────────────────────── */

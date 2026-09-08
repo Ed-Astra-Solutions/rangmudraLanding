@@ -168,32 +168,13 @@
       </div>
     </section>
 
-    <!-- Testimonials (chocolate band) -->
+    <!-- Testimonials (chocolate band).
+         Same shared patron list as the home page — add a patron once in
+         Admin -> Home -> Patron testimonials and it appears in both. -->
     <section class="section bg-chocolate" aria-labelledby="about-testimonials-heading">
       <div class="container">
-        <div class="testimonials-grid">
-          <div>
-            <h2 class="testimonials-eyebrow" id="about-testimonials-heading" data-content-lines="about.testimonials-heading">WHAT OUR<br>PATRONS SAY</h2>
-            <div class="stars" style="margin-bottom:24px;" aria-label="5 out of 5 stars">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-            <blockquote class="testimonial-quote" data-content="about.testimonial-quote">"I've purchased from many textile studios but Rangmudra is in a league of its own. The depth of knowledge, the quality of craft, the passion — it's evident in every piece."</blockquote>
-            <p class="testimonial-author" data-content="about.testimonial-author">— Meena K., Mumbai</p>
-          </div>
-          <div>
-            <img
-              src="/images/uploads/wshop-curated-course.jpg"
-              alt="Decorative display of eco-print botanical artwork"
-              class="testimonials-image"
-              loading="lazy"
-              width="480" height="576"
-            >
-          </div>
-        </div>
+        <h2 class="testimonials-eyebrow" id="about-testimonials-heading" data-content-lines="about.testimonials-heading">WHAT OUR<br>PATRONS SAY</h2>
+        <div data-testimonials></div>
       </div>
     </section>
 
@@ -272,6 +253,7 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module" src="/js/sections.js"></script>
+  <script type="module" src="/js/testimonials.js"></script>
   <script type="module">
     import { initAccordions } from '/js/accordion.js';
     document.addEventListener('DOMContentLoaded', () => {
