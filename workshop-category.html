@@ -53,9 +53,9 @@
         fetchpriority="high"
         width="1440" height="320"
       >
-      <a href="workshops.html" class="btn-ghost page-hero__back">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        Back
+      <a href="index.html" class="btn-ghost page-hero__back" aria-label="Go to the home page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        Home
       </a>
       <div class="page-hero__content">
         <h1 class="h2-i" style="color:var(--pr-l5);" id="hero-title">Workshops</h1>
@@ -85,7 +85,7 @@
 
         <!-- Category title block -->
         <div style="margin-bottom:64px;">
-          <p class="eyebrow">WORKSHOPS</p>
+          <p class="eyebrow" id="category-eyebrow">WORKSHOPS</p>
           <h2 class="h2-i color-sc-100" id="category-heading" style="margin-bottom:16px;"></h2>
           <p class="h5-a color-sc-l3" id="category-desc" style="max-width:680px;"></p>
         </div>
@@ -105,7 +105,7 @@
     <button class="enquire-panel__close" id="enquire-panel-close" aria-label="Close enquiry form">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <h2 class="h3-i color-sc-100" id="enquire-panel-title" style="margin-bottom:32px;">Reach out to us</h2>
+    <h2 class="h3-i color-sc-100" id="enquire-panel-title" style="margin-bottom:32px;" data-content="workshops.enquire-panel-title">Reach out to us</h2>
     <form id="enquire-form">
       <div class="input-wrap" style="margin-bottom:20px;">
         <label class="input-label" for="eq-name">Name</label>
@@ -163,7 +163,10 @@
     }
     applySections();
 
-    const CAT_META = {
+    // Category titles and blurbs come from the page-copy CMS, so the Corporate
+    // (and Experience / Curated) landing pages are editable from the admin like
+    // every other page. The literals here are the shipped defaults.
+    const FALLBACK = {
       experience: {
         title: 'Experience Workshops',
         desc: 'Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.',
@@ -177,13 +180,21 @@
         desc: 'Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.',
       },
     };
+    const fallback = FALLBACK[cat] || FALLBACK.experience;
+    const key = FALLBACK[cat] ? cat : 'experience';
 
-    const meta = CAT_META[cat] || CAT_META.experience;
+    const { getContent } = await import('/js/content.js');
+    const meta = {
+      title: await getContent(`workshops.${key}-title`, fallback.title),
+      desc: await getContent(`workshops.${key}-desc`, fallback.desc),
+      eyebrow: await getContent(`workshops.${key}-eyebrow`, 'WORKSHOPS'),
+    };
 
     document.title = `${meta.title} — Rangmudra`;
     document.getElementById('hero-title').textContent = meta.title;
     document.getElementById('category-heading').textContent = meta.title;
     document.getElementById('category-desc').textContent = meta.desc;
+    document.getElementById('category-eyebrow').textContent = meta.eyebrow;
     document.getElementById('category-pill').textContent = meta.title.toUpperCase();
 
     const WORKSHOPS = await getWorkshops();

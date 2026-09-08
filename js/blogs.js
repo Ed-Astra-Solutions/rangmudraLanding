@@ -1,4 +1,4 @@
-/* blogs.js — Journal index page: featured post, search, category filter, grid. */
+/* blogs.js — Blogs index page: featured post, search, category filter, grid. */
 
 import { getBlogs } from '/js/data.js';
 

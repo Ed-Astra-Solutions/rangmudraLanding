@@ -1,5 +1,10 @@
 /* tokens.css — Design tokens and typography utility classes */
 
+/* Archivo carries every piece of body/utility text (see --font-archivo below).
+   Loaded here rather than per-page so one <link rel=stylesheet> covers the
+   whole site, admin panel included. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&display=swap');
+
 /* Maiandra Black, self-hosted. Registered across the whole weight range so the
    black cut answers every font-weight the type classes ask for (they all set
    400) — there is no lighter cut in the family on purpose. */
@@ -55,12 +60,15 @@
   --error: #B44444;
 
   /* Typography families.
-     Both roles are Maiandra Black — the token names are kept as-is because the
-     whole stylesheet and the spec in CLAUDE.md reference them. The fallbacks
-     are what actually renders the rupee sign, arrows and check marks, which
-     Maiandra Black has no glyphs for. */
+     Maiandra Black is the Rangmudra display face — headings, banners, section
+     and sub-section names, the wordmark. It is a single heavy cut, and running
+     body copy in it reads as bold and is hard to scan, so all utility text is
+     back on Archivo Regular. The token names are kept as-is because the whole
+     stylesheet and the spec in CLAUDE.md reference them.
+     The fallbacks render the rupee sign, arrows and check marks, which Maiandra
+     Black has no glyphs for. */
   --font-italiana: 'Maiandra Black', Helvetica, Arial, sans-serif;
-  --font-archivo:  'Maiandra Black', Helvetica, Arial, sans-serif;
+  --font-archivo:  'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Layout */
   --max-content: 1280px;
@@ -126,19 +134,23 @@
   font-weight: 400;
 }
 
+/* 15% tracking is the brand's voice on SHORT all-caps utility text (h6/h7 —
+   nav links, eyebrows, captions). At paragraph length it pulls words apart and
+   is what makes running copy hard to read, so the two body sizes are tightened.
+   Everything is still Archivo Regular — never a bold cut. */
 .h4-a {
   font-family: var(--font-archivo);
   font-size: 24px;
   line-height: 32px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.06em;
   font-weight: 400;
 }
 
 .h5-a {
   font-family: var(--font-archivo);
   font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.15em;
+  line-height: 26px;
+  letter-spacing: 0.02em;
   font-weight: 400;
 }
 

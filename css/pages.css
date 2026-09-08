@@ -98,7 +98,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
 }
 
@@ -234,6 +234,43 @@
   /* minmax(0,…) stops the testimonial carousel's wide track from forcing the
      single column past the viewport. */
   .testimonials-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+}
+
+/* Each testimonial slide owns its own photo, so the quote and the picture move
+   together. Aligning the two columns' tops keeps the image from jumping when a
+   longer quote makes the text column taller. */
+.testimonial-slide .testimonials-grid { align-items: center; }
+.testimonial-slide .testimonials-image { max-height: 560px; }
+
+/* Homepage gallery teaser — one photograph that opens the gallery page. */
+.gallery-teaser {
+  position: relative;
+  display: block;
+  margin-inline: var(--gutter-desktop);
+  overflow: hidden;
+  text-decoration: none;
+}
+.gallery-teaser__image {
+  display: block;
+  width: 100%;
+  max-height: 680px;
+  object-fit: cover;
+  transition: transform 600ms var(--ease-standard);
+}
+.gallery-teaser:hover .gallery-teaser__image { transform: scale(1.03); }
+.gallery-teaser__cta {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  background: var(--sc-100);
+  color: var(--pr-l5);
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 1023px) { .gallery-teaser { margin-inline: var(--gutter-tablet); } }
+@media (max-width: 767px) {
+  .gallery-teaser { margin-inline: var(--gutter-mobile); }
+  .gallery-teaser__cta { left: 20px; bottom: 20px; }
 }
 
 /* Quick reads grid */
@@ -410,7 +447,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   opacity: 0.8;
   max-width: 480px;
 }
@@ -443,7 +480,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-100);
   background: var(--w1);
 }
@@ -707,7 +744,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
   margin-bottom: 32px;
 }
@@ -857,7 +894,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-100);
   background: var(--w1);
 }

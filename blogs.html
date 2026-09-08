@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal — Rangmudra</title>
+  <title>Blogs — Rangmudra</title>
   <meta name="description" content="Stories, craft guides, and dispatches from the Rangmudra studio — block printing, eco printing, and the slow art of making by hand.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <link rel="canonical" href="https://rangmudra.com/blogs.html">
@@ -13,15 +13,15 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Rangmudra">
   <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="Journal — Rangmudra">
+  <meta property="og:title" content="Blogs — Rangmudra">
   <meta property="og:description" content="Quick reads on block printing, eco printing, natural dyes and caring for handcrafted textiles.">
   <meta property="og:url" content="https://rangmudra.com/blogs.html">
   <meta property="og:image" content="https://rangmudra.com/images/uploads/blog-eco-printing.jpg">
-  <meta property="og:image:alt" content="Journal — Rangmudra">
+  <meta property="og:image:alt" content="Blogs — Rangmudra">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Journal — Rangmudra">
+  <meta name="twitter:title" content="Blogs — Rangmudra">
   <meta name="twitter:description" content="Quick reads on block printing, eco printing, natural dyes and caring for handcrafted textiles.">
   <meta name="twitter:image" content="https://rangmudra.com/images/uploads/blog-eco-printing.jpg">
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
@@ -43,7 +43,7 @@
   <main>
 
     <!-- Hero -->
-    <section class="workshops-hero" aria-label="Journal hero" style="min-height:360px;">
+    <section class="workshops-hero" aria-label="Blogs hero" style="min-height:360px;">
       <img
         src="/images/uploads/process-dyeing.jpg"
         alt="Pressed botanicals arranged for an eco-print study"
@@ -55,15 +55,15 @@
       >
       <div class="workshops-hero__overlay" aria-hidden="true"></div>
 
-      <a href="index.html" class="btn-ghost" style="position:absolute;top:24px;left:48px;z-index:3;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        Back
+      <a href="index.html" class="btn-ghost" style="position:absolute;top:24px;left:48px;z-index:3;" aria-label="Go to the home page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        Home
       </a>
 
       <div class="workshops-hero__content">
-        <p class="h6-a" style="text-transform:uppercase;color:var(--pr-l5);margin-bottom:16px;letter-spacing:0.15em;">JOURNAL</p>
-        <h1 class="h2-i" style="color:var(--pr-l5);font-size:clamp(40px,5vw,72px);line-height:1.1;">Quick Reads &amp;<br>Long Stories</h1>
-        <p class="h5-a" style="color:var(--pr-l5);opacity:0.85;max-width:560px;margin:24px auto 0;text-align:center;">Notes from the studio, the dye vat, and the carving bench — for anyone who loves the slow art of making by hand.</p>
+        <p class="h6-a" style="text-transform:uppercase;color:var(--pr-l5);margin-bottom:16px;letter-spacing:0.15em;" data-content="blogs.hero-eyebrow">BLOGS</p>
+        <h1 class="h2-i" style="color:var(--pr-l5);font-size:clamp(40px,5vw,72px);line-height:1.1;" data-content-lines="blogs.hero-title">Quick Reads &amp;<br>Long Stories</h1>
+        <p class="h5-a" style="color:var(--pr-l5);opacity:0.85;max-width:560px;margin:24px auto 0;text-align:center;" data-content="blogs.hero-subtitle">Notes from the studio, the dye vat, and the carving bench — for anyone who loves the slow art of making by hand.</p>
       </div>
     </section>
 
@@ -71,12 +71,12 @@
     <section style="background:var(--pr-l5);padding:32px 0 0;">
       <div class="container">
         <div class="workshops-toolbar">
-          <p class="h6-a color-sc-l3" style="text-transform:uppercase;">All stories</p>
+          <p class="h6-a color-sc-l3" style="text-transform:uppercase;" data-content="blogs.toolbar-label">All stories</p>
           <input
             type="search"
             class="workshops-search"
             id="blog-search"
-            placeholder="Search the journal..."
+            placeholder="Search the blogs..."
             aria-label="Search blog posts"
           >
         </div>
@@ -90,7 +90,7 @@
     <!-- Featured post -->
     <section class="section" style="padding-top:48px;padding-bottom:24px;">
       <div class="container">
-        <p class="eyebrow" style="margin-bottom:16px;">FEATURED</p>
+        <p class="eyebrow" style="margin-bottom:16px;" data-content="blogs.featured-eyebrow">FEATURED</p>
         <a href="#" id="featured-card" class="blog-feature" aria-label="Featured blog post">
           <div class="blog-feature__img-wrap">
             <img id="featured-img" src="" alt="" class="blog-feature__img" loading="eager" width="900" height="600">
@@ -109,12 +109,12 @@
     <!-- Posts grid -->
     <section class="section" style="padding-top:24px;">
       <div class="container">
-        <p class="eyebrow" style="margin-bottom:24px;">RECENT POSTS</p>
+        <p class="eyebrow" style="margin-bottom:24px;" data-content="blogs.recent-eyebrow">RECENT POSTS</p>
         <div class="blogs-grid" id="blogs-grid" aria-live="polite">
           <!-- Blog cards injected by blogs.js -->
         </div>
         <div id="blogs-empty" class="blogs-empty" hidden>
-          <p class="h5-a color-sc-l3">No stories match your search. Try a different keyword or category.</p>
+          <p class="h5-a color-sc-l3" data-content="blogs.empty-text">No stories match your search. Try a different keyword or category.</p>
         </div>
       </div>
     </section>

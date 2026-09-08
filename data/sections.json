@@ -4,19 +4,13 @@
     "introduction": "/images/uploads/home-introduction.jpg",
     "workshops-promo": "/images/uploads/home-workshops-promo.jpg",
     "shop-promo": "/images/uploads/home-shop-promo.jpg",
-    "testimonials": "/images/uploads/home-testimonials.jpg",
-    "gallery": "/images/uploads/home-gallery.jpg",
-    "quick-reads-large": "/images/uploads/home-quickreads-large.jpg",
-    "quick-reads-1": "/images/uploads/home-quickreads-1.jpg",
-    "quick-reads-2": "/images/uploads/home-quickreads-2.jpg"
+    "testimonial-1": "/images/uploads/home-testimonials.jpg",
+    "testimonial-2": "/images/uploads/about-sustainability.jpg",
+    "testimonial-3": "/images/uploads/about-team-hero.jpg",
+    "gallery": "/images/uploads/home-gallery.jpg"
   },
-  "about": {
-    "hero": "/images/uploads/about-hero.jpg",
-    "story": "/images/uploads/about-story.jpg",
-    "sustainability": "/images/uploads/about-sustainability.jpg",
-    "team-hero": "/images/uploads/about-team-hero.jpg",
-    "team-secondary": "/images/uploads/about-team-secondary.jpg",
-    "faq-decor": "/images/uploads/about-faq-decor.jpg"
+  "shop": {
+    "hero": "/images/uploads/shop-hero.jpg"
   },
   "workshops": {
     "hero": "/images/uploads/workshops-hero.jpg",
@@ -27,8 +21,13 @@
     "category-hero-corporate": "/images/uploads/workshops-cat-corporate.jpg",
     "category-hero-curated": "/images/uploads/workshops-cat-curated.jpg"
   },
-  "shop": {
-    "hero": "/images/uploads/shop-hero.jpg"
+  "about": {
+    "hero": "/images/uploads/about-hero.jpg",
+    "story": "/images/uploads/about-story.jpg",
+    "sustainability": "/images/uploads/about-sustainability.jpg",
+    "team-hero": "/images/uploads/about-team-hero.jpg",
+    "team-secondary": "/images/uploads/about-team-secondary.jpg",
+    "faq-decor": "/images/uploads/about-faq-decor.jpg"
   },
   "enquire": {
     "hero": "/images/uploads/enquire-hero.jpg",

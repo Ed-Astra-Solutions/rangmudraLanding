@@ -44,6 +44,7 @@ const STATIC_TRAILS = {
   'shop.html':             [{ label: 'Shop' }],
   'workshops.html':        [{ label: 'Workshops' }],
   'blogs.html':            [{ label: 'Blogs' }],
+  'gallery.html':          [{ label: 'Gallery' }],
   'about.html':            [{ label: 'About Us' }],
   'enquire.html':          [{ label: 'Enquire' }],
   'cart.html':             [{ label: 'My Cart' }],
@@ -142,6 +143,26 @@ async function buildTrail() {
       const w = workshops?.find(x => x.slug === slug);
       trail.push({ label: w?.title || 'Workshop' });
     }
+    return trail;
+  }
+
+  if (page === 'gallery-item.html') {
+    trail.push({ label: 'Gallery', href: 'gallery.html' });
+    const id = params.get('id');
+    if (id) {
+      let item = null;
+      try {
+        const { getGalleryItem } = await import('/js/data.js');
+        item = await getGalleryItem(id);
+      } catch (_) { /* fall back to a generic label */ }
+      trail.push({ label: item?.title || 'Design' });
+    }
+    return trail;
+  }
+
+  if (page === 'order-confirmation.html') {
+    trail.push({ label: 'My Cart', href: 'cart.html' });
+    trail.push({ label: 'Order confirmed' });
     return trail;
   }
 

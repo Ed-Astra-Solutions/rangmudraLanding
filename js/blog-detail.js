@@ -65,7 +65,7 @@ function renderRelated(post, posts) {
 
 function wireShare(post) {
   const url = window.location.href;
-  const text = encodeURIComponent(`${post.title} — Rangmudra Journal`);
+  const text = encodeURIComponent(`${post.title} — Rangmudra Blog`);
   document.getElementById('share-twitter').href =
     `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`;
   document.getElementById('share-facebook').href =

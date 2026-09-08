@@ -29,6 +29,11 @@ async function initComponents() {
   const { mountSaleBanner } = await import('./sale.js');
   const { updateCartBadge, syncCart } = await import('./cart.js');
   const { isLoggedIn } = await import('./auth.js');
+  const { applyContent } = await import('./content.js');
+
+  /* The header and footer carry admin-editable copy too, and they only exist
+     now that the partials are injected. */
+  applyContent();
 
   /* The header only exists now that the partial is injected, so this is the
      first point at which the cart badge can show a real count. */

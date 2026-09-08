@@ -276,6 +276,27 @@
 }
 
 /* Mobile header */
+/* Between the desktop layout and the 767px hamburger breakpoint the eight nav
+   links, the wordmark and four icon buttons no longer fit — the header pushed
+   the whole page into a horizontal scroll on iPad-landscape / small-laptop
+   widths. Tighten the gaps and tracking through that band. */
+@media (max-width: 1200px) {
+  .site-header .container { padding-inline: 20px; gap: 16px; }
+  .header__nav { gap: 20px; }
+  .header__nav-link { letter-spacing: 0.1em; }
+  .header__actions { gap: 8px; }
+}
+@media (max-width: 1080px) {
+  .header__nav { gap: 14px; }
+  .header__nav-link { font-size: 11px; letter-spacing: 0.06em; }
+  .header__icon-btn { width: 38px; height: 38px; }
+  .header__wordmark { font-size: 24px; }
+}
+@media (max-width: 900px) {
+  .header__nav { gap: 10px; }
+  .header__nav-link { font-size: 10px; letter-spacing: 0.04em; }
+}
+
 @media (max-width: 767px) {
   .site-header { height: 64px; }
   .site-header .container { grid-template-columns: 1fr auto; padding-inline: 16px; }
@@ -825,7 +846,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
   margin-bottom: 16px;
 }
@@ -979,7 +1000,7 @@
   font-family: var(--font-archivo);
   font-size: 24px;
   line-height: 32px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--w1);
   max-width: 460px;
   margin-top: 16px;
@@ -1074,11 +1095,15 @@
 
 .dropdown.open .dropdown__chevron { transform: rotate(180deg); }
 
+/* Anchored to the trigger's RIGHT edge: these dropdowns sit at the right end of
+   the shop toolbar, and a left-anchored menu wider than its trigger hung past
+   the viewport and put the whole page into a horizontal scroll. */
 .dropdown__menu {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
+  right: 0;
   min-width: 100%;
+  max-width: calc(100vw - 40px);
   background: var(--pr-l5);
   border: 1px solid var(--sc-100);
   border-radius: 8px;
@@ -1340,7 +1365,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-100);
   transition: border-color var(--dur-micro) var(--ease-standard);
 }
@@ -1492,7 +1517,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
   padding-bottom: 24px;
 }
@@ -1616,7 +1641,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
 }
 
@@ -1680,11 +1705,15 @@
   overflow: hidden;
 }
 
+/* The label used to take a fixed 55% of a ~360px sidebar, which left the input
+   too narrow to show "Enter code" at all once the Apply button had its share.
+   It now shrinks to its text and the input takes the space that is left. */
 .coupon-input__label {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55%;
+  flex: 0 1 auto;
+  min-width: 0;
   padding-inline: 20px;
   background: var(--pr-b2);
   font-family: var(--font-archivo);
@@ -1704,12 +1733,14 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-100);
   border: none;
+  min-width: 0;
 }
 
-.coupon-input__field::placeholder { color: var(--pr-100); }
+/* pr-100 tan on white is about 2:1 — the placeholder was there but unreadable. */
+.coupon-input__field::placeholder { color: var(--sc-l3); opacity: 1; }
 
 .coupon-input__apply {
   flex-shrink: 0;
@@ -1728,9 +1759,17 @@
 .coupon-input__apply:hover { background: var(--sc-l1); }
 
 @media (max-width: 767px) {
-  /* Give the input half more room so the "Enter code" placeholder isn't clipped. */
-  .coupon-input__label { width: 48%; padding-inline: 16px; font-size: 12px; }
-  .coupon-input__field { padding-inline: 16px; font-size: 15px; }
+  .coupon-input__label { padding-inline: 14px; font-size: 12px; }
+  .coupon-input__field { padding-inline: 14px; font-size: 15px; }
+  .coupon-input__apply { padding-inline: 16px; }
+}
+
+/* On a phone the label and the Apply button together leave the input barely
+   wide enough for "Enter code" — trim both so the field stays readable. */
+@media (max-width: 480px) {
+  .coupon-input__label { padding-inline: 12px; font-size: 11px; letter-spacing: 0.1em; }
+  .coupon-input__field { padding-inline: 12px; font-size: 14px; letter-spacing: 0.02em; }
+  .coupon-input__apply { padding-inline: 12px; font-size: 11px; letter-spacing: 0.1em; }
 }
 
 /* ─── Auth Modal ──────────────────────────────────────────────────────────── */
@@ -1815,7 +1854,7 @@
   font-family: var(--font-archivo);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.02em;
   color: var(--sc-l3);
   text-align: center;
   margin-top: 12px;
@@ -2138,8 +2177,21 @@
   font-size: 13px;
   color: var(--sc-100);
 }
-.breadcrumb-wrap .breadcrumb a { color: var(--sc-l1); text-decoration: none; }
-.breadcrumb-wrap .breadcrumb a:hover { color: var(--sc-100); text-decoration: underline; }
+/* The ancestor crumbs are links and have to look like links: underlined and in
+   the brand tan, with the current page left as plain, heavier ink. Before this
+   both were near-identical browns with no underline, which read as a row of
+   dead text. */
+.breadcrumb-wrap .breadcrumb a {
+  color: var(--pr-b2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  border-radius: 3px;
+  transition: color var(--dur-micro) var(--ease-standard);
+}
+.breadcrumb-wrap .breadcrumb a:hover,
+.breadcrumb-wrap .breadcrumb a:focus-visible { color: var(--sc-100); }
+.breadcrumb-wrap .breadcrumb [aria-current="page"] { color: var(--sc-100); }
 .breadcrumb-wrap .breadcrumb__sep { color: var(--sc-l3); }
 .breadcrumb-wrap .breadcrumb {
   max-width: var(--max-content);
