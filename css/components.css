@@ -2236,11 +2236,15 @@
   padding: 80px 48px;
 }
 
+/* Pinned inside the artwork rather than the viewport — see .hero-home-btn. */
 .page-hero__back {
   position: absolute;
   top: 24px;
-  left: 48px;
+  left: max(48px, calc((100% - var(--max-media)) / 2 + 48px));
   z-index: 3;
+}
+@media (max-width: 767px) {
+  .page-hero__back { left: max(20px, calc((100% - var(--max-media)) / 2 + 20px)); }
 }
 
 /* ─── Cart sidebar ────────────────────────────────────────────────────────── */

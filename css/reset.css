@@ -66,3 +66,11 @@ table {
     scroll-behavior: auto !important;
   }
 }
+
+/* Below this the design stops shrinking — the page scrolls sideways instead of
+   compressing type and images past the point where they are still readable.
+   360px is narrower than any current phone, so it only ever engages on a
+   deliberately tiny window. */
+body {
+  min-width: var(--min-page, 360px);
+}

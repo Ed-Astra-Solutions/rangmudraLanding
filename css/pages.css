@@ -46,7 +46,9 @@
 
 .home-hero__wordmark {
   font-family: var(--font-italiana);
-  font-size: 96px;
+  /* Floored at 40px: below that the wordmark stops shrinking, which is the
+     point past which it no longer reads as the brand mark. */
+  font-size: clamp(40px, 7.5vw, 96px);
   line-height: 1;
   letter-spacing: 0.15em;
   color: var(--pr-l5);
@@ -55,11 +57,27 @@
   animation: heroReveal var(--dur-hero) var(--ease-decelerate) 200ms forwards;
 }
 
+/* Strapline under the wordmark. Deliberately small and wide-tracked against the
+   96px display type — it reads as a subtitle, not a second heading. Follows the
+   wordmark in on the same reveal, a beat later. */
+.home-hero__tagline {
+  font-family: var(--font-archivo);
+  font-size: clamp(11px, 1.1vw, 14px);
+  line-height: 1.6;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pr-l5);
+  margin-top: 18px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: heroReveal var(--dur-hero) var(--ease-decelerate) 400ms forwards;
+}
+
 @keyframes heroReveal {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 767px) { .home-hero__wordmark { font-size: 48px; } }
+/* (size is handled by the clamp above) */
 
 /* Introduction section */
 .intro-grid {
@@ -115,6 +133,11 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Two promo bands stacked edge to edge read as one confusing image. A cream gap
+   between them separates "Workshops" from "Shop" as two distinct invitations. */
+.promo-section + .promo-section { margin-top: 64px; }
+@media (max-width: 767px) { .promo-section + .promo-section { margin-top: 40px; } }
 
 .promo-section__bg {
   position: absolute;
@@ -262,6 +285,55 @@
 .testimonials-grid--no-media { grid-template-columns: minmax(0, 1fr); }
 .testimonials-grid--no-media .testimonial-quote { max-width: 40ch; }
 
+/* The hero's Home button. Pinned 48px inside the ARTWORK, not the viewport, so
+   once the image is capped on a wide screen the button stays on the photo
+   instead of floating out on the bare matte beside it. */
+.hero-home-btn {
+  position: absolute;
+  top: 24px;
+  left: max(48px, calc((100% - var(--max-media)) / 2 + 48px));
+  z-index: 3;
+}
+@media (max-width: 767px) { .hero-home-btn { left: max(20px, calc((100% - var(--max-media)) / 2 + 20px)); } }
+
+/* ─── Full-bleed artwork: cap, centre, let the band's background fill ──────
+   These bands used to stretch their photo across the whole viewport, so on a
+   wide monitor the image was blown up and heavily cropped. The artwork now
+   stops growing at --max-media and sits centred, with the band's own colour
+   filling the space either side. Below that width nothing changes — the image
+   still spans the viewport as before. */
+.home-hero,
+.promo-section,
+.page-hero,
+.shop-hero,
+.workshops-hero {
+  /* The colour that shows beside the artwork on an ultra-wide screen. These
+     bands are dark-text-on-photo, so chocolate reads as an intentional matte.
+     .enquire-hero sets its own cream ground further down and keeps it. */
+  background-color: var(--sc-100);
+}
+
+.home-hero__bg,
+.promo-section__bg,
+.page-hero__bg,
+.shop-hero__bg,
+.workshops-hero__bg,
+.enquire-hero__bg {
+  max-width: var(--max-media);
+  /* inset:0 + auto margins centres the capped image inside the band. */
+  margin-inline: auto;
+}
+
+/* The scrim/overlay has to stay with the artwork rather than covering the
+   bare background beside it. */
+.home-hero__overlay,
+.promo-section__overlay,
+.shop-hero__overlay,
+.workshops-hero__overlay {
+  max-width: var(--max-media);
+  margin-inline: auto;
+}
+
 /* Homepage gallery teaser — one photograph that opens the gallery page. */
 .gallery-teaser {
   position: relative;
@@ -273,6 +345,8 @@
 .gallery-teaser__image {
   display: block;
   width: 100%;
+  max-width: var(--max-media);
+  margin-inline: auto;
   max-height: 680px;
   object-fit: cover;
   transition: transform 600ms var(--ease-standard);

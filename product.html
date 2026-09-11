@@ -107,13 +107,13 @@
           <p class="process-eyebrow">THE PROCESS</p>
           <div class="process-strip" aria-label="Block printing process steps">
             <div class="process-card">
-              <img src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
+              <img data-section="shop.process-1" src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
             <div class="process-card">
-              <img src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
+              <img data-section="shop.process-2" src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
             <div class="process-card">
-              <img src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
+              <img data-section="shop.process-3" src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
           </div>
         </div>
@@ -168,6 +168,7 @@
   <div data-partial="auth-modal"></div>
 
   <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { addToCart, isInCart } from '/js/cart.js';
     import { initFilterPills } from '/js/filter-pills.js';

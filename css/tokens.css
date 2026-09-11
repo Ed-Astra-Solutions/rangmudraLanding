@@ -72,6 +72,12 @@
 
   /* Layout */
   --max-content: 1280px;
+  /* Full-bleed artwork stops growing here and the band's own background fills
+     the rest, so a photo is never stretched across an ultra-wide monitor. */
+  --max-media: 1600px;
+  /* The layout stops compressing at this width; narrower than this the page
+     scrolls sideways rather than squashing the design further. */
+  --min-page: 360px;
   --gutter-desktop: 48px;
   --gutter-tablet: 32px;
   --gutter-mobile: 20px;
