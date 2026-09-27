@@ -30,6 +30,7 @@
       </div>
       <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:16px;"></div>
       <p class="h5-a color-sc-l3" id="cart-item-count">Loading cart...</p>
+      <p class="h6-a cart-merge-note" id="merge-note" role="status" hidden></p>
 
       <div style="display:flex;flex-direction:column;gap:16px;margin-top:32px;" id="cart-items-list" aria-label="Cart items">
         <!-- Populated by JS -->
@@ -115,7 +116,7 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getCart, removeFromCart } from '/js/cart.js';
+    import { getCart, removeFromCart, signInForCheckout } from '/js/cart.js';
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, itemPriceHTML, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxPercentFor } from '/js/tax.js';
@@ -447,11 +448,26 @@
       const btn = document.getElementById('proceed-btn');
       const mobileBtn = document.getElementById('mobile-proceed-btn');
       /* Sign-in happens here, before the address step — so the address page
-         opens with the shopper's saved addresses already available. */
+         opens with the shopper's saved addresses already available, and any
+         pieces the account's saved cart adds are shown here before they're
+         paid for. The next Proceed goes on to checkout. */
       const go = async () => {
         if (getCart().length === 0 || soldOutIds.size > 0) return;
-        const { requireAuth } = await import('/js/auth.js');
-        requireAuth({ onSuccess: () => { window.location.href = 'checkout-address.html'; } });
+        const added = await signInForCheckout();
+        if (added === null) return; // dismissed the sign-in
+        if (!added.length) { window.location.href = 'checkout-address.html'; return; }
+        const names = added.map((i) => i.name).filter(Boolean).join(', ');
+        const note = document.getElementById('merge-note');
+        note.textContent = added.length === 1
+          ? `Heads-up — your account had 1 more piece saved in its cart, so it's been added${names ? `: ${names}` : ''}. Remove it below if you don't want it, then Proceed.`
+          : `Heads-up — your account had ${added.length} more pieces saved in its cart, so they've been added${names ? `: ${names}` : ''}. Remove any you don't want below, then Proceed.`;
+        note.hidden = false;
+        // The added pieces may have sold out since they were saved.
+        await refreshStock();
+        renderCart();
+        syncProceedState();
+        updateSummary();
+        note.scrollIntoView({ behavior: 'smooth', block: 'center' });
       };
       btn?.addEventListener('click', go);
       mobileBtn?.addEventListener('click', go);

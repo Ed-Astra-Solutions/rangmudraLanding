@@ -5,8 +5,10 @@
  *
  * Lists what is in the cart (each line links back to its product page), the
  * subtotal after product discounts / a live sale, and two ways on:
- *   QUICK CHECKOUT → straight to the delivery-address step (which asks a guest
- *                    to sign in first)
+ *   QUICK CHECKOUT → signs a guest in first, then on to the delivery-address
+ *                    step. Signing in merges the account's saved cart in, so
+ *                    if that adds pieces the drawer stays open and says so,
+ *                    and the next click goes on to checkout.
  *   SHOP MORE      → back to the shop
  * plus a quieter "View full cart" for the full breakdown. A coupon can be
  * applied right here; it is saved under the same key the cart page and the
@@ -15,7 +17,7 @@
  * Tax and delivery are left to checkout: delivery depends on the address.
  */
 
-import { getCart, removeFromCart } from '/js/cart.js';
+import { getCart, removeFromCart, signInForCheckout } from '/js/cart.js';
 import { getSale, effectivePrice, itemPriceHTML, formatPrice } from '/js/sale.js';
 import { apiUrl } from '/js/config.js';
 
@@ -74,6 +76,7 @@ function ensureDrawer() {
           <span id="cart-drawer-subtotal"></span>
         </div>
         <p class="cart-drawer__note">Tax and delivery are worked out at checkout.</p>
+        <p class="cart-drawer__merge" id="cart-drawer-merge" role="status" hidden></p>
         <a href="checkout-address.html" class="btn-primary cart-drawer__checkout">QUICK CHECKOUT →</a>
         <a href="shop.html" class="cart-drawer__shop-more">SHOP MORE</a>
         <a href="cart.html" class="cart-drawer__view-cart">View full cart</a>
@@ -91,6 +94,15 @@ function ensureDrawer() {
       if (line) removeFromCart(line.id, line.size);
     }
   });
+  drawer.querySelector('.cart-drawer__checkout').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const added = await signInForCheckout();
+    if (added === null) return; // dismissed the sign-in
+    // Signing in closes the modal, which lets the page scroll again.
+    if (!drawer.hidden) document.body.style.overflow = 'hidden';
+    if (!added.length) { window.location.href = 'checkout-address.html'; return; }
+    showMergeNotice(added);
+  });
   drawer.querySelector('#cart-drawer-coupon-form').addEventListener('submit', (e) => {
     e.preventDefault();
     applyCoupon(drawer.querySelector('#cart-drawer-coupon').value);
@@ -106,6 +118,17 @@ function ensureDrawer() {
     if (coupon) applyCoupon(coupon.code, { quiet: true });
   });
   return drawer;
+}
+
+// Heads-up after sign-in pulled pieces saved on the account into the cart.
+function showMergeNotice(added) {
+  const names = added.map((i) => i.name).filter(Boolean);
+  const list = names.length ? `: ${names.join(', ')}` : '';
+  const el = drawer.querySelector('#cart-drawer-merge');
+  el.textContent = added.length === 1
+    ? `Heads-up — your account had 1 more piece saved in its cart, so it's been added${list}. Remove it here if you don't want it, or continue to check out.`
+    : `Heads-up — your account had ${added.length} more pieces saved in its cart, so they've been added${list}. Remove any you don't want here, or continue to check out.`;
+  el.hidden = false;
 }
 
 function render(status = '') {
@@ -247,6 +270,7 @@ export async function openCartDrawer({ status = 'Added to your cart' } = {}) {
 
 export function closeCartDrawer() {
   if (!drawer || drawer.hidden) return;
+  drawer.querySelector('#cart-drawer-merge').hidden = true;
   drawer.classList.remove('is-open');
   document.body.style.overflow = '';
   hideTimer = setTimeout(() => { drawer.hidden = true; }, 300);

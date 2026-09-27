@@ -2677,6 +2677,16 @@
   margin-bottom: 12px;
 }
 
+.cart-merge-note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--pr-l2);
+  color: var(--sc-100);
+  text-transform: none;
+}
+.cart-merge-note[hidden] { display: none; }
+
 .cart-item__controls {
   display: flex;
   align-items: center;
@@ -3665,6 +3675,18 @@ main {
   letter-spacing: 0.05em;
   color: var(--sc-l3);
 }
+
+.cart-drawer__merge {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--pr-l2);
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.02em;
+  color: var(--sc-100);
+}
+.cart-drawer__merge[hidden] { display: none; }
 
 .cart-drawer__note {
   font-family: var(--font-archivo);

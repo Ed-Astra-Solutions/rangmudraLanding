@@ -6,7 +6,7 @@
  * mirrored to their account (PUT /api/user/cart), and the two are merged at
  * sign-in so a guest basket carries into the account instead of being lost. */
 
-import { isLoggedIn, authFetch } from './auth.js';
+import { isLoggedIn, authFetch, requireAuth } from './auth.js';
 
 const CART_KEY = 'rangmudra_cart';
 
@@ -199,6 +199,27 @@ function syncCart({ signIn = false } = {}) {
   return syncing;
 }
 
+/* Sign in before checkout, not on the address step: signing in merges the
+   account's saved cart into this browser's, and the shopper has to see that
+   before paying for it. Resolves with the pieces the merge added (empty when
+   nothing changed or they were already signed in), or null if they dismissed
+   the sign-in. */
+function signInForCheckout() {
+  if (isLoggedIn()) return Promise.resolve([]);
+  const before = new Set(getCart().map(i => i.id));
+  return new Promise((resolve) => {
+    requireAuth({
+      // The sign-in's own auth-changed sync is already running; syncCart()
+      // hands back that same run.
+      onSuccess: async () => {
+        const after = await syncCart({ signIn: true });
+        resolve(after.filter(i => !before.has(i.id)));
+      },
+      onCancel: () => resolve(null),
+    });
+  });
+}
+
 window.addEventListener('auth-changed', (e) => {
   if (e.detail?.loggedIn) {
     syncCart({ signIn: true });
@@ -233,4 +254,4 @@ window.addEventListener('cart-updated', updateCartBadge);
 // calls updateCartBadge() again once the partials are in place.
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 
-export { getCart, addToCart, removeFromCart, updateQty, clearCart, getCartTotal, getCartCount, isInCart, updateCartBadge, syncCart };
+export { getCart, addToCart, removeFromCart, updateQty, clearCart, getCartTotal, getCartCount, isInCart, updateCartBadge, syncCart, signInForCheckout };
