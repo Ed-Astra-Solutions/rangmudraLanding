@@ -77,7 +77,7 @@ function wireShare(post) {
   document.getElementById('share-facebook').href =
     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
   /* Instagram has no share-by-URL; link to brand profile. */
-  document.getElementById('share-instagram').href = 'https://instagram.com/';
+  document.getElementById('share-instagram').href = 'https://www.instagram.com/rangmudra_bengaluru/';
   document.getElementById('share-copy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(url);

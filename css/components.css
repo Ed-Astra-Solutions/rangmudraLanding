@@ -492,6 +492,19 @@
   margin-top: 32px;
 }
 
+.footer__partners-title {
+  font-family: var(--font-archivo);
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--pr-100);
+  margin-top: 32px;
+  margin-bottom: 8px;
+}
+
+.footer__partner-link { display: inline-block; }
+
 .footer__newsletter-form {
   display: flex;
   border: 1px solid rgba(236, 227, 215, 0.3);
