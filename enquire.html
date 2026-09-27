@@ -213,8 +213,10 @@
   <script type="module">
     import { initCarousels } from '/js/carousel.js';
     import { apiUrl } from '/js/config.js';
+    import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     document.addEventListener('DOMContentLoaded', () => {
       initCarousels();
+      armForm(document.getElementById('contact-form'));
 
       document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -224,7 +226,7 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
         try {
-          const res = await fetch(apiUrl('/api/enquiry'), {
+          const res = await guardedFetch(apiUrl('/api/enquiry'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -233,6 +235,7 @@
               phone: form.querySelector('#c-phone').value,
               company: form.querySelector('#c-company').value,
               message: form.querySelector('#c-message').value,
+              ...(await botFields(form, 'enquiry')),
             }),
           });
           if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');

@@ -222,6 +222,7 @@
   <script type="module">
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
+    import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     import { primaryImage } from '/js/media.js';
 
     const CATEGORIES = ['experience', 'corporate', 'curated'];
@@ -283,6 +284,7 @@
 
     openBtn?.addEventListener('click', () => openPanel());
     panelClose?.addEventListener('click', closePanel);
+    armForm(document.getElementById('enquire-form'));
     document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
@@ -292,7 +294,7 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
       try {
-        const res = await fetch(apiUrl('/api/workshops/book'), {
+        const res = await guardedFetch(apiUrl('/api/workshops/book'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -304,6 +306,7 @@
             groupSize: form.querySelector('#eq-group').value,
             date: form.querySelector('#eq-date').value,
             message: form.querySelector('#eq-message').value,
+            ...(await botFields(form, 'workshop_booking')),
           }),
         });
         if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');

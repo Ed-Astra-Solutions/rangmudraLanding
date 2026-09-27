@@ -559,6 +559,80 @@
 
 .footer__legal-link:hover { opacity: 0.9; }
 
+/* Google's required notice, standing in for the hidden reCAPTCHA badge. */
+.footer__recaptcha {
+  padding-top: 16px;
+  font-family: var(--font-archivo);
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.15em;
+  color: var(--pr-l5);
+  opacity: 0.5;
+}
+
+.footer__recaptcha a { color: inherit; text-decoration: underline; }
+
+/* reCAPTCHA v3's floating badge would sit on top of the WhatsApp FAB; Google
+   permits hiding it when the notice above is shown in the user flow. */
+.grecaptcha-badge { visibility: hidden; }
+
+/* v2 "I'm not a robot" fallback, shown only when the v3 score is too low.
+   Sits above every other layer, including the sign-in modal. */
+.captcha-challenge {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(44, 26, 16, 0.5);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-standard);
+}
+
+.captcha-challenge.open { opacity: 1; }
+
+.captcha-challenge__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 32px 32px;
+  text-align: center;
+  background: var(--pr-l5);
+  border-radius: 20px;
+}
+
+.captcha-challenge__title { color: var(--sc-100); }
+
+.captcha-challenge__text {
+  margin-top: 12px;
+  color: var(--sc-l3);
+}
+
+/* The Google widget is a fixed 304px; keep it inside narrow phones. */
+.captcha-challenge__widget {
+  min-height: 78px;
+  margin-top: 24px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.captcha-challenge__cancel {
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 8px 20px;
+  color: var(--sc-l3);
+  text-transform: uppercase;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.captcha-challenge__cancel:hover { color: var(--sc-100); }
+
 @media (max-width: 1023px) {
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 48px; }
 }
@@ -2163,6 +2237,7 @@
 }
 
 .auth-modal__terms a { color: var(--sc-l3); text-decoration: underline; }
+.auth-modal__recaptcha { margin-top: 12px; line-height: 14px; }
 
 .auth-modal__whatsapp-row {
   display: flex;

@@ -227,6 +227,7 @@
   <script type="module">
     import { getWorkshops } from '/js/data.js';
     import { apiUrl } from '/js/config.js';
+    import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     import { entityMedia, applyMedia } from '/js/media.js';
     import { renderMediaMosaic, openMediaLightbox } from '/js/media-mosaic.js';
 
@@ -375,6 +376,7 @@
       if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
     });
 
+    armForm(document.getElementById('enquire-form'));
     document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
@@ -384,7 +386,7 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
       try {
-        const res = await fetch(apiUrl('/api/workshops/book'), {
+        const res = await guardedFetch(apiUrl('/api/workshops/book'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -396,6 +398,7 @@
             groupSize: form.querySelector('#eq-group').value,
             date: form.querySelector('#eq-date').value,
             message: form.querySelector('#eq-message').value,
+            ...(await botFields(form, 'workshop_booking')),
           }),
         });
         if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');

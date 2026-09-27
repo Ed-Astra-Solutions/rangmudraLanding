@@ -1,6 +1,7 @@
 /* auth.js — Email OTP auth modal logic (talks to the server). */
 
 import { apiUrl } from '/js/config.js';
+import { getRecaptchaToken, warmUp, guardedFetch } from '/js/bot-guard.js';
 
 const SESSION_KEY = 'rangmudra_session';
 
@@ -104,6 +105,7 @@ function openAuthModal(onSuccess, onCancel) {
 
   const emailInput = document.getElementById('email-input');
   if (emailInput) setTimeout(() => emailInput.focus(), 100);
+  warmUp(); // load reCAPTCHA while the shopper types their email
 }
 
 function closeAuthModal() {
@@ -183,10 +185,10 @@ function startResendCountdown() {
 }
 
 async function requestOtp(email) {
-  const res = await fetch(apiUrl('/api/auth/request-otp'), {
+  const res = await guardedFetch(apiUrl('/api/auth/request-otp'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, recaptchaToken: await getRecaptchaToken('otp_request') }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'Could not send the code. Please try again.');

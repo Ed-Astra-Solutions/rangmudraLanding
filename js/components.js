@@ -62,8 +62,10 @@ async function initNewsletter() {
   const form = document.querySelector('.footer__newsletter-form');
   if (!form) return;
   const { apiUrl } = await import('./config.js');
+  const { armForm, botFields, guardedFetch } = await import('./bot-guard.js');
   // Replace the no-op onsubmit="return false" with a real handler.
   form.removeAttribute('onsubmit');
+  armForm(form);
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = form.querySelector('input[type=email]');
@@ -72,10 +74,10 @@ async function initNewsletter() {
     if (!email) return;
     if (btn) btn.disabled = true;
     try {
-      const res = await fetch(apiUrl('/api/newsletter'), {
+      const res = await guardedFetch(apiUrl('/api/newsletter'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ...(await botFields(form, 'newsletter')) }),
       });
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
       form.reset();
