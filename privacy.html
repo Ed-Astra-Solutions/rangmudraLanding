@@ -36,31 +36,26 @@
   <div data-partial="header"></div>
 
   <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
-  <main style="padding-top:calc(88px + 64px);padding-bottom:80px;">
-    <div class="container" style="max-width:720px;">
-      <h1 class="h2-i color-sc-100" style="margin-bottom:48px;">Privacy Policy</h1>
-      <div style="display:flex;flex-direction:column;gap:32px;">
-        <div>
-          <h2 class="h4-i color-sc-100" style="margin-bottom:16px;">Information We Collect</h2>
-          <p class="h5-a color-sc-l3">We collect your phone number for authentication and your delivery addresses for order fulfilment. We do not collect or store payment card details — all payments are processed securely through our payment gateway partner.</p>
-        </div>
-        <div>
-          <h2 class="h4-i color-sc-100" style="margin-bottom:16px;">How We Use Your Information</h2>
-          <p class="h5-a color-sc-l3">Your information is used solely for processing orders, sending shipping updates, and improving your experience on our platform. We do not sell your data to third parties.</p>
-        </div>
-        <div>
-          <h2 class="h4-i color-sc-100" style="margin-bottom:16px;">Data Security</h2>
-          <p class="h5-a color-sc-l3">We use industry-standard encryption and security practices to protect your personal information. Our session tokens expire after 30 days.</p>
-        </div>
-        <div>
-          <h2 class="h4-i color-sc-100" style="margin-bottom:16px;">Contact</h2>
-          <p class="h5-a color-sc-l3">For any privacy concerns, please write to us at <a href="mailto:hello@rangmudra.com" style="color:var(--pr-b2);text-decoration:underline;">hello@rangmudra.com</a>.</p>
-        </div>
+  <main data-policy="privacy" style="padding-top:calc(88px + 64px);padding-bottom:80px;">
+    <!-- Editable from Admin → Website page design → Privacy Policy. This copy
+         is the static fallback; js/policy.js replaces it with the saved text. -->
+    <div class="container" style="max-width:720px;padding-top:64px;">
+      <h1 class="h2-i color-sc-100" style="margin-bottom:48px;" data-policy-title>Privacy Policy</h1>
+      <div class="policy__body" data-policy-body>
+        <h2 class="h4-i color-sc-100 policy__heading">Information We Collect</h2>
+        <p class="h5-a color-sc-l3">We collect your email address to sign you in and your delivery addresses for order fulfilment. We do not collect or store payment card details — all payments are processed securely through our payment gateway partner.</p>
+        <h2 class="h4-i color-sc-100 policy__heading">How We Use Your Information</h2>
+        <p class="h5-a color-sc-l3">Your information is used solely for processing orders, sending shipping updates, and improving your experience on our platform. We do not sell your data to third parties.</p>
+        <h2 class="h4-i color-sc-100 policy__heading">Data Security</h2>
+        <p class="h5-a color-sc-l3">We use industry-standard encryption and security practices to protect your personal information. Our session tokens expire after 30 days.</p>
+        <h2 class="h4-i color-sc-100 policy__heading">Contact</h2>
+        <p class="h5-a color-sc-l3">For any privacy concerns, please write to us at <a href="mailto:rangmudrabengaluru@gmail.com">rangmudrabengaluru@gmail.com</a>.</p>
       </div>
     </div>
   </main>
   <div data-partial="footer"></div>
   <div data-partial="auth-modal"></div>
   <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/policy.js"></script>
 </body>
 </html>

@@ -159,7 +159,9 @@
           <div>
             <p class="intro-body" style="margin-bottom:24px;" data-content="about.team-body-1">Our team is a family of passionate artisans, designers, and heritage enthusiasts. Each member brings a unique skill set — from the precise hand of a master block carver to the keen eye of a pattern designer.</p>
             <p class="intro-body" style="margin-bottom:32px;" data-content="about.team-body-2">We are committed to using only organic fabrics and natural dyes in every piece we create. Our partnership with local artisan communities ensures that ancient skills are preserved while providing sustainable livelihoods.</p>
-            <button class="btn-primary pill" style="display:flex;align-items:center;gap:8px;" aria-label="Play team video">
+            <!-- Shown only once a video is set in Admin → About Us → "Our Team —
+                 video"; with no video there is nothing for it to play. -->
+            <button class="btn-primary pill" id="team-play-btn" style="display:none;align-items:center;gap:8px;" aria-label="Play team video">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               PLAY NOW
             </button>
@@ -181,53 +183,53 @@
     <!-- FAQ -->
     <section class="section bg-cream" aria-labelledby="faq-heading">
       <div class="container">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+        <div class="faq-grid">
           <div>
             <h2 class="h2-i color-sc-100" id="faq-heading" style="margin-bottom:48px;" data-content="about.faq-heading">Frequently Asked Questions</h2>
             <div class="accordion-list">
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-trigger__question" data-content="about.faq-1-question">Do I need any prior experience?</span>
+                  <span class="accordion-trigger__question">Do I need any prior experience?</span>
                   <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <div class="accordion-content">
-                  <p class="accordion-body" data-content="about.faq-1-answer">No prior experience is needed. Our workshops are designed for complete beginners and walk you through every step of the process. Our facilitators are patient and encouraging.</p>
+                  <p class="accordion-body">No prior experience is needed. Our workshops are designed for complete beginners and walk you through every step of the process. Our facilitators are patient and encouraging.</p>
                 </div>
               </div>
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-trigger__question" data-content="about.faq-2-question">What should I wear?</span>
+                  <span class="accordion-trigger__question">What should I wear?</span>
                   <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <div class="accordion-content">
-                  <p class="accordion-body" data-content="about.faq-2-answer">We recommend wearing clothes you don't mind getting a little dye on. Aprons are provided, but working with natural dyes can sometimes leave a mark.</p>
+                  <p class="accordion-body">We recommend wearing clothes you don't mind getting a little dye on. Aprons are provided, but working with natural dyes can sometimes leave a mark.</p>
                 </div>
               </div>
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-trigger__question" data-content="about.faq-3-question">Are the dyes safe?</span>
+                  <span class="accordion-trigger__question">Are the dyes safe?</span>
                   <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <div class="accordion-content">
-                  <p class="accordion-body" data-content="about.faq-3-answer">Yes, all our dyes are natural, plant-based, and non-toxic. They are safe for all ages including children and those with sensitive skin.</p>
+                  <p class="accordion-body">Yes, all our dyes are natural, plant-based, and non-toxic. They are safe for all ages including children and those with sensitive skin.</p>
                 </div>
               </div>
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-trigger__question" data-content="about.faq-4-question">Can I book a private group session?</span>
+                  <span class="accordion-trigger__question">Can I book a private group session?</span>
                   <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <div class="accordion-content">
-                  <p class="accordion-body" data-content="about.faq-4-answer">Absolutely! We welcome private bookings for birthday parties, corporate events, school groups, and family gatherings. Please reach out via our Enquire page for custom pricing.</p>
+                  <p class="accordion-body">Absolutely! We welcome private bookings for birthday parties, corporate events, school groups, and family gatherings. Please reach out via our Enquire page for custom pricing.</p>
                 </div>
               </div>
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-trigger__question" data-content="about.faq-5-question">What is the cancellation policy?</span>
+                  <span class="accordion-trigger__question">What is the cancellation policy?</span>
                   <svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <div class="accordion-content">
-                  <p class="accordion-body" data-content="about.faq-5-answer">Cancellations made 48 hours or more before the workshop receive a full refund. Cancellations within 48 hours may be rescheduled to a future date. No-shows are non-refundable.</p>
+                  <p class="accordion-body">Cancellations made 48 hours or more before the workshop receive a full refund. Cancellations within 48 hours may be rescheduled to a future date. No-shows are non-refundable.</p>
                 </div>
               </div>
             </div>
@@ -256,9 +258,39 @@
   <script type="module" src="/js/testimonials.js"></script>
   <script type="module">
     import { initAccordions } from '/js/accordion.js';
-    document.addEventListener('DOMContentLoaded', () => {
-      initAccordions();
-    });
+    import { getFaqs } from '/js/data.js';
+    import { getSection } from '/js/sections.js';
+    import { openMediaLightbox } from '/js/media-mosaic.js';
+
+    const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const PLUS = '<svg class="accordion-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+
+    // The FAQ is managed as a list in Admin → About Us → FAQ. The questions in
+    // the markup are the static fallback and stay if the list can't be loaded.
+    try {
+      const faqs = await getFaqs();
+      const list = document.querySelector('.accordion-list');
+      if (list && faqs.length) {
+        list.innerHTML = faqs.map((f) => `
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false">
+              <span class="accordion-trigger__question">${esc(f.question)}</span>
+              ${PLUS}
+            </button>
+            <div class="accordion-content">
+              <p class="accordion-body">${esc(f.answer).replace(/\n/g, '<br>')}</p>
+            </div>
+          </div>`).join('');
+      }
+    } catch (_) { /* keep the inline questions */ }
+    initAccordions();
+
+    const video = await getSection('about.team-video');
+    const playBtn = document.getElementById('team-play-btn');
+    if (playBtn && video && video.type === 'video') {
+      playBtn.style.display = 'flex';
+      playBtn.addEventListener('click', () => openMediaLightbox([video]));
+    }
   </script>
 </body>
 </html>

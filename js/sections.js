@@ -29,6 +29,17 @@ async function loadSections() {
   return cached;
 }
 
+// One slot's media entry (or null when it's empty), for a page that decides
+// what to show based on it — e.g. the About page only offers PLAY NOW once a
+// team video has been uploaded.
+export async function getSection(ref) {
+  const sections = await loadSections();
+  if (!sections || !ref) return null;
+  const [page, slot] = ref.split('.');
+  const value = sections[page] && sections[page][slot];
+  return value ? normalizeMedia(value) : null;
+}
+
 // Exported so a page can set data-section from a query param and re-apply.
 // Re-running is safe: applyMedia() swaps the element in place.
 export async function applySections() {

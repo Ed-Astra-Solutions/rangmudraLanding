@@ -63,17 +63,7 @@
     "team-body-1": "Our team is a family of passionate artisans, designers, and heritage enthusiasts. Each member brings a unique skill set — from the precise hand of a master block carver to the keen eye of a pattern designer.",
     "team-body-2": "We are committed to using only organic fabrics and natural dyes in every piece we create. Our partnership with local artisan communities ensures that ancient skills are preserved while providing sustainable livelihoods.",
     "faq-heading": "Frequently Asked Questions",
-    "testimonials-heading": "WHAT OUR\nPATRONS SAY",
-    "faq-1-question": "Do I need any prior experience?",
-    "faq-2-question": "What should I wear?",
-    "faq-3-question": "Are the dyes safe?",
-    "faq-4-question": "Can I book a private group session?",
-    "faq-5-question": "What is the cancellation policy?",
-    "faq-1-answer": "No prior experience is needed. Our workshops are designed for complete beginners and walk you through every step of the process. Our facilitators are patient and encouraging.",
-    "faq-2-answer": "We recommend wearing clothes you don't mind getting a little dye on. Aprons are provided, but working with natural dyes can sometimes leave a mark.",
-    "faq-3-answer": "Yes, all our dyes are natural, plant-based, and non-toxic. They are safe for all ages including children and those with sensitive skin.",
-    "faq-4-answer": "Absolutely! We welcome private bookings for birthday parties, corporate events, school groups, and family gatherings. Please reach out via our Enquire page for custom pricing.",
-    "faq-5-answer": "Cancellations made 48 hours or more before the workshop receive a full refund. Cancellations within 48 hours may be rescheduled to a future date. No-shows are non-refundable."
+    "testimonials-heading": "WHAT OUR\nPATRONS SAY"
   },
   "blogs": {
     "hero-eyebrow": "BLOGS",
@@ -97,6 +87,7 @@
     "scroll-label": "SCROLL TO EXPLORE",
     "craft-eyebrow": "OUR CRAFT",
     "craft-heading": "An Artistic Experience",
+    "craft-subtitle": "A glimpse inside the studio — the three crafts at the heart of Rangmudra, and the ones you can learn with us in a workshop.",
     "form-eyebrow": "GET IN TOUCH",
     "form-heading": "Ask Us Anything",
     "form-subtitle": "Choose your experience level and book a session that speaks to you.",
@@ -107,7 +98,7 @@
     "card-call-line-1": "+91 98765 43210",
     "card-call-line-2": "Mon-Sat, 10AM-6PM",
     "card-email-title": "Email Us",
-    "card-email-line-1": "hello@rangmudra.com",
+    "card-email-line-1": "rangmudrabengaluru@gmail.com",
     "card-email-line-2": "We respond within 24hrs",
     "slide-1-title": "Artisan Craftsmanship",
     "slide-2-title": "Botanical Eco Printing",
@@ -128,11 +119,23 @@
     "address": "Doddakalasandra, Bangalore,\nKarnataka — 560062",
     "phone": "+91 98765 43210",
     "phone-note": "Mon-Sat, 10AM-6PM",
-    "email": "hello@rangmudra.com",
+    "email": "rangmudrabengaluru@gmail.com",
     "email-note": "We respond within 24hrs",
     "newsletter-title": "Join Our World",
     "newsletter-placeholder": "Your email",
     "copyright": "© 2026 Rangmudra. All rights reserved. Crafted with love in Bangalore.",
     "whatsapp-link": "https://wa.me/919876543210"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "body": "## Information We Collect\nWe collect your email address to sign you in and your delivery addresses for order fulfilment. We do not collect or store payment card details — all payments are processed securely through our payment gateway partner.\n\n## How We Use Your Information\nYour information is used solely for processing orders, sending shipping updates, and improving your experience on our platform. We do not sell your data to third parties.\n\n## Data Security\nWe use industry-standard encryption and security practices to protect your personal information. Our session tokens expire after 30 days.\n\n## Contact\nFor any privacy concerns, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "body": "## Acceptance of Terms\nBy accessing or using the Rangmudra website or placing an order, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.\n\n## Products & Orders\nAll products listed on Rangmudra are handcrafted using natural dyes and wooden block printing techniques. Due to the handmade nature of our products, slight variations in colour, pattern placement, and texture are inherent and not considered defects. We reserve the right to limit quantities and refuse orders at our discretion.\n\n## Pricing & Payment\nAll prices are listed in Indian Rupees (₹) and are inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time without notice. Payment must be completed in full before an order is processed and dispatched.\n\n## Workshops & Bookings\nWorkshop bookings are confirmed upon receipt of full payment. We reserve the right to reschedule or cancel a workshop due to insufficient registrations or unforeseen circumstances, in which case a full refund will be issued. Participants are responsible for arriving on time; late arrivals may not be accommodated.\n\n## Cancellations & Returns\nOrders cancelled within 24 hours of placement are eligible for a full refund. After 24 hours, cancellations are subject to a 10% processing fee. Returns are accepted within 7 days of delivery for items that are damaged or significantly different from the listing. Please write to us at rangmudrabengaluru@gmail.com with photographs of the item to initiate a return.\n\n## Intellectual Property\nAll content on this website — including photographs, block-print designs, text, and the Rangmudra wordmark — is the exclusive intellectual property of Rangmudra Studio. Reproduction, distribution, or commercial use of any content without prior written permission is prohibited.\n\n## Limitation of Liability\nRangmudra shall not be liable for any indirect, incidental, or consequential damages arising from your use of our platform or products. Our total liability is limited to the amount paid for the specific order or service in question.\n\n## Governing Law\nThese terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Bengaluru, Karnataka.\n\n## Contact\nFor any questions about these terms, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "shipping": {
+    "title": "Shipping Policy",
+    "body": "## Processing Time\nEach Rangmudra piece is handcrafted to order. Please allow 3–5 business days for your order to be prepared, quality-checked, and packaged before dispatch. During peak seasons or for custom workshop-related orders, processing may take up to 7 business days.\n\n## Delivery Timelines\nOrders within Bengaluru are typically delivered within 2–3 business days after dispatch. Orders to other cities within India take 5–7 business days. We currently ship only within India. International shipping is not available at this time.\n\n## Shipping Charges\nDelivery is charged at India Post Speed Post rates, worked out at checkout from the parcel's weight and the distance to your PIN code. You will see the exact fee before you pay. For bulky items or special packaging requests, additional charges may apply and will be communicated before dispatch.\n\n## Order Tracking\nOnce your order is dispatched, you will receive a tracking number that allows you to follow your shipment. You can also view your order status in the My Orders section of your profile.\n\n## Packaging\nWe take care to package every order thoughtfully. Products are wrapped in recycled tissue paper, sealed with our branded stamp, and placed in a kraft box or mailer bag. We consciously avoid single-use plastics in our packaging — in keeping with Rangmudra's commitment to sustainable craft.\n\n## Damaged or Lost Shipments\nIf your order arrives damaged, please photograph the packaging and the item and write to us at rangmudrabengaluru@gmail.com within 48 hours of delivery. We will arrange a replacement or refund at no additional cost. In the rare event of a lost shipment, we will investigate with the courier and issue a replacement or refund within 10 business days.\n\n## Contact\nFor shipping-related queries, please write to us at rangmudrabengaluru@gmail.com."
   }
 }

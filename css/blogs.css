@@ -218,10 +218,19 @@
   max-width: 75%;
 }
 
-.blog-article__body figure img {
+.blog-article__body figure img,
+.blog-article__body figure video {
   display: block;
   width: 100%;
   border-radius: 12px;
+}
+
+.blog-article__body figure video { background: var(--sc-100); }
+
+.blog-article__body a {
+  color: var(--pr-b2);
+  text-decoration: underline;
+  overflow-wrap: anywhere;
 }
 
 .blog-article__body figure figcaption {

@@ -9,6 +9,7 @@ const FALLBACK = {
   workshops: '/data/workshops.json',
   blogs: '/data/blogs.json',
   addresses: '/data/addresses.json',
+  faqs: '/data/faqs.json',
 };
 
 export async function getData(resource) {
@@ -96,6 +97,15 @@ export async function getProductsPage({
 export const getWorkshops = () => getData('workshops');
 export const getBlogs = () => getData('blogs');
 export const getAddresses = () => getData('addresses');
+
+// The static snapshot carries unpublished rows too, so filter and order here to
+// match what /api/faqs returns.
+export async function getFaqs() {
+  const all = await getData('faqs');
+  return (Array.isArray(all) ? all : [])
+    .filter((f) => f.published !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
 
 // Gallery has a richer API shape ({ items, total, page, pageSize, tags }) plus
 // server-side search/filter/pagination. On static hosting (no backend) we fall

@@ -9,7 +9,6 @@
 import { isLoggedIn, authFetch } from './auth.js';
 
 const CART_KEY = 'rangmudra_cart';
-const MAX_QTY = 10;
 
 function getCart() {
   try {
@@ -87,22 +86,21 @@ let applyingRemote = false;
 let pushTimer = null;
 let pushPending = false;
 
-// Merge two carts by (id, size). Quantity is the larger of the two rather than
-// the sum, so re-running a sync can never inflate the basket. Local fields win —
-// they came from the page the shopper is looking at, so prices and images are
-// the freshest.
+// Merge two carts by product id. Every piece is one-of-a-kind (one unit of
+// stock), so a product appears at most once whatever its size and its qty is
+// always 1 — the same rule addToCart enforces. Keying by (id, size) here let a
+// guest basket and the account's basket holding the same piece in different
+// sizes merge into two lines for one piece. Local fields win — they came from
+// the page the shopper is looking at, so the size, price and image are freshest.
 function mergeCarts(local, remote) {
   const merged = new Map();
   for (const item of remote || []) {
     if (!item || !item.id) continue;
-    merged.set(item.id + '|' + (item.size || ''), { ...item, qty: item.qty || 1 });
+    merged.set(item.id, { ...item, qty: 1 });
   }
   for (const item of local || []) {
     if (!item || !item.id) continue;
-    const key = item.id + '|' + (item.size || '');
-    const existing = merged.get(key);
-    const qty = Math.min(MAX_QTY, Math.max(item.qty || 1, existing?.qty || 0));
-    merged.set(key, { ...existing, ...item, qty });
+    merged.set(item.id, { ...merged.get(item.id), ...item, qty: 1 });
   }
   return [...merged.values()];
 }

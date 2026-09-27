@@ -62,11 +62,14 @@
    wordmark in on the same reveal, a beat later. */
 .home-hero__tagline {
   font-family: var(--font-archivo);
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(12px, 1.25vw, 16px);
   line-height: 1.6;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--pr-l5);
+  /* Small type over a busy photograph: a soft shadow keeps it legible
+     whatever the hero image is, without a visible box behind it. */
+  text-shadow: 0 1px 3px rgba(44, 26, 16, 0.75), 0 0 12px rgba(44, 26, 16, 0.45);
   margin-top: 18px;
   opacity: 0;
   transform: translateY(16px);
@@ -306,10 +309,10 @@
 .promo-section,
 .page-hero,
 .shop-hero,
-.workshops-hero {
+.workshops-hero,
+.enquire-hero {
   /* The colour that shows beside the artwork on an ultra-wide screen. These
-     bands are dark-text-on-photo, so chocolate reads as an intentional matte.
-     .enquire-hero sets its own cream ground further down and keeps it. */
+     bands are cream-text-on-photo, so chocolate reads as an intentional matte. */
   background-color: var(--sc-100);
 }
 
@@ -329,7 +332,8 @@
 .home-hero__overlay,
 .promo-section__overlay,
 .shop-hero__overlay,
-.workshops-hero__overlay {
+.workshops-hero__overlay,
+.enquire-hero__overlay {
   max-width: var(--max-media);
   margin-inline: auto;
 }
@@ -899,7 +903,8 @@
 .checkout-page {
   background: var(--pr-l5);
   min-height: 100vh;
-  padding-top: 88px;
+  /* No top padding: the breadcrumb bar already clears the fixed header, and
+     both together left an empty 88px band above it. */
 }
 
 .checkout-grid {
@@ -1021,8 +1026,23 @@
   .workshops-toolbar > .btn-primary { width: 100%; justify-content: center; }
 }
 
+/* About — FAQ list beside a decorative photo; stacked on phones, where the
+   side-by-side version squeezed both columns to a sliver. */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+@media (max-width: 767px) {
+  .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
 /* ─── Enquire page ────────────────────────────────────────────────────────── */
 
+/* Photo at full strength under a chocolate scrim, cream type on top — the
+   same treatment as every other page banner. It used to fade the photo to 15%
+   over a sand ground, which read as a greyed-out, washed-out image. */
 .enquire-hero {
   position: relative;
   min-height: 360px;
@@ -1030,7 +1050,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--pr-l3);
 }
 
 .enquire-hero__bg {
@@ -1039,7 +1058,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.15;
+}
+
+.enquire-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(44, 26, 16, 0.45);
 }
 
 .enquire-hero__content {
@@ -1063,14 +1088,14 @@
   line-height: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--sc-l3);
+  color: var(--pr-l5);
   margin-top: 48px;
 }
 
 .enquire-hero__scroll-line {
   width: 1px;
   height: 48px;
-  background: linear-gradient(to bottom, var(--sc-l3), transparent);
+  background: linear-gradient(to bottom, var(--pr-l5), transparent);
 }
 
 .contact-cards-grid {

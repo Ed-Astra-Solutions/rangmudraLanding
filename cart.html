@@ -373,8 +373,9 @@
       const countEl = document.getElementById('cart-item-count');
 
       if (countEl) {
+        // The empty state below already says so; saying it twice read as a glitch.
         countEl.textContent = cart.length === 0
-          ? 'Your cart is empty'
+          ? ''
           : `You have ${cart.reduce((s, i) => s + (i.qty || 1), 0)} item${cart.reduce((s, i) => s + (i.qty || 1), 0) !== 1 ? 's' : ''} in the cart`;
       }
 

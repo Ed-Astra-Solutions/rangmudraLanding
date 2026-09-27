@@ -2,6 +2,7 @@
    keyed by ?slug=... in the URL. Falls back to the first post if no slug. */
 
 import { getBlogs } from '/js/data.js';
+import { inlineHTML } from '/js/rich-text.js';
 
 async function loadPost() {
   const slug = new URLSearchParams(window.location.search).get('slug');
@@ -29,15 +30,20 @@ function renderBody(post) {
   document.getElementById('article-excerpt').textContent = post.excerpt;
   const bodyEl = document.getElementById('article-body');
   bodyEl.innerHTML = (post.content || []).map(block => {
-    if (block.type === 'p') return `<p>${escapeHtml(block.text)}</p>`;
+    // Paragraphs and bullets carry **bold**, *italic* and [links](…) — see
+    // rich-text.js. Headings are plain text.
+    if (block.type === 'p') return `<p>${inlineHTML(block.text)}</p>`;
     if (block.type === 'h') return `<h2 class="h3-i color-sc-100">${escapeHtml(block.text)}</h2>`;
     if (block.type === 'ul') {
-      const items = block.items.map(i => `<li>${escapeHtml(i)}</li>`).join('');
+      const items = block.items.map(i => `<li>${inlineHTML(i)}</li>`).join('');
       return `<ul>${items}</ul>`;
     }
-    if (block.type === 'img') {
+    if (block.type === 'img' || block.type === 'video') {
       const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : '';
-      return `<figure><img src="${block.src}" alt="${escapeAttr(block.alt || '')}" loading="lazy">${caption}</figure>`;
+      const media = block.type === 'video'
+        ? `<video src="${escapeAttr(block.src)}" controls playsinline preload="metadata"${block.alt ? ` aria-label="${escapeAttr(block.alt)}"` : ''}></video>`
+        : `<img src="${escapeAttr(block.src)}" alt="${escapeAttr(block.alt || '')}" loading="lazy">`;
+      return `<figure>${media}${caption}</figure>`;
     }
     return '';
   }).join('');
