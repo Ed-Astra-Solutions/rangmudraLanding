@@ -3340,6 +3340,17 @@ main {
   border-radius: 8px;
   background: var(--w1);
 }
+/* Styled here rather than inline so `hidden` wins — an inline display:flex
+   overrode it and left PLAY NOW showing on workshops with no video. */
+.workshop-feature__play {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.workshop-feature__play[hidden] { display: none; }
 
 /* The hover zoom would push a letterboxed photo past its white field and reveal
    the crop we just removed, so cards lift instead of scaling. */
