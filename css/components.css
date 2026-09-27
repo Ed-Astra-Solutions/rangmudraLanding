@@ -1391,52 +1391,141 @@
   color: var(--error);
 }
 
-/* Google Places suggestions under the address form's Line 1 (js/google-places.js) */
+/* Google Places address search on the address form's Line 1 (js/google-places.js) */
+.places-field { position: relative; }
+.places-input {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 48px;
+}
+.places-input::-webkit-search-decoration,
+.places-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
+
+.places-spinner {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border: 2px solid rgba(44, 26, 16, 0.15);
+  border-top-color: var(--pr-b2);
+  border-radius: 50%;
+  animation: places-spin 0.7s linear infinite;
+  pointer-events: none;
+}
+.places-spinner[hidden] { display: none; }
+@keyframes places-spin { to { transform: rotate(360deg); } }
+
 .places-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   z-index: 20;
-  margin-top: 4px;
-  padding: 8px;
+  overflow: hidden;
   background: var(--w1);
-  border: 1px solid var(--sc-100);
-  border-radius: 12px;
+  border: 1px solid rgba(44, 26, 16, 0.16);
+  border-radius: 14px;
   box-shadow: var(--shadow-dropdown);
+  animation: places-menu-in 160ms var(--ease-decelerate, cubic-bezier(0.22, 1, 0.36, 1));
 }
-.places-menu__list { list-style: none; margin: 0; padding: 0; }
+.places-menu[hidden] { display: none; }
+@keyframes places-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+.places-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.places-menu__list:empty { display: none; }
 .places-menu__item {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background var(--dur-micro) var(--ease-standard);
 }
-.places-menu__item:hover,
 .places-menu__item[aria-selected="true"] { background: var(--pr-l5); }
+.places-menu__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--pr-l5);
+  color: var(--pr-b2);
+}
+.places-menu__item[aria-selected="true"] .places-menu__icon { background: var(--pr-l2); color: var(--sc-100); }
+.places-menu__text { display: flex; flex-direction: column; min-width: 0; padding-top: 1px; }
 .places-menu__main {
   font-family: var(--font-archivo);
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.02em;
-  color: var(--sc-100);
+  color: var(--sc-l3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+.places-menu__main strong { font-weight: 400; color: var(--sc-100); }
 .places-menu__sub {
   font-family: var(--font-archivo);
   font-size: 12px;
   line-height: 18px;
   letter-spacing: 0.02em;
   color: var(--sc-l3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+.places-menu__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 18px;
+  font-family: var(--font-archivo);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  color: var(--sc-l3);
+}
+.places-menu__status[hidden] { display: none; }
+.places-menu__status.is-busy::before {
+  content: '';
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(44, 26, 16, 0.15);
+  border-top-color: var(--pr-b2);
+  border-radius: 50%;
+  animation: places-spin 0.7s linear infinite;
+}
+.places-menu__status,
+.places-menu__attribution { max-width: none; }
 .places-menu__attribution {
-  margin: 4px 12px 0;
+  margin: 0;
+  padding: 8px 18px;
+  border-top: 1px solid rgba(44, 26, 16, 0.08);
   font-family: var(--font-archivo);
   font-size: 10px;
-  line-height: 16px;
+  line-height: 14px;
   letter-spacing: 0.15em;
   text-align: right;
   color: var(--sc-l4x);
+}
+@media (prefers-reduced-motion: reduce) {
+  .places-menu { animation: none; }
+  .places-spinner, .places-menu__status.is-busy::before { animation-duration: 1.6s; }
 }
 .input-hint {
   font-family: var(--font-archivo);
