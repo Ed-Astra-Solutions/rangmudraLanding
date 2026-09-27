@@ -171,6 +171,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { addToCart, isInCart } from '/js/cart.js';
+    import { openCartDrawer } from '/js/cart-drawer.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { initCarousel } from '/js/carousel.js';
     import { getProducts } from '/js/data.js';
@@ -321,6 +322,8 @@
         document.getElementById('add-to-cart-btn')?.addEventListener('click', () => {
           addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null, taxPercent: product.taxPercent ?? null });
           renderCTA();
+          // Show what's in the cart with Quick checkout / Shop more.
+          openCartDrawer();
         });
       }
 
@@ -330,7 +333,7 @@
         mobileBtn.textContent = inCart ? 'GO TO CART' : 'ADD TO CART';
         mobileBtn.onclick = inCart
           ? () => window.location.href = 'cart.html'
-          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null, taxPercent: product.taxPercent ?? null }); renderCTA(); };
+          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null, taxPercent: product.taxPercent ?? null }); renderCTA(); openCartDrawer(); };
       }
     }
 

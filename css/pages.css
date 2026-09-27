@@ -1069,14 +1069,40 @@
   .faq-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 
-/* Workshops landing — the Experience / Corporate / Curated sections run back
-   to back on the same cream, so a full section rhythm on both sides of each
-   join (120px + 120px) left a gulf between them. Adjacent ones share a single
+/* Workshops landing — the category cards and the Experience / Corporate /
+   Curated sections run back to back on the same cream, so a full section
+   rhythm on both sides of each join (120px + 120px) left a gulf between them. Adjacent ones share a single
    gap; the first keeps its normal top and the last its normal bottom. */
-.workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 64px; }
+.workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 48px; }
 .workshop-cat-section + .workshop-cat-section { padding-top: 0; }
 @media (max-width: 767px) {
-  .workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 40px; }
+  .workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 32px; }
+}
+
+/* Section divider — a short printed band between two hairlines. The art is a
+   slot (e.g. workshops.divider), so the studio can swap in another border. */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.section-divider__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(44, 26, 16, 0.18);
+}
+.section-divider__art {
+  flex: none;
+  height: 72px;
+  width: auto;
+  max-width: 60%;
+  object-fit: contain;
+  opacity: 0.85;
+}
+@media (max-width: 767px) {
+  .section-divider { gap: 12px; margin-bottom: 32px; }
+  .section-divider__art { height: 48px; max-width: 72%; }
 }
 
 /* ─── Enquire page ────────────────────────────────────────────────────────── */
@@ -1201,6 +1227,13 @@
   min-height: 100vh;
   padding-top: calc(88px + 48px);
   padding-bottom: 80px;
+}
+
+/* The breadcrumb band already clears the fixed header, and components.css
+   zeroes <main>'s top padding after it — keep breathing room below the band. */
+.breadcrumb-wrap + main.profile-page { padding-top: 48px !important; }
+@media (max-width: 767px) {
+  .breadcrumb-wrap + main.profile-page { padding-top: 32px !important; }
 }
 
 .profile-header-card {

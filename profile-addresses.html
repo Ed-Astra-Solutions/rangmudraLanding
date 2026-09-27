@@ -36,31 +36,15 @@
       </button>
 
       <!-- Add new address form (hidden by default) -->
-      <form id="new-address-form" style="display:none;margin-top:32px;max-width:520px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div class="input-wrap">
-            <label class="input-label" for="addr-label">Label</label>
-            <input type="text" id="addr-label" class="input-field" placeholder="Home" maxlength="24">
-          </div>
-          <div class="input-wrap">
-            <label class="input-label" for="addr-title">Name / Building</label>
-            <input type="text" id="addr-title" class="input-field" placeholder="Rangmudra Studio" required maxlength="80">
-          </div>
-        </div>
-        <div class="input-wrap" style="margin-bottom:24px;">
-          <label class="input-label" for="addr-body">Full Address</label>
-          <textarea id="addr-body" class="input-field" rows="3" placeholder="Doddakalasandra, Bangalore, Karnataka — 560062" required maxlength="300" style="resize:vertical;"></textarea>
-        </div>
-        <div class="input-error" id="addr-error" style="display:none;margin-bottom:16px;"></div>
-        <button type="submit" class="btn-gold" id="addr-save-btn">Save Address</button>
-      </form>
+      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;"></div>
     </div>
   </main>
   <div data-partial="footer"></div>
   <div data-partial="auth-modal"></div>
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { isLoggedIn, openAuthModal, getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress } from '/js/auth.js';
+    import { isLoggedIn, openAuthModal, getUserAddresses, updateUserAddress, deleteUserAddress } from '/js/auth.js';
+    import { mountAddressForm } from '/js/address-form.js';
 
     if (!isLoggedIn()) {
       openAuthModal(() => location.reload());
@@ -68,7 +52,6 @@
       const list = document.getElementById('address-list');
       const emptyEl = document.getElementById('address-empty');
       const form = document.getElementById('new-address-form');
-      const errEl = document.getElementById('addr-error');
 
       function escapeHtml(s) {
         return (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -115,26 +98,11 @@
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
       });
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        errEl.style.display = 'none';
-        const btn = document.getElementById('addr-save-btn');
-        const payload = {
-          label: document.getElementById('addr-label').value.trim() || 'Home',
-          title: document.getElementById('addr-title').value.trim(),
-          address: document.getElementById('addr-body').value.trim(),
-        };
-        btn.disabled = true;
-        try {
-          await addUserAddress(payload);
-          form.reset();
+      mountAddressForm(form, {
+        onSaved() {
           form.style.display = 'none';
           reload();
-        } catch (err) {
-          errEl.textContent = err.message;
-          errEl.style.display = 'block';
-        }
-        btn.disabled = false;
+        },
       });
 
       reload();

@@ -57,7 +57,10 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-const SKIP_SELECTOR = '.home-hero, .home-hero *, .site-header, .site-header *, .site-footer, .site-footer *, .auth-modal-backdrop, .auth-modal-backdrop *, .mobile-nav, .mobile-nav *, .whatsapp-fab, .mobile-cta-bar, .mobile-summary-bar, .enquire-panel, .enquire-panel *';
+/* Carousel slides are skipped: a slide parked off to the side inside the track
+   never intersects the viewport, so its reveal never fired and it stayed shifted
+   24px down — enough to give the track a hidden vertical scroll. */
+const SKIP_SELECTOR = '.carousel__track *, .home-hero, .home-hero *, .site-header, .site-header *, .site-footer, .site-footer *, .auth-modal-backdrop, .auth-modal-backdrop *, .mobile-nav, .mobile-nav *, .whatsapp-fab, .mobile-cta-bar, .mobile-summary-bar, .enquire-panel, .enquire-panel *';
 
 function tagReveal(el, variant = 'up', delay = 0) {
   if (el.dataset.reveal) return;

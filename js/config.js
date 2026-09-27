@@ -28,3 +28,14 @@ export const API_BASE = resolveBase().replace(/\/$/, '');
 
 // Build an absolute API URL from an "/api/..." path.
 export const apiUrl = (path) => API_BASE + path;
+
+// Google Maps browser key for the address search in the address form
+// (js/google-places.js). Browser keys are public by design — lock it down in
+// Google Cloud Console to HTTP referrers (rangmudra.com, *.rangmudra.com,
+// localhost) and to the Maps JavaScript API + Places API (New) only.
+// Empty = address search is off and the form works as plain fields.
+// `window.RANGMUDRA_MAPS_KEY` overrides it (e.g. for local testing).
+export const GOOGLE_MAPS_API_KEY =
+  (typeof window !== 'undefined' && typeof window.RANGMUDRA_MAPS_KEY === 'string')
+    ? window.RANGMUDRA_MAPS_KEY
+    : '';

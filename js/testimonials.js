@@ -99,7 +99,7 @@ async function render() {
     }
 
     mount.innerHTML = `
-      <div class="carousel" aria-live="polite" aria-label="Patron testimonials">
+      <div class="carousel" aria-live="off" aria-label="Patron testimonials" data-autoplay="7000">
         <div class="carousel__track">${list.map(slide).join('')}</div>
         ${list.length > 1 ? '<div class="carousel__dots" aria-label="Testimonial indicators"></div>' : ''}
       </div>`;

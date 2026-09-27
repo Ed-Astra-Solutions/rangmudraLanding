@@ -1,4 +1,9 @@
-/* carousel.js — Generic scroll-snap carousel with arrow controls */
+/* carousel.js — Generic scroll-snap carousel with arrow controls.
+ *
+ * Optional auto-advance: <div class="carousel" data-autoplay="7000"> moves to
+ * the next slide every 7s and wraps to the first. It pauses while the pointer
+ * is over the carousel, while it has keyboard focus, while it is off screen
+ * and while the tab is hidden, and it is off for reduced-motion users. */
 
 export function initCarousels(container = document) {
   container.querySelectorAll('.carousel').forEach(initCarousel);
@@ -53,6 +58,38 @@ export function initCarousel(el) {
 
   if (prevBtn) prevBtn.addEventListener('click', () => scrollTo(current - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => scrollTo(current + 1));
+
+  const interval = Number(el.dataset.autoplay) || 0;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (interval > 0 && !reduceMotion && getSlides().length > 1) {
+    let hovering = false;
+    let focused = false;
+    let onScreen = false;
+    let timer = null;
+    const tick = () => {
+      const slides = getSlides();
+      scrollTo(current + 1 >= slides.length ? 0 : current + 1);
+    };
+    const update = () => {
+      const run = onScreen && !hovering && !focused && !document.hidden;
+      if (run && !timer) timer = setInterval(tick, interval);
+      if (!run && timer) { clearInterval(timer); timer = null; }
+    };
+    el.addEventListener('pointerenter', () => { hovering = true; update(); });
+    el.addEventListener('pointerleave', () => { hovering = false; update(); });
+    el.addEventListener('focusin', () => { focused = true; update(); });
+    el.addEventListener('focusout', () => { focused = false; update(); });
+    document.addEventListener('visibilitychange', update);
+    new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; update(); },
+      { threshold: 0.4 }).observe(el);
+    // A manual move (dot, arrow, swipe) restarts the countdown so the carousel
+    // doesn't jump away straight after the visitor chose a slide.
+    const restart = () => { if (timer) { clearInterval(timer); timer = null; update(); } };
+    dotsContainer?.addEventListener('click', restart);
+    prevBtn?.addEventListener('click', restart);
+    nextBtn?.addEventListener('click', restart);
+    track.addEventListener('touchend', restart, { passive: true });
+  }
 
   /* Update current on scroll */
   track.addEventListener('scroll', () => {

@@ -39,39 +39,7 @@
       </button>
 
       <!-- Add new address form (hidden by default) -->
-      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;">
-        <form>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div class="input-wrap">
-              <label class="input-label" for="addr-name">Full Name</label>
-              <input type="text" id="addr-name" class="input-field" placeholder="First Name Last Name" required>
-            </div>
-            <div class="input-wrap">
-              <label class="input-label" for="addr-phone">Phone</label>
-              <input type="tel" id="addr-phone" class="input-field" placeholder="+91 98765 43210" required autocomplete="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other">
-            </div>
-          </div>
-          <div class="input-wrap" style="margin-bottom:16px;">
-            <label class="input-label" for="addr-line1">Address Line 1</label>
-            <input type="text" id="addr-line1" class="input-field" placeholder="Rangmudra Studio, No. 12" required>
-          </div>
-          <div class="input-wrap" style="margin-bottom:16px;">
-            <label class="input-label" for="addr-line2">Address Line 2</label>
-            <input type="text" id="addr-line2" class="input-field" placeholder="Doddakalasandra">
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
-            <div class="input-wrap">
-              <label class="input-label" for="addr-city">City</label>
-              <input type="text" id="addr-city" class="input-field" placeholder="Bangalore" required>
-            </div>
-            <div class="input-wrap">
-              <label class="input-label" for="addr-pin">PIN Code</label>
-              <input type="text" id="addr-pin" class="input-field" placeholder="560062" pattern="\d{6}" required>
-            </div>
-          </div>
-          <button type="submit" class="btn-gold">Save Address</button>
-        </form>
-      </div>
+      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;"></div>
     </div>
 
     <!-- Right: Sidebar with addresses -->
@@ -110,7 +78,8 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { isLoggedIn, openAuthModal, requireAuth, getUserAddresses, addUserAddress } from '/js/auth.js';
+    import { isLoggedIn, openAuthModal, requireAuth, getUserAddresses } from '/js/auth.js';
+    import { mountAddressForm } from '/js/address-form.js';
     import { getCart } from '/js/cart.js';
     import { quoteDelivery, addressPincode } from '/js/shipping.js';
 
@@ -197,39 +166,13 @@
     });
 
     /* Save a new address to the user's account, then show + select it */
-    newAddressWrap?.querySelector('form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!isLoggedIn()) { openAuthModal(); return; }
-      const form = e.target;
-      const btn = form.querySelector('[type=submit]');
-      const label = btn.textContent;
-      const val = (id) => (form.querySelector('#' + id)?.value || '').trim();
-      const name = val('addr-name');
-      const phone = val('addr-phone');
-      const lines = [val('addr-line1'), val('addr-line2'), [val('addr-city'), val('addr-pin')].filter(Boolean).join(' ')]
-        .filter(Boolean);
-      if (phone) lines.push('Phone: ' + phone);
-      btn.disabled = true;
-      btn.textContent = 'Saving…';
-      try {
-        const saved = await addUserAddress({
-          label: 'Home',
-          title: name || 'New address',
-          address: lines.join('\n'),
-          pincode: val('addr-pin'),
-        });
+    if (newAddressWrap) mountAddressForm(newAddressWrap, {
+      onSaved(saved) {
         ADDRESSES.push(saved);
         selectedId = saved.id;
         renderAddresses();
-        form.reset();
-        if (newAddressWrap) newAddressWrap.style.display = 'none';
-      } catch (err) {
-        if (err.authExpired) openAuthModal(() => location.reload());
-        else alert(err.message || 'Sorry, we couldn\'t save your address. Please try again.');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = label;
-      }
+        newAddressWrap.style.display = 'none';
+      },
     });
 
     document.getElementById('proceed-btn')?.addEventListener('click', () => {

@@ -19,7 +19,8 @@
     "category-curated": "/images/uploads/workshops-cat-curated.jpg",
     "category-hero-experience": "/images/uploads/workshops-cat-experience.jpg",
     "category-hero-corporate": "/images/uploads/workshops-cat-corporate.jpg",
-    "category-hero-curated": "/images/uploads/workshops-cat-curated.jpg"
+    "category-hero-curated": "/images/uploads/workshops-cat-curated.jpg",
+    "divider": "/images/textures/divider-block-print.png"
   },
   "about": {
     "hero": "/images/uploads/about-hero.jpg",

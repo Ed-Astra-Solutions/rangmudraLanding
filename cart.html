@@ -393,16 +393,19 @@
 
       list.innerHTML = cart.map(item => `
         <div class="cart-item${soldOutIds.has(item.id) ? ' cart-item--sold-out' : ''}" data-id="${item.id}" data-size="${item.size}">
-          <img
-            src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}"
-            alt="${item.name}"
-            class="cart-item__image"
-            loading="lazy"
-            width="100" height="100"
-          >
+          <!-- Photo and name open the piece's own page (a product's id is its slug). -->
+          <a href="product.html?slug=${encodeURIComponent(item.id)}" class="cart-item__link" tabindex="-1" aria-hidden="true">
+            <img
+              src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}"
+              alt=""
+              class="cart-item__image"
+              loading="lazy"
+              width="100" height="100"
+            >
+          </a>
           <div class="cart-item__info">
             <p class="cart-item__category">${item.category || 'RANGMUDRA'}</p>
-            <h3 class="cart-item__name">${item.name}</h3>
+            <h3 class="cart-item__name"><a href="product.html?slug=${encodeURIComponent(item.id)}" class="cart-item__name-link">${item.name}</a></h3>
             ${soldOutIds.has(item.id) ? '<p class="h6-a cart-item__soldout">Sold out</p>' : ''}
           </div>
           <div class="cart-item__controls">
