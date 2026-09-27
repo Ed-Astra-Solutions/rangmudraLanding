@@ -29,6 +29,9 @@
       <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:32px;"></div>
       <p class="h5-a color-sc-l3" style="margin-bottom:32px;">Choose a saved address or add a new one.</p>
 
+      <!-- Saved addresses to choose from — shown when there is more than one -->
+      <div id="address-choices" class="address-choices" role="radiogroup" aria-label="Saved addresses" hidden></div>
+
       <button
         class="h6-a"
         style="display:flex;align-items:center;gap:8px;color:var(--pr-b2);text-transform:uppercase;letter-spacing:0.15em;background:none;border:none;cursor:pointer;text-decoration:underline;"
@@ -63,9 +66,9 @@
       <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Delivery Address</h2>
 
       <p class="h5-a color-sc-l3" id="address-empty" style="display:none;margin-bottom:24px;">No saved addresses yet — add one to continue.</p>
-      <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="radiogroup" aria-label="Saved addresses">
-        <!-- Populated by JS -->
-      </div>
+      <!-- The selected address only; the choice is made in the list on the left -->
+      <div id="address-list" aria-live="polite"></div>
+      <a href="#address-choices" class="address-change-link h6-a" id="address-change-link" hidden>Change address</a>
 
       <button class="btn-proceed" style="margin-top:32px;" id="proceed-btn">Proceed</button>
       <a href="cart.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
@@ -96,9 +99,10 @@
       if (!cart.length) return;
       await Promise.all(ADDRESSES.map(async (addr) => {
         const quote = await quoteDelivery(addressPincode(addr), cart);
-        const el = document.querySelector(`[data-delivery-for="${addr.id}"]`);
-        if (!el || !quote) return;
-        el.textContent = `Delivery ₹${quote.deliveryFee.toLocaleString('en-IN')} · Speed Post, ${quote.zoneLabel.toLowerCase()}`;
+        if (!quote) return;
+        document.querySelectorAll(`[data-delivery-for="${CSS.escape(addr.id)}"]`).forEach((el) => {
+          el.textContent = `Delivery ₹${quote.deliveryFee.toLocaleString('en-IN')} · Speed Post, ${quote.zoneLabel.toLowerCase()}`;
+        });
       }));
     }
 
@@ -125,40 +129,84 @@
       onCancel: () => { window.location.href = 'cart.html'; },
     });
 
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const selectedAddress = () => ADDRESSES.find(a => a.id === selectedId);
+
+    /* Left: every saved address as a radio list (only when there is a choice
+       to make). Right: just the selected one, which is what Proceed uses. */
     function renderAddresses() {
       const list = document.getElementById('address-list');
+      const choices = document.getElementById('address-choices');
+      const changeLink = document.getElementById('address-change-link');
       if (!list) return;
       const emptyEl = document.getElementById('address-empty');
       if (emptyEl) emptyEl.style.display = ADDRESSES.length ? 'none' : 'block';
-      list.innerHTML = ADDRESSES.map(addr => `
-        <div
-          class="address-card ${addr.id === selectedId ? 'selected' : ''}"
-          data-id="${addr.id}"
-          role="radio"
-          aria-checked="${addr.id === selectedId}"
-          tabindex="0"
-        >
-          <span class="address-card__label">${addr.label}</span>
-          <p class="address-card__title">${addr.title}</p>
-          <p class="address-card__body">${addr.address.replace(/\n/g, '<br>')}</p>
-          <p class="address-card__body" data-delivery-for="${addr.id}" style="margin-top:12px;opacity:0.75;"></p>
+
+      const multiple = ADDRESSES.length > 1;
+      choices.hidden = !multiple;
+      changeLink.hidden = !multiple;
+      choices.innerHTML = multiple ? ADDRESSES.map(addr => `
+        <div class="address-option" data-id="${esc(addr.id)}" role="radio"
+             aria-checked="${addr.id === selectedId}" tabindex="${addr.id === selectedId ? 0 : -1}">
+          <span class="address-option__radio" aria-hidden="true"></span>
+          <span class="address-option__text">
+            <span class="address-option__head">
+              <span class="address-option__title">${esc(addr.title)}</span>
+              <span class="address-option__label">${esc(addr.label)}</span>
+              ${addr.default ? '<span class="address-option__default">Default</span>' : ''}
+            </span>
+            <span class="address-option__body">${esc(addr.address).replace(/\n/g, ', ')}</span>
+            <span class="address-option__delivery" data-delivery-for="${esc(addr.id)}"></span>
+          </span>
         </div>
-      `).join('');
+      `).join('') : '';
 
+      renderSelected();
       showDeliveryFees();
+    }
 
-      list.querySelectorAll('.address-card').forEach(card => {
-        const select = () => {
-          selectedId = card.dataset.id;
-          list.querySelectorAll('.address-card').forEach(c => {
-            c.classList.toggle('selected', c.dataset.id === selectedId);
-            c.setAttribute('aria-checked', c.dataset.id === selectedId);
-          });
-        };
-        card.addEventListener('click', select);
-        card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
+    function renderSelected() {
+      const list = document.getElementById('address-list');
+      const addr = selectedAddress();
+      // Rendered already revealed: reveal.js would otherwise re-hide the card
+      // and fade it in again on every switch of address.
+      list.innerHTML = addr ? `
+        <div class="address-card selected is-visible" data-reveal="fade">
+          <span class="address-card__label">${esc(addr.label)}</span>
+          <p class="address-card__title">${esc(addr.title)}</p>
+          <p class="address-card__body">${esc(addr.address).replace(/\n/g, '<br>')}</p>
+          <p class="address-card__body" data-delivery-for="${esc(addr.id)}" style="margin-top:12px;opacity:0.75;"></p>
+        </div>` : '';
+      document.querySelectorAll('#address-choices .address-option').forEach(o => {
+        const on = o.dataset.id === selectedId;
+        o.setAttribute('aria-checked', String(on));
+        o.tabIndex = on ? 0 : -1;
       });
     }
+
+    function selectAddress(id, { focus = false } = {}) {
+      if (!id || id === selectedId) return;
+      selectedId = id;
+      renderSelected();
+      showDeliveryFees();
+      if (focus) document.querySelector(`#address-choices [data-id="${CSS.escape(id)}"]`)?.focus();
+    }
+
+    // One set of listeners on the list itself — it is re-rendered on every save.
+    const choicesEl = document.getElementById('address-choices');
+    choicesEl.addEventListener('click', (e) => {
+      const opt = e.target.closest('.address-option');
+      if (opt) selectAddress(opt.dataset.id);
+    });
+    choicesEl.addEventListener('keydown', (e) => {
+      const opt = e.target.closest('.address-option');
+      if (!opt) return;
+      const opts = [...choicesEl.querySelectorAll('.address-option')];
+      const i = opts.indexOf(opt);
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectAddress(opt.dataset.id); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); selectAddress(opts[(i + 1) % opts.length].dataset.id, { focus: true }); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); selectAddress(opts[(i - 1 + opts.length) % opts.length].dataset.id, { focus: true }); }
+    });
 
     const newAddressWrap = document.getElementById('new-address-form');
     document.getElementById('add-address-btn')?.addEventListener('click', () => {

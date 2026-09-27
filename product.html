@@ -174,9 +174,9 @@
     import { openCartDrawer } from '/js/cart-drawer.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { initCarousel } from '/js/carousel.js';
-    import { getProducts } from '/js/data.js';
+    import { getProducts, getData } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
-    import { entityMedia, primaryImage, mediaHTML, applyMedia } from '/js/media.js';
+    import { entityMedia, primaryImage, mediaHTML, applyMedia, normalizeMediaList } from '/js/media.js';
 
     const params = new URLSearchParams(location.search);
     const slug = params.get('slug') || 'flora-patterned-set';
@@ -193,6 +193,30 @@
 
     function formatPrice(n) {
       return '₹' + n.toLocaleString('en-IN');
+    }
+
+    /* "The Process" strip: the product's own set if it has one, else its
+       category's set from the admin, else the site-wide shop.process-* slots
+       already in the markup. */
+    async function renderProcess() {
+      let list = normalizeMediaList(product.processMedia);
+      if (!list.length) {
+        try {
+          const { categories = {} } = await getData('process-media');
+          list = normalizeMediaList(categories[product.category]);
+        } catch (_) { /* keep the default strip */ }
+      }
+      if (!list.length) return;
+      const strip = document.querySelector('.process-strip');
+      if (!strip) return;
+      strip.innerHTML = list.map((m, i) => `
+        <div class="process-card">
+          ${mediaHTML(m, {
+            className: 'process-card__image',
+            alt: m.alt || `${product.name} — the process, step ${i + 1}`,
+            width: 200, height: 280, loop: true, controls: false,
+          })}
+        </div>`).join('');
     }
 
     function renderProductPage() {
@@ -372,6 +396,7 @@
     }
 
     renderProductPage();
+    renderProcess();
     initTabs();
     initFilterPills('#similar-pills');
   </script>

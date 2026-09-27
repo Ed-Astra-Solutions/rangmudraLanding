@@ -10,6 +10,7 @@ const FALLBACK = {
   blogs: '/data/blogs.json',
   addresses: '/data/addresses.json',
   faqs: '/data/faqs.json',
+  'process-media': '/data/process-media.json',
 };
 
 export async function getData(resource) {

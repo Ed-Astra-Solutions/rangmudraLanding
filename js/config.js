@@ -38,4 +38,4 @@ export const apiUrl = (path) => API_BASE + path;
 export const GOOGLE_MAPS_API_KEY =
   (typeof window !== 'undefined' && typeof window.RANGMUDRA_MAPS_KEY === 'string')
     ? window.RANGMUDRA_MAPS_KEY
-    : '';
+    : 'AIzaSyBb4ve4orTO8kVsMbJhlV6KtYswlE2LZ7s';
