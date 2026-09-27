@@ -245,8 +245,10 @@ export async function attachPlacesAutocomplete(input, onPick) {
       suggestions = (res.suggestions || []).filter((s) => s.placePrediction);
       lastQuery = query;
       setLoading(false);
-      // Only show the list if the shopper is still in the field.
+      // Only show the list if the shopper is still in the field; otherwise
+      // don't leave "Searching…" hanging open.
       if (document.activeElement === input) render();
+      else close();
     } catch (err) {
       if (seq !== requestSeq) return;
       console.warn('[places] suggestions failed', err);
