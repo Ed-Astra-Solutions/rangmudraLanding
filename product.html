@@ -171,6 +171,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { addToCart, isInCart } from '/js/cart.js';
+    import { heldUntil, holdTime } from '/js/holds.js';
     import { openCartDrawer } from '/js/cart-drawer.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { initCarousel } from '/js/carousel.js';
@@ -295,16 +296,27 @@
     function renderCTA() {
       const area = document.getElementById('cta-area');
       if (!area) return;
+      renderCTAButtons(area);
+      // A piece another shopper is paying for can still be added — it comes
+      // back if they don't finish — but say so plainly.
+      const held = heldUntil(product);
+      if (held && product.available !== false) {
+        area.insertAdjacentHTML('beforeend', `<p class="h6-a color-sc-l3 hold-note">Another shopper is checking out this one-of-a-kind piece. If they don't complete payment, it's available again after ${holdTime(held)}.</p>`);
+      }
+    }
+
+    function renderCTAButtons(area) {
       const inCart = isInCart(product.id, selectedSize);
 
       /* Sold-out items stay browsable but must not be addable — the checkout
          rejects them server-side, so letting one into the cart only surfaces
          the problem at payment time. */
       const soldOut = product.available === false;
+      const held = heldUntil(product);
       const chip = document.getElementById('availability-chip');
       if (chip) {
-        chip.textContent = soldOut ? 'SOLD OUT' : 'AVAILABLE';
-        chip.classList.toggle('available-chip--sold-out', soldOut);
+        chip.textContent = soldOut ? 'SOLD OUT' : held ? 'ON HOLD' : 'AVAILABLE';
+        chip.classList.toggle('available-chip--sold-out', soldOut || !!held);
       }
 
       if (soldOut) {

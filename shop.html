@@ -137,6 +137,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { initDropdowns } from '/js/dropdown.js';
+    import { heldUntil } from '/js/holds.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
     import { isInCart, addToCart } from '/js/cart.js';
@@ -164,7 +165,7 @@
               width="400" height="500"
               onerror="this.src='/images/uploads/prod-ajrakh-corset-1.jpg'"
             >
-            ${p.available === false ? `<span class="shop-card__soldout">Sold out</span>` : ''}
+            ${p.available === false ? `<span class="shop-card__soldout">Sold out</span>` : heldUntil(p) ? `<span class="shop-card__soldout">On hold</span>` : ''}
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
             ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
             <button

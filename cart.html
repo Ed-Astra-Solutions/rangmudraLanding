@@ -120,6 +120,7 @@
     import { getSale, isSaleLive, itemPriceHTML, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxPercentFor } from '/js/tax.js';
     import { getProducts } from '/js/data.js';
+    import { heldUntil, holdTime } from '/js/holds.js';
     import { quoteDelivery, addressPincode, deliveryNote } from '/js/shipping.js';
 
     // Delivery is priced by India Post Speed Post from the studio's PIN to the
@@ -331,11 +332,13 @@
        sold out (or been withdrawn) since it was added. Checkout stays blocked
        until those lines are removed; the server enforces the same rule. */
     let soldOutIds = new Set();
+    // Pieces another shopper is paying for right now: id → Date the hold ends.
+    let heldIds = new Map();
 
     async function refreshStock() {
       try {
         const cart = getCart();
-        if (!cart.length) { soldOutIds = new Set(); return; }
+        if (!cart.length) { soldOutIds = new Set(); heldIds = new Map(); return; }
         const products = await getProducts();
         const byId = new Map(products.map((p) => [p.id, p]));
         soldOutIds = new Set(
@@ -344,15 +347,19 @@
             return !p || p.available === false;
           }).map((i) => i.id)
         );
+        heldIds = new Map(
+          cart.map((i) => [i.id, heldUntil(byId.get(i.id))]).filter(([, until]) => until)
+        );
       } catch (_) {
         // Catalogue unreachable — leave the cart as-is; create-order will catch it.
         soldOutIds = new Set();
+        heldIds = new Map();
       }
     }
 
     function syncProceedState() {
       const empty = getCart().length === 0;
-      const blocked = soldOutIds.size > 0 || empty;
+      const blocked = soldOutIds.size > 0 || heldIds.size > 0 || empty;
       // "Amount to be paid ₹0" above a dead button helps nobody.
       const mobileBar = document.querySelector('.mobile-cta-bar');
       if (mobileBar) mobileBar.hidden = empty;
@@ -362,10 +369,15 @@
       });
       const note = document.getElementById('stock-note');
       if (note) {
-        note.hidden = soldOutIds.size === 0;
-        note.textContent = soldOutIds.size === 1
-          ? 'One piece in your cart has sold out. Please remove it to continue.'
-          : `${soldOutIds.size} pieces in your cart have sold out. Please remove them to continue.`;
+        note.hidden = soldOutIds.size === 0 && heldIds.size === 0;
+        if (soldOutIds.size) {
+          note.textContent = soldOutIds.size === 1
+            ? 'One piece in your cart has sold out. Please remove it to continue.'
+            : `${soldOutIds.size} pieces in your cart have sold out. Please remove them to continue.`;
+        } else if (heldIds.size) {
+          const last = new Date(Math.max(...[...heldIds.values()].map(Number)));
+          note.textContent = `${heldIds.size === 1 ? 'One piece' : `${heldIds.size} pieces`} in your cart ${heldIds.size === 1 ? 'is' : 'are'} on hold for another shopper who is paying right now. Remove ${heldIds.size === 1 ? 'it' : 'them'} to check out the rest, or come back after ${holdTime(last)}. If they don't complete payment, it's yours to buy.`;
+        }
       }
     }
 
@@ -394,7 +406,7 @@
       }
 
       list.innerHTML = cart.map(item => `
-        <div class="cart-item${soldOutIds.has(item.id) ? ' cart-item--sold-out' : ''}" data-id="${item.id}" data-size="${item.size}">
+        <div class="cart-item${soldOutIds.has(item.id) || heldIds.has(item.id) ? ' cart-item--sold-out' : ''}" data-id="${item.id}" data-size="${item.size}">
           <!-- Photo and name open the piece's own page (a product's id is its slug). -->
           <a href="product.html?slug=${encodeURIComponent(item.id)}" class="cart-item__link" tabindex="-1" aria-hidden="true">
             <img
@@ -408,7 +420,8 @@
           <div class="cart-item__info">
             <p class="cart-item__category">${item.category || 'RANGMUDRA'}</p>
             <h3 class="cart-item__name"><a href="product.html?slug=${encodeURIComponent(item.id)}" class="cart-item__name-link">${item.name}</a></h3>
-            ${soldOutIds.has(item.id) ? '<p class="h6-a cart-item__soldout">Sold out</p>' : ''}
+            ${soldOutIds.has(item.id) ? '<p class="h6-a cart-item__soldout">Sold out</p>'
+              : heldIds.has(item.id) ? `<p class="h6-a cart-item__soldout">On hold until ${holdTime(heldIds.get(item.id))}</p>` : ''}
           </div>
           <div class="cart-item__controls">
             <span class="cart-item__size-select" aria-label="Size: ${item.size}">${item.size}</span>

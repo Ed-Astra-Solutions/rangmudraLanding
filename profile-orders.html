@@ -28,7 +28,7 @@
         </a>
         <h1 class="h3-i color-sc-100">My Orders</h1>
       </div>
-      <div id="orders-list" style="display:flex;flex-direction:column;gap:16px;"></div>
+      <div id="orders-list" class="orders-list"></div>
       <div id="orders-empty" style="text-align:center;padding:80px 0;display:none;">
         <p class="h4-i color-sc-l3" style="margin-bottom:24px;">No orders yet</p>
         <a href="shop.html" class="btn-primary">Start Shopping</a>
@@ -41,12 +41,116 @@
   <script type="module">
     import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
+    import { getProducts } from '/js/data.js';
 
-    const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+    const fmt = (n) => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const day = (iso) => iso ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    const PAID = ['paid', 'shipped', 'delivered'];
     const STATUS = {
-      paid: 'Paid', created: 'Pending payment', failed: 'Failed',
-      signature_failed: 'Verification failed',
+      created: 'Awaiting payment', failed: 'Payment failed', signature_failed: 'Payment not verified',
+      paid: 'Confirmed', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
     };
+
+    // Placed → Confirmed → Shipped → Delivered, each with the date it happened.
+    function tracker(o) {
+      const steps = [
+        ['Placed', o.createdAt, true],
+        ['Confirmed', o.paidAt, PAID.includes(o.status)],
+        ['Shipped', o.shippedAt, ['shipped', 'delivered'].includes(o.status)],
+        ['Delivered', o.deliveredAt, o.status === 'delivered'],
+      ];
+      return `<ol class="order-track" aria-label="Order progress">${steps.map(([label, at, done]) => `
+        <li class="order-track__step${done ? ' is-done' : ''}">
+          <span class="order-track__dot" aria-hidden="true"></span>
+          <span class="h6-a order-track__label">${label}</span>
+          <span class="h7-a order-track__date">${done ? esc(day(at)) : ''}</span>
+        </li>`).join('')}</ol>`;
+    }
+
+    function trackingBox(o) {
+      const t = o.tracking;
+      if (!t || !['shipped', 'delivered'].includes(o.status)) return '';
+      const bits = [t.carrier, t.number ? `Tracking no. ${t.number}` : ''].filter(Boolean).map(esc).join(' · ');
+      return `<div class="order-card__tracking">
+        <span class="h6-a color-sc-100">${bits || 'Shipped'}</span>
+        ${t.url ? `<a class="order-card__link h6-a" href="${esc(t.url)}" target="_blank" rel="noopener">Track shipment →</a>` : ''}
+      </div>`;
+    }
+
+    function itemRow(i, product) {
+      const slug = i.slug || (product && product.slug) || i.id;
+      const href = i.id ? `product.html?slug=${encodeURIComponent(slug)}` : '';
+      const image = i.image || (product && ((product.images && product.images[0]) || product.image)) || '';
+      const meta = [i.category || (product && product.category), i.printType || (product && product.printType)].filter(Boolean).map(esc).join(' · ');
+      const open = href ? `<a href="${href}"` : '<div';
+      const close = href ? '</a>' : '</div>';
+      return `
+        <li class="order-item">
+          ${open} class="order-item__thumb" ${href ? `aria-label="View ${esc(i.name)}"` : ''}>
+            ${image ? `<img src="${esc(image)}" alt="" width="72" height="90" loading="lazy">` : ''}
+          ${close}
+          <div class="order-item__info">
+            ${meta ? `<p class="h6-a order-item__meta">${meta}</p>` : ''}
+            ${href ? `<a class="h4-i color-sc-100 order-item__name" href="${href}">${esc(i.name)}</a>` : `<p class="h4-i color-sc-100">${esc(i.name)}</p>`}
+            <p class="h6-a color-sc-l3">${[i.size ? `Size ${esc(i.size)}` : '', (i.qty || 1) > 1 ? `Qty ${i.qty}` : ''].filter(Boolean).join(' · ')}</p>
+          </div>
+          <p class="h5-a color-sc-100 order-item__price">${fmt((i.price || 0) * (i.qty || 1))}</p>
+        </li>`;
+    }
+
+    function addressText(a) {
+      if (!a) return '';
+      return [a.title, a.address, a.line1, a.line2, a.city, a.state].filter(Boolean).map(esc).join(', ');
+    }
+
+    function orderCard(o, productById) {
+      const paid = PAID.includes(o.status);
+      const pending = ['created', 'failed', 'signature_failed'].includes(o.status);
+      return `
+        <article class="order-card">
+          <header class="order-card__head">
+            <div>
+              <p class="h6-a color-sc-l3 order-card__id">Order ${esc(o.id)}</p>
+              <p class="h6-a color-sc-l3">Placed ${esc(day(o.createdAt))}</p>
+            </div>
+            <span class="h6-a order-badge order-badge--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
+          </header>
+          ${paid ? tracker(o) : ''}
+          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">This order hasn't been paid yet. Unpaid orders are cancelled after 20 minutes. Your cart is still saved.</p>` : ''}
+          ${trackingBox(o)}
+          <ul class="order-card__items">${(o.items || []).map((i) => itemRow(i, productById.get(i.id))).join('')}</ul>
+          <footer class="order-card__foot">
+            <div>
+              ${addressText(o.address) ? `<p class="h6-a color-sc-l3 order-card__address">Delivering to ${addressText(o.address)}</p>` : ''}
+              <p class="h5-a color-sc-100">Total ${paid ? 'paid' : ''} <strong>${fmt(o.amount)}</strong>${o.discount > 0 ? ` <span class="h6-a color-sc-l3">(saved ${fmt(o.discount)})</span>` : ''}</p>
+            </div>
+            ${paid ? `<button type="button" class="btn-ghost order-card__invoice" data-invoice="${esc(o.id)}">Download invoice</button>` : ''}
+          </footer>
+        </article>`;
+    }
+
+    async function downloadInvoice(btn) {
+      const id = btn.dataset.invoice;
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Preparing…';
+      try {
+        const res = await fetch(apiUrl(`/api/orders/${encodeURIComponent(id)}/invoice`), { headers: { 'x-user-token': getToken() } });
+        if (!res.ok) throw new Error();
+        const blob = await res.blob();
+        const name = (res.headers.get('Content-Disposition') || '').match(/filename="([^"]+)"/)?.[1] || `Rangmudra-Invoice-${id}.pdf`;
+        const url = URL.createObjectURL(blob);
+        const a = Object.assign(document.createElement('a'), { href: url, download: name });
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        btn.textContent = label;
+      } catch {
+        btn.textContent = 'Could not download, try again';
+      } finally {
+        btn.disabled = false;
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', async () => {
       if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
@@ -54,19 +158,19 @@
       const list = document.getElementById('orders-list');
       const empty = document.getElementById('orders-empty');
       try {
-        const orders = await fetch(apiUrl('/api/orders'), { headers: { 'x-user-token': getToken() } }).then(r => r.json());
+        const [orders, products] = await Promise.all([
+          fetch(apiUrl('/api/orders'), { headers: { 'x-user-token': getToken() } }).then(r => r.json()),
+          // Only for older orders saved before items carried their own photo.
+          getProducts().catch(() => []),
+        ]);
         if (!Array.isArray(orders) || !orders.length) { empty.style.display = 'block'; return; }
+        const productById = new Map((products || []).map((p) => [p.id, p]));
         orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        list.innerHTML = orders.map(o => `
-          <div style="background:var(--w1);border-radius:16px;padding:24px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;">
-              <span class="h6-a color-sc-l3" style="text-transform:uppercase;">${o.id}</span>
-              <span class="h6-a" style="color:${o.status === 'paid' ? 'var(--ac-b2)' : 'var(--sc-l3)'};">${STATUS[o.status] || o.status}</span>
-            </div>
-            <p class="h5-a color-sc-100">${o.items.map(i => `${i.name} × ${i.qty}`).join(', ')}</p>
-            <p class="h5-a color-sc-100" style="margin-top:8px;">${fmt(o.amount)}</p>
-            <p class="h6-a color-sc-l3" style="margin-top:4px;">${new Date(o.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-          </div>`).join('');
+        list.innerHTML = orders.map((o) => orderCard(o, productById)).join('');
+        list.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-invoice]');
+          if (btn) downloadInvoice(btn);
+        });
       } catch {
         empty.style.display = 'block';
       }

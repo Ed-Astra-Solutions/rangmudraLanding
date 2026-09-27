@@ -83,6 +83,7 @@
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxRowLabel } from '/js/tax.js';
+    import { rememberMyHold, forgetMyHold } from '/js/holds.js';
     import { quoteDelivery, addressPincode, deliveryNote, FALLBACK_DELIVERY_FEE } from '/js/shipping.js';
 
     // Priced from the chosen address's PIN — see refreshDelivery(). The server
@@ -261,6 +262,8 @@
           }),
         });
         const order = await orderRes.json().catch(() => ({}));
+        // These pieces are now held for this shopper; don't flag them as taken here.
+        if (orderRes.ok && order.holdUntil) rememberMyHold(cart.map((i) => i.id), order.holdUntil);
 
         if (!orderRes.ok) {
           alert(order.error || 'Could not start payment. Please try again.');
@@ -274,6 +277,9 @@
           name: 'Rangmudra',
           description: 'Block Printing, Colors and More.',
           order_id: order.orderId,
+          // Close the payment window before the server cancels the unpaid
+          // order (20 min), so nobody pays for an order that's gone.
+          timeout: 18 * 60,
           handler: async (response) => {
             try {
               const verifyRes = await fetch(apiUrl('/api/checkout/verify-payment'), {
@@ -283,6 +289,7 @@
               });
               if (verifyRes.ok) {
                 clearCart();
+                forgetMyHold();
                 localStorage.removeItem(COUPON_KEY);
                 window.location.href = `order-confirmation.html?order=${encodeURIComponent(order.receipt)}`;
               } else {
