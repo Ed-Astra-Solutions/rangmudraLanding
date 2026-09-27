@@ -19,12 +19,12 @@ const FORM_HTML = `
       </div>
     </div>
     <div class="input-wrap" style="margin-bottom:16px;">
-      <label class="input-label" for="addr-door">Door No / Floor / Street</label>
-      <input type="text" id="addr-door" class="input-field" placeholder="Flat 402, 4th Floor, 12th Cross" required>
-    </div>
-    <div class="input-wrap" style="margin-bottom:16px;">
       <label class="input-label" for="addr-line1">Building / Area</label>
       <input type="text" id="addr-line1" class="input-field" placeholder="Building, locality, area" required>
+    </div>
+    <div class="input-wrap" style="margin-bottom:16px;">
+      <label class="input-label" for="addr-door">Door No / Floor / Street</label>
+      <input type="text" id="addr-door" class="input-field" placeholder="Flat 402, 4th Floor, 12th Cross" required>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
       <div class="input-wrap">
@@ -50,7 +50,7 @@ export function mountAddressForm(container, { onSaved } = {}) {
 
   // Google address search on the Building / Area field — picking a suggestion
   // fills in the whole address, the city and the PIN. Google stops at the
-  // building, so the door number and floor go in their own field above.
+  // building, so the door number and floor go in their own field below it.
   const line1 = form.querySelector('#addr-line1');
   const door = form.querySelector('#addr-door');
   attachPlacesAutocomplete(line1, (addr) => {
