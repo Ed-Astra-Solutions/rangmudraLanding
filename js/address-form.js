@@ -19,9 +19,12 @@ const FORM_HTML = `
       </div>
     </div>
     <div class="input-wrap" style="margin-bottom:16px;">
-      <label class="input-label" for="addr-line1">Full Address</label>
-      <input type="text" id="addr-line1" class="input-field" placeholder="Door no, floor, building, street, area" required>
-      <p class="input-hint" data-addr-hint hidden>Google finds the building — add your door number and floor at the start of the address.</p>
+      <label class="input-label" for="addr-door">Door No / Floor / Street</label>
+      <input type="text" id="addr-door" class="input-field" placeholder="Flat 402, 4th Floor, 12th Cross" required>
+    </div>
+    <div class="input-wrap" style="margin-bottom:16px;">
+      <label class="input-label" for="addr-line1">Building / Area</label>
+      <input type="text" id="addr-line1" class="input-field" placeholder="Building, locality, area" required>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
       <div class="input-wrap">
@@ -45,24 +48,20 @@ export function mountAddressForm(container, { onSaved } = {}) {
   const btn = form.querySelector('[type=submit]');
   const showError = (msg) => { errEl.textContent = msg; errEl.style.display = 'block'; };
 
-  // Google address search on the Full Address field — picking a suggestion
+  // Google address search on the Building / Area field — picking a suggestion
   // fills in the whole address, the city and the PIN. Google stops at the
-  // building, so the shopper then adds their door number and floor to the start
-  // of the same field (the caret is put there for them).
+  // building, so the door number and floor go in their own field above.
   const line1 = form.querySelector('#addr-line1');
-  const hint = form.querySelector('[data-addr-hint]');
+  const door = form.querySelector('#addr-door');
   attachPlacesAutocomplete(line1, (addr) => {
     const set = (id, v) => { const el = form.querySelector('#' + id); if (el && v) el.value = v; };
     line1.value = addr.full;
     set('addr-city', addr.city);
     set('addr-pin', addr.pincode);
-    hint.hidden = false;
-    line1.focus();
-    line1.setSelectionRange(0, 0);
+    if (!door.value.trim()) door.focus();
   }).then((on) => {
-    if (on) line1.placeholder = 'Search your building, street or area';
+    if (on) line1.placeholder = 'Search your building or area';
   });
-  form.addEventListener('reset', () => { hint.hidden = true; });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -76,7 +75,7 @@ export function mountAddressForm(container, { onSaved } = {}) {
     // they are only added as their own line when it doesn't.
     const full = val('addr-line1');
     const cityPin = [val('addr-city'), val('addr-pin')].filter(Boolean).join(' ');
-    const lines = [full, full.includes(val('addr-pin')) ? '' : cityPin]
+    const lines = [val('addr-door'), full, full.includes(val('addr-pin')) ? '' : cityPin]
       .filter(Boolean);
     if (phone) lines.push('Phone: ' + phone);
 
