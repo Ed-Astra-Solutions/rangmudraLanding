@@ -130,11 +130,11 @@
         const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, subtotal }),
+          body: JSON.stringify({ code, subtotal, itemCount: getCart().length }),
         });
         if (!res.ok) { localStorage.removeItem(COUPON_KEY); return { code: null, discount: 0 }; }
         const data = await res.json();
-        return { code, discount: data.discount || 0 };
+        return { code, discount: data.discount || 0, freeDelivery: !!data.freeDelivery };
       } catch {
         return { code, discount: 0 };
       }
@@ -154,7 +154,9 @@
     async function renderOrderSummary() {
       const cart = getCart();
       const sub = cartSubtotals();
-      const { code, discount: couponDiscount } = await getCouponDiscount(sub.serverSubtotal);
+      const { code, discount: couponDiscount, freeDelivery } = await getCouponDiscount(sub.serverSubtotal);
+      // The master code waives delivery too.
+      const deliveryFee = freeDelivery ? 0 : DELIVERY_FEE;
       const saleDiscount = saleDiscountFor(sub.saleEligible);
       // Best promo wins — sale and coupon never stack; sale takes ties.
       const saleWins = saleDiscount >= couponDiscount;
@@ -164,10 +166,10 @@
       const discountedSubtotal = Math.max(0, subtotal - discount);
       // Per-product tax rates, mirroring the server's line-by-line maths.
       const tax = computeCartTax(cart, promoDiscount);
-      const total = discountedSubtotal + tax + DELIVERY_FEE;
+      const total = discountedSubtotal + tax + deliveryFee;
 
       const deliveryEl = document.getElementById('review-delivery');
-      if (deliveryEl) deliveryEl.textContent = formatPrice(DELIVERY_FEE);
+      if (deliveryEl) deliveryEl.textContent = formatPrice(deliveryFee);
       const deliveryNoteEl = document.getElementById('review-delivery-note');
       if (deliveryNoteEl) deliveryNoteEl.textContent = deliveryNote(DELIVERY_QUOTE);
 

@@ -195,7 +195,7 @@ async function applyCoupon(raw, { quiet = false } = {}) {
     const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, subtotal: baseSubtotal }),
+      body: JSON.stringify({ code, subtotal: baseSubtotal, itemCount: getCart().length }),
     });
     const data = await res.json().catch(() => ({}));
     if (seq !== couponSeq) return; // a newer apply already answered

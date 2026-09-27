@@ -190,7 +190,9 @@
       // its share of the subtotal after the promo discount.
       const discountedSubtotal = Math.max(0, sub.listSubtotal - discount);
       const tax = computeCartTax(getCart(), promoDiscount);
-      const total = discountedSubtotal + tax + (DELIVERY_FEE || 0);
+      // The master code waives delivery too.
+      const deliveryFee = appliedCoupon?.freeDelivery && DELIVERY_FEE !== null ? 0 : DELIVERY_FEE;
+      const total = discountedSubtotal + tax + (deliveryFee || 0);
 
       let label = 'Discount';
       if (promoDiscount > 0 && sub.productDiscount > 0) {
@@ -214,7 +216,7 @@
       }
       // An em dash, not a figure, until we know where the parcel is going.
       document.getElementById('summary-delivery').textContent =
-        DELIVERY_FEE === null ? '—' : formatPrice(DELIVERY_FEE);
+        deliveryFee === null ? '—' : formatPrice(deliveryFee);
       const deliveryNoteEl = document.getElementById('summary-delivery-note');
       // Nothing to explain about the delivery of an empty cart.
       if (deliveryNoteEl) deliveryNoteEl.textContent = getCart().length ? deliveryNote(DELIVERY_QUOTE) : '';
@@ -252,7 +254,7 @@
         const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code: trimmed, subtotal }),
+          body: JSON.stringify({ code: trimmed, subtotal, itemCount: getCart().length }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -262,7 +264,7 @@
           updateSummary();
           return;
         }
-        appliedCoupon = { code: trimmed, discount: data.discount };
+        appliedCoupon = { code: trimmed, discount: data.discount, freeDelivery: !!data.freeDelivery };
         localStorage.setItem(COUPON_KEY, trimmed);
         // Best one wins: if the live sale already beats this code, say so.
         if (saleDiscountFor(subtotal) >= data.discount) {
