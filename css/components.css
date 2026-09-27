@@ -2687,6 +2687,19 @@
 }
 .cart-merge-note[hidden] { display: none; }
 
+.pay-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1.5px solid var(--sc-100);
+  border-radius: 20px;
+}
+.pay-status[hidden] { display: none; }
+#proceed-btn[hidden] { display: none; }
+.pay-status__label { text-transform: uppercase; color: var(--pr-b2); }
+
 .cart-item__controls {
   display: flex;
   align-items: center;

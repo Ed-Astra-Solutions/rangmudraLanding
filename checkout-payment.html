@@ -67,6 +67,13 @@
       <!-- No payment-method choice: Razorpay is the only gateway, so Proceed opens it directly -->
       <p class="h5-a color-sc-l3" style="margin-bottom:48px;">Pay securely by UPI, Cards, Net Banking or Wallets. Tap Proceed to complete your payment.</p>
 
+      <!-- Shown when the shopper closes the payment window without paying -->
+      <div class="pay-status" id="pay-status" role="status" hidden>
+        <p class="h6-a pay-status__label" id="pay-status-label"></p>
+        <p class="h5-a color-sc-100" id="pay-status-text"></p>
+        <button class="btn-proceed" id="retry-btn">Retry Payment</button>
+      </div>
+
       <button class="btn-proceed" id="proceed-btn">Proceed</button>
       <a href="checkout-address.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
 
@@ -78,12 +85,13 @@
 
   <script type="module" src="/js/components.js"></script>
   <script type="module">
-    import { getCart, clearCart } from '/js/cart.js';
+    import { getCart } from '/js/cart.js';
     import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
     import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
     import { computeCartTax, taxRowLabel } from '/js/tax.js';
-    import { rememberMyHold, forgetMyHold } from '/js/holds.js';
+    import { holdTime } from '/js/holds.js';
+    import { openPayment, retryPayment } from '/js/pay.js';
     import { quoteDelivery, addressPincode, deliveryNote, FALLBACK_DELIVERY_FEE } from '/js/shipping.js';
 
     // Priced from the chosen address's PIN — see refreshDelivery(). The server
@@ -225,6 +233,49 @@
     }
 
     const proceedBtn = document.getElementById('proceed-btn');
+    const payStatus = document.getElementById('pay-status');
+    const retryBtn = document.getElementById('retry-btn');
+    // The order the shopper last opened the payment window for.
+    let pendingOrder = null;
+
+    /* Closed the payment window without paying: the order stays open (and its
+       pieces held) until its time runs out, and the cart is left as it was, so
+       Retry Payment reopens the same order. */
+    function showPayStatus({ outcome, holdUntil }) {
+      const until = holdUntil ? new Date(holdUntil) : null;
+      document.getElementById('pay-status-label').textContent = outcome === 'failed' ? 'Order Failed' : 'Payment Pending';
+      document.getElementById('pay-status-text').textContent = (outcome === 'failed'
+        ? 'Your payment didn\'t go through.'
+        : 'You closed the payment window before paying.')
+        + (until ? ` Your pieces are held for you until ${holdTime(until)}.` : '')
+        + ' Everything is still in your cart.';
+      payStatus.hidden = false;
+      proceedBtn.hidden = true;
+    }
+
+    function hidePayStatus() {
+      payStatus.hidden = true;
+      proceedBtn.hidden = false;
+    }
+
+    retryBtn.addEventListener('click', async () => {
+      if (!pendingOrder) return;
+      retryBtn.disabled = true;
+      const label = retryBtn.textContent;
+      retryBtn.textContent = 'Reopening payment…';
+      try {
+        await retryPayment(pendingOrder.id, { itemIds: pendingOrder.itemIds, onClose: showPayStatus });
+      } catch (err) {
+        // Out of time (or no longer payable): start over with Proceed, which
+        // places a fresh order from the cart.
+        pendingOrder = null;
+        hidePayStatus();
+        alert(err.message);
+      } finally {
+        retryBtn.disabled = false;
+        retryBtn.textContent = label;
+      }
+    });
 
     proceedBtn?.addEventListener('click', async () => {
       const cart = getCart();
@@ -262,56 +313,13 @@
           }),
         });
         const order = await orderRes.json().catch(() => ({}));
-        // These pieces are now held for this shopper; don't flag them as taken here.
-        if (orderRes.ok && order.holdUntil) rememberMyHold(cart.map((i) => i.id), order.holdUntil);
-
         if (!orderRes.ok) {
           alert(order.error || 'Could not start payment. Please try again.');
           return;
         }
-
-        const rzp = new Razorpay({
-          key: order.keyId,
-          amount: order.amount,
-          currency: order.currency,
-          name: 'Rangmudra',
-          description: 'Block Printing, Colors and More.',
-          order_id: order.orderId,
-          // Close the payment window before the server cancels the unpaid
-          // order (20 min), so nobody pays for an order that's gone.
-          timeout: 18 * 60,
-          handler: async (response) => {
-            try {
-              const verifyRes = await fetch(apiUrl('/api/checkout/verify-payment'), {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-user-token': token },
-                body: JSON.stringify(response),
-              });
-              if (verifyRes.ok) {
-                clearCart();
-                forgetMyHold();
-                localStorage.removeItem(COUPON_KEY);
-                window.location.href = `order-confirmation.html?order=${encodeURIComponent(order.receipt)}`;
-              } else {
-                const v = await verifyRes.json().catch(() => ({}));
-                alert(v.error || 'We could not verify your payment. If you were charged, please contact us.');
-              }
-            } catch {
-              alert('We could not verify your payment. If you were charged, please contact us.');
-            }
-          },
-          theme: { color: '#7C684F' },
-          modal: {
-            ondismiss: () => {
-              proceedBtn.disabled = false;
-              proceedBtn.textContent = originalLabel;
-            },
-          },
-        });
-        rzp.on('payment.failed', (resp) => {
-          alert('Payment failed: ' + (resp.error?.description || 'please try again.'));
-        });
-        rzp.open();
+        hidePayStatus();
+        pendingOrder = { id: order.receipt, itemIds: cart.map((i) => i.id) };
+        openPayment(order, { itemIds: pendingOrder.itemIds, onClose: showPayStatus });
       } catch (err) {
         alert('Something went wrong starting payment. Please try again.');
       } finally {

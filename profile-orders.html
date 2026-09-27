@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/pages.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 </head>
 <body>
   <div data-partial="header"></div>
@@ -42,13 +43,15 @@
     import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
     import { apiUrl } from '/js/config.js';
     import { getProducts } from '/js/data.js';
+    import { retryPayment } from '/js/pay.js';
+    import { holdTime } from '/js/holds.js';
 
     const fmt = (n) => '₹' + Math.round(n || 0).toLocaleString('en-IN');
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const day = (iso) => iso ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
     const PAID = ['paid', 'shipped', 'delivered'];
     const STATUS = {
-      created: 'Awaiting payment', failed: 'Payment failed', signature_failed: 'Payment not verified',
+      created: 'Payment Pending', failed: 'Order Failed', signature_failed: 'Payment not verified',
       paid: 'Confirmed', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
     };
 
@@ -107,6 +110,11 @@
     function orderCard(o, productById) {
       const paid = PAID.includes(o.status);
       const pending = ['created', 'failed', 'signature_failed'].includes(o.status);
+      // Storefront orders can be paid again while their hold on the pieces
+      // lasts (the server allows it until 2 minutes before the hold ends).
+      const until = o.holdUntil ? new Date(o.holdUntil) : null;
+      const retryable = ['created', 'failed'].includes(o.status) && o.source !== 'manual'
+        && until && until - Date.now() > 3 * 60 * 1000;
       return `
         <article class="order-card">
           <header class="order-card__head">
@@ -117,7 +125,7 @@
             <span class="h6-a order-badge order-badge--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
           </header>
           ${paid ? tracker(o) : ''}
-          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">This order hasn't been paid yet. Unpaid orders are cancelled after 20 minutes. Your cart is still saved.</p>` : ''}
+          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">${o.status === 'failed' ? 'The payment for this order didn\'t go through.' : 'This order hasn\'t been paid yet.'} ${retryable ? `You can retry payment until ${esc(holdTime(until))}, after which the order is cancelled.` : 'Unpaid orders are cancelled after 20 minutes.'} Everything is still in your cart.</p>` : ''}
           ${trackingBox(o)}
           <ul class="order-card__items">${(o.items || []).map((i) => itemRow(i, productById.get(i.id))).join('')}</ul>
           <footer class="order-card__foot">
@@ -126,8 +134,31 @@
               <p class="h5-a color-sc-100">Total ${paid ? 'paid' : ''} <strong>${fmt(o.amount)}</strong>${o.discount > 0 ? ` <span class="h6-a color-sc-l3">(saved ${fmt(o.discount)})</span>` : ''}</p>
             </div>
             ${paid ? `<button type="button" class="btn-ghost order-card__invoice" data-invoice="${esc(o.id)}">Download invoice</button>` : ''}
+            ${retryable ? `<button type="button" class="btn-primary order-card__retry" data-retry="${esc(o.id)}">Retry Payment</button>` : ''}
           </footer>
         </article>`;
+    }
+
+    // Reopen the payment window for an unpaid order. Closing it again changes
+    // nothing — the order stays as it is and the cart keeps its pieces — so the
+    // page just reloads to show the order's latest state.
+    async function retryOrder(btn, order) {
+      if (!order) return;
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Reopening payment…';
+      try {
+        await retryPayment(order.id, {
+          itemIds: (order.items || []).map((i) => i.id).filter(Boolean),
+          onClose: () => location.reload(),
+        });
+      } catch (err) {
+        alert(err.message);
+        location.reload();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
     }
 
     async function downloadInvoice(btn) {
@@ -167,9 +198,12 @@
         const productById = new Map((products || []).map((p) => [p.id, p]));
         orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         list.innerHTML = orders.map((o) => orderCard(o, productById)).join('');
+        const orderById = new Map(orders.map((o) => [o.id, o]));
         list.addEventListener('click', (e) => {
           const btn = e.target.closest('[data-invoice]');
           if (btn) downloadInvoice(btn);
+          const retry = e.target.closest('[data-retry]');
+          if (retry) retryOrder(retry, orderById.get(retry.dataset.retry));
         });
       } catch {
         empty.style.display = 'block';

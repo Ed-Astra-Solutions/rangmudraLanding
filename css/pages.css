@@ -1383,6 +1383,8 @@
 .order-badge--paid, .order-badge--shipped { background: var(--pr-l2); color: var(--sc-100); }
 .order-badge--delivered { background: var(--ac-l3); color: var(--ac-b3); }
 .order-card__note { padding: 12px 16px; background: var(--pr-l5); border-radius: 8px; }
+.order-badge--failed, .order-badge--signature_failed { background: var(--sc-100); color: var(--pr-l5); }
+.order-card__retry { flex-shrink: 0; width: auto; padding: 0 32px; }
 
 .order-track { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; }
 .order-track__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
