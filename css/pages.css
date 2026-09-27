@@ -641,9 +641,16 @@
 
 .product-layout {
   display: grid;
-  grid-template-columns: 58% 42%;
+  /* The photo used to take 58% of the screen and grew with it until it was
+     taller than the window, leaving the description squeezed beside it. Now
+     the gallery column is only as wide as the photo (sized to the screen
+     height below) and the details take the rest, with the pair centred on the
+     page's content width. No top padding — the breadcrumb bar above already
+     clears the header. */
+  grid-template-columns: auto minmax(0, 1fr);
+  max-width: var(--max-content);
+  margin-inline: auto;
   min-height: calc(100vh - 88px);
-  padding-top: 88px;
 }
 
 .product-gallery {
@@ -654,6 +661,10 @@
 .product-gallery__main {
   position: relative;
   aspect-ratio: 4 / 5;
+  /* Sized so the whole photo and the thumbnail row fit in one screen height
+     (header + breadcrumb + padding + thumbnails ≈ 300px), and never wider
+     than its column. */
+  width: clamp(360px, calc((100vh - 280px) * 0.8), 560px);
   overflow: hidden;
   margin-bottom: 16px;
 }
@@ -684,7 +695,13 @@
 
 .product-gallery__thumbnails {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  /* Wrap at the photo's width instead of widening the gallery column when a
+     product has many photos (width:0 keeps the row out of the column's
+     intrinsic size; min-width stretches it back to the photo's width). */
+  width: 0;
+  min-width: 100%;
 }
 
 .product-gallery__thumb {
@@ -806,7 +823,12 @@
   gap: 32px;
   border-bottom: 1px solid rgba(44, 26, 16, 0.12);
   margin-bottom: 24px;
+  /* Scrolls sideways rather than spilling past the column on narrower screens. */
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.product-tabs::-webkit-scrollbar { display: none; }
+.product-tabs .product-tab { flex-shrink: 0; white-space: nowrap; }
 
 .product-tab {
   font-family: var(--font-archivo);
@@ -848,7 +870,8 @@
 }
 
 @media (max-width: 767px) {
-  .product-layout { grid-template-columns: minmax(0, 1fr); padding-top: 64px; }
+  .product-layout { grid-template-columns: minmax(0, 1fr); }
+  .product-gallery__main { width: 100%; }
   .product-gallery { padding: 24px; min-width: 0; }
   .product-info { min-width: 0; }
   .product-info { padding: 24px; max-height: none; overflow-y: visible; }
@@ -1036,6 +1059,16 @@
 }
 @media (max-width: 767px) {
   .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* Workshops landing — the Experience / Corporate / Curated sections run back
+   to back on the same cream, so a full section rhythm on both sides of each
+   join (120px + 120px) left a gulf between them. Adjacent ones share a single
+   gap; the first keeps its normal top and the last its normal bottom. */
+.workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 64px; }
+.workshop-cat-section + .workshop-cat-section { padding-top: 0; }
+@media (max-width: 767px) {
+  .workshop-cat-section:has(+ .workshop-cat-section) { padding-bottom: 40px; }
 }
 
 /* ─── Enquire page ────────────────────────────────────────────────────────── */

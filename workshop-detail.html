@@ -65,6 +65,10 @@
       </div>
       <div class="page-hero__content">
         <h1 class="h2-i" style="color:var(--pr-l5);" id="hero-title">Workshop</h1>
+        <!-- BOOK NOW appears at several points down the page (all wired to the
+             same enquiry form, this workshop preselected) so nobody has to
+             scroll to the closing bar to ask for a session. -->
+        <button type="button" class="btn-primary pill" data-book-now style="margin-top:24px;height:48px;padding-inline:28px;">BOOK NOW →</button>
       </div>
     </section>
 
@@ -88,6 +92,7 @@
             <div class="workshop-card__meta" id="workshop-meta"></div>
             <div class="workshop-card__chips" id="workshop-chips" style="margin-top:16px;"></div>
             <p class="h5-a color-sc-l3" id="workshop-price" style="margin-top:16px;"></p>
+            <button type="button" class="btn-primary pill" data-book-now style="margin-top:24px;height:48px;padding-inline:28px;">BOOK NOW →</button>
           </div>
         </div>
 
@@ -112,6 +117,10 @@
             <h4 class="h3-i color-sc-100" style="margin-bottom:32px;">Ideal For</h4>
             <ul id="ideal-list" style="display:flex;flex-direction:column;gap:16px;list-style:none;"></ul>
           </div>
+        </div>
+
+        <div style="text-align:center;margin:-32px 0 80px;">
+          <button type="button" class="btn-primary pill" data-book-now style="height:48px;padding-inline:32px;">BOOK NOW →</button>
         </div>
 
         <!-- Photo/video wall — rendered from the workshop's gallery, hidden when empty -->
@@ -203,6 +212,12 @@
       </div>
       <button type="submit" class="btn-primary full-width">Submit</button>
     </form>
+  </div>
+
+  <!-- Phones: BOOK NOW stays on screen while scrolling. -->
+  <div class="mobile-cta-bar" id="mobile-book-bar" aria-label="Book this workshop">
+    <p class="h6-a" style="flex:1;min-width:0;color:var(--sc-l3);text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="mobile-book-title"></p>
+    <button type="button" class="btn-primary pill" data-book-now>BOOK NOW →</button>
   </div>
 
   <div data-partial="footer"></div>
@@ -352,6 +367,9 @@
       e.preventDefault();
       openPanel();
     });
+    document.querySelectorAll('[data-book-now]').forEach((btn) => btn.addEventListener('click', openPanel));
+    const mobileTitle = document.getElementById('mobile-book-title');
+    if (mobileTitle) mobileTitle.textContent = workshop.title;
     document.getElementById('enquire-panel-close')?.addEventListener('click', closePanel);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
