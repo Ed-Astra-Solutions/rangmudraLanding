@@ -359,6 +359,11 @@
   width: 100%;
   max-width: var(--max-media);
   margin-inline: auto;
+  /* The width/height attributes only reserve space; without height:auto the
+     680px attribute height stuck at every width, leaving a tall empty column
+     on phones and tablets. 2:1 is the shape the admin crop tool locks to. */
+  height: auto;
+  aspect-ratio: 2 / 1;
   max-height: 680px;
   object-fit: cover;
   transition: transform 600ms var(--ease-standard);
