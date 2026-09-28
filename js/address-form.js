@@ -88,6 +88,7 @@ export function mountAddressForm(container, { onSaved } = {}) {
         title: name || 'New address',
         address: lines.join('\n'),
         pincode: val('addr-pin'),
+        phone,
       });
       form.reset();
       onSaved?.(saved);

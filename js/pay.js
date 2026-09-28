@@ -30,6 +30,7 @@ function post(path, body) {
    closes the window without a verified payment. */
 export function openPayment(order, { itemIds = [], onClose } = {}) {
   let declined = false;
+  let reason = '';
   if (order.holdUntil) rememberMyHold(itemIds, order.holdUntil);
 
   const rzp = new Razorpay({
@@ -39,6 +40,8 @@ export function openPayment(order, { itemIds = [], onClose } = {}) {
     name: 'Rangmudra',
     description: 'Block Printing, Colors and More.',
     order_id: order.orderId,
+    // The shopper's account email and the phone on their delivery address.
+    prefill: order.prefill || {},
     // Close the payment window before the server cancels the unpaid order,
     // so nobody pays for an order that's gone.
     timeout: order.timeoutSec || 18 * 60,
@@ -62,14 +65,17 @@ export function openPayment(order, { itemIds = [], onClose } = {}) {
     theme: { color: '#7C684F' },
     modal: {
       ondismiss: () => {
-        if (declined) post('/api/checkout/payment-failed', { razorpay_order_id: order.orderId }).catch(() => {});
+        if (declined) post('/api/checkout/payment-failed', { razorpay_order_id: order.orderId, reason }).catch(() => {});
         onClose?.({ outcome: declined ? 'failed' : 'pending', holdUntil: order.holdUntil });
       },
     },
   });
   // Razorpay keeps its window open on a decline so the shopper can try another
   // method; it only counts as failed if they then close it.
-  rzp.on('payment.failed', () => { declined = true; });
+  rzp.on('payment.failed', (resp) => {
+    declined = true;
+    reason = resp?.error?.description || reason;
+  });
   rzp.open();
 }
 
