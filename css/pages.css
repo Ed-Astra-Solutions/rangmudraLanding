@@ -302,10 +302,11 @@
 /* Home page band: the heading sits at the top of the quote column, beside the
    photo, instead of stacked above it, so heading, quote and picture fit on one
    screen. Heading and carousel share one grid cell; the quote column is padded
-   down past the heading and the quote sits at the foot of the picture. Under
-   the heading runs the same hand-block border used on the Workshops page. */
+   down past the heading and the quote sits at the foot of the picture. The
+   band is narrower than the page container so the quote stays close to the
+   picture rather than across a wide gap. */
 .section.testimonials-section { padding-block: 72px; }
-.testimonials-band { display: grid; }
+.testimonials-band { display: grid; max-width: 1040px; }
 .testimonials-band > * { grid-area: 1 / 1; min-width: 0; }
 .testimonials-head {
   position: relative;
@@ -318,20 +319,14 @@
   line-height: 44px;
   margin-bottom: 16px;
 }
-.testimonials-art {
-  width: auto;
-  max-width: 100%;
-  height: 56px;
-  opacity: 0.85;
-  mix-blend-mode: multiply;
-}
 .testimonials-band .testimonial-slide .testimonials-grid {
   grid-template-columns: minmax(0, 1fr) auto;
+  gap: 64px;
   align-items: end;
 }
 .testimonials-band .testimonial-slide .testimonials-grid > div:first-child {
   max-width: 560px;
-  padding-top: 192px;
+  padding-top: 128px;
 }
 .testimonials-band .testimonial-slide__media {
   width: auto;
@@ -341,14 +336,13 @@
 @media (max-width: 1023px) {
   .testimonials-band { display: block; }
   .testimonials-head { margin-bottom: 32px; }
-  .testimonials-band .testimonial-slide .testimonials-grid { grid-template-columns: minmax(0, 1fr); }
+  .testimonials-band .testimonial-slide .testimonials-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .testimonials-band .testimonial-slide .testimonials-grid > div:first-child { padding-top: 0; }
   .testimonials-band .testimonial-slide__media { width: 100%; height: auto; max-height: 440px; }
 }
 @media (max-width: 767px) {
   .section.testimonials-section { padding-block: 56px; }
   .testimonials-band .testimonials-eyebrow { font-size: 26px; line-height: 34px; }
-  .testimonials-art { height: 44px; }
 }
 
 /* A patron with no picture gets the full width for their quote. */

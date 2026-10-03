@@ -196,7 +196,6 @@
       <div class="container testimonials-band">
         <div class="testimonials-head">
           <h2 class="testimonials-eyebrow" id="testimonials-heading" data-content-lines="homepage.testimonials-heading">WHAT OUR<br>PATRONS SAY</h2>
-          <img src="/images/textures/divider-block-print.png" alt="" class="testimonials-art" width="467" height="72" loading="lazy">
         </div>
         <div data-testimonials></div>
       </div>
@@ -235,6 +234,82 @@
       </div>
     </section>
 
+    <!-- Section 8: Enquiry box — contact details on the left, the form on the
+         right. Posts to the same /api/enquiry endpoint as the Enquire page. -->
+    <section class="section bg-cream home-enquiry-section" aria-labelledby="home-enquiry-heading">
+      <div class="container">
+        <div class="home-enquiry">
+          <aside class="home-enquiry__info">
+            <p class="h6-a home-enquiry__eyebrow" data-content="homepage.enquiry-eyebrow">GET IN TOUCH</p>
+            <h2 class="h3-i home-enquiry__heading" id="home-enquiry-heading" data-content="homepage.enquiry-heading">Let's Create Together</h2>
+            <p class="h5-a home-enquiry__intro" data-content="homepage.enquiry-body">Planning a workshop, a custom order or a studio visit? Write to us and we'll get back within a day.</p>
+            <ul class="home-enquiry__details">
+              <li>
+                <span class="home-enquiry__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                <div>
+                  <p class="h6-a home-enquiry__label" data-content="enquire.card-visit-title">Visit Us</p>
+                  <p class="h5-a" data-content="enquire.card-visit-line-1">Workstation 2, Shankaraa Foundation, Kanakapura Main Road</p>
+                  <p class="h5-a home-enquiry__muted" data-content="enquire.card-visit-line-2">Next to Doddakalasandra Metro, Bengaluru — 560062</p>
+                </div>
+              </li>
+              <li>
+                <span class="home-enquiry__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                <div>
+                  <p class="h6-a home-enquiry__label" data-content="enquire.card-call-title">Call Us</p>
+                  <p class="h5-a" data-content="enquire.card-call-line-1">+91 89514 80256</p>
+                  <p class="h5-a home-enquiry__muted" data-content="enquire.card-call-line-2">Mon-Sat, 10AM-4PM</p>
+                </div>
+              </li>
+              <li>
+                <span class="home-enquiry__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+                <div>
+                  <p class="h6-a home-enquiry__label" data-content="enquire.card-email-title">Email Us</p>
+                  <p class="h5-a" data-content="enquire.card-email-line-1">rangmudrabengaluru@gmail.com</p>
+                  <p class="h5-a home-enquiry__muted" data-content="enquire.card-email-line-2">We respond within 24hrs</p>
+                </div>
+              </li>
+            </ul>
+          </aside>
+
+          <form class="home-enquiry__form" id="home-enquiry-form" novalidate>
+            <h3 class="h4-i color-sc-100 home-enquiry__form-title" data-content="homepage.enquiry-form-title">Send an enquiry</h3>
+            <div class="home-enquiry__row">
+              <div class="home-enquiry__field">
+                <label class="h6-a" for="he-name">Name <span class="home-enquiry__req" aria-hidden="true">*</span></label>
+                <input type="text" id="he-name" name="name" autocomplete="name" required>
+              </div>
+              <div class="home-enquiry__field">
+                <label class="h6-a" for="he-email">Email <span class="home-enquiry__req" aria-hidden="true">*</span></label>
+                <input type="email" id="he-email" name="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="home-enquiry__row">
+              <div class="home-enquiry__field">
+                <label class="h6-a" for="he-phone">Phone</label>
+                <input type="tel" id="he-phone" name="phone" autocomplete="tel" inputmode="tel">
+              </div>
+              <div class="home-enquiry__field">
+                <label class="h6-a" for="he-topic">I'm interested in</label>
+                <select id="he-topic" name="topic">
+                  <option value="Workshops">Workshops</option>
+                  <option value="Corporate workshop">Corporate workshop</option>
+                  <option value="Custom order">Custom order</option>
+                  <option value="Shop / an existing order">Shop / an existing order</option>
+                  <option value="Something else">Something else</option>
+                </select>
+              </div>
+            </div>
+            <div class="home-enquiry__field">
+              <label class="h6-a" for="he-message">Message <span class="home-enquiry__req" aria-hidden="true">*</span></label>
+              <textarea id="he-message" name="message" rows="5" required></textarea>
+            </div>
+            <p class="h6-a home-enquiry__status" role="status" aria-live="polite" hidden></p>
+            <button type="submit" class="btn-gold home-enquiry__submit">SEND ENQUIRY →</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <div data-partial="footer"></div>
@@ -244,6 +319,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module" src="/js/quick-reads.js"></script>
   <script type="module" src="/js/testimonials.js"></script>
+  <script type="module" src="/js/home-enquiry.js"></script>
   <script type="module">
     import { initCarousels } from '/js/carousel.js';
     document.addEventListener('DOMContentLoaded', () => {
