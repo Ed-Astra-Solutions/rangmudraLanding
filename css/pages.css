@@ -827,7 +827,7 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--pr-100);
-  margin-bottom: 8px;
+  margin-top: 24px;
 }
 
 .product-info__title {
