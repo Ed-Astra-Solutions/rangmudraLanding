@@ -27,7 +27,8 @@ function post(path, body) {
 /* Open Razorpay for `order` — the create-order / retry-payment response.
    `itemIds` are the order's pieces, taken out of the cart once it's paid.
    onClose({ outcome: 'failed' | 'pending', holdUntil }) fires when the shopper
-   closes the window without a verified payment. */
+   closes the window without a verified payment; `holdUntil` is the end of the
+   short retry window the server then gives the order (null if unknown). */
 export function openPayment(order, { itemIds = [], onClose } = {}) {
   let declined = false;
   let reason = '';
@@ -37,7 +38,7 @@ export function openPayment(order, { itemIds = [], onClose } = {}) {
     key: order.keyId,
     amount: order.amount,
     currency: order.currency,
-    name: 'Rangmudra',
+    name: 'RangMudra',
     description: 'Block Printing, Colors and More.',
     order_id: order.orderId,
     // The shopper's account email and the phone on their delivery address.
@@ -64,9 +65,15 @@ export function openPayment(order, { itemIds = [], onClose } = {}) {
     },
     theme: { color: '#7C684F' },
     modal: {
-      ondismiss: () => {
-        if (declined) post('/api/checkout/payment-failed', { razorpay_order_id: order.orderId, reason }).catch(() => {});
-        onClose?.({ outcome: declined ? 'failed' : 'pending', holdUntil: order.holdUntil });
+      ondismiss: async () => {
+        // Closing the window unpaid starts the order's retry window.
+        let holdUntil = null;
+        try {
+          const res = await post('/api/checkout/payment-failed', { razorpay_order_id: order.orderId, reason, declined });
+          holdUntil = (await res.json()).holdUntil || null;
+        } catch (_) {}
+        if (holdUntil) rememberMyHold(itemIds, holdUntil);
+        onClose?.({ outcome: declined ? 'failed' : 'pending', holdUntil });
       },
     },
   });

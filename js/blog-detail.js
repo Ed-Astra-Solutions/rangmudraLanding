@@ -17,7 +17,7 @@ async function loadPost() {
 }
 
 function renderHero(post) {
-  document.title = `${post.title} — Rangmudra`;
+  document.title = `${post.title} — RangMudra`;
   document.getElementById('cover-img').src = post.image;
   document.getElementById('cover-img').alt = post.title;
   document.getElementById('cover-cat').textContent = post.category;
@@ -71,7 +71,7 @@ function renderRelated(post, posts) {
 
 function wireShare(post) {
   const url = window.location.href;
-  const text = encodeURIComponent(`${post.title} — Rangmudra Blog`);
+  const text = encodeURIComponent(`${post.title} — RangMudra Blog`);
   document.getElementById('share-twitter').href =
     `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`;
   document.getElementById('share-facebook').href =

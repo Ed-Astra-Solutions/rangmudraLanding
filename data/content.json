@@ -23,7 +23,10 @@
   "workshops": {
     "hero-eyebrow": "EXPLORE",
     "hero-title": "Workshops &\nExperience",
-    "toolbar-label": "Workshops",
+    "custom-eyebrow": "CUSTOM WORKSHOPS",
+    "custom-heading": "Looking for something different?",
+    "custom-body": "Looking for a different experience? We can custom curate or custom design workshops according to your requirements.",
+    "custom-cta": "GET IN TOUCH",
     "experience-eyebrow": "WORKSHOPS",
     "experience-title": "Experience Workshops",
     "experience-desc": "Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.",
@@ -85,9 +88,6 @@
     "hero-title": "Connect With Us",
     "hero-subtitle": "Experience the artistry of block printing and eco printing. Join our workshops or explore our curated collection.",
     "scroll-label": "SCROLL TO EXPLORE",
-    "craft-eyebrow": "OUR CRAFT",
-    "craft-heading": "An Artistic Experience",
-    "craft-subtitle": "A glimpse inside the studio — the three crafts at the heart of Rangmudra, and the ones you can learn with us in a workshop.",
     "form-eyebrow": "GET IN TOUCH",
     "form-heading": "Ask Us Anything",
     "form-subtitle": "Choose your experience level and book a session that speaks to you.",
@@ -113,9 +113,6 @@
     "facebook-url": "https://www.facebook.com/profile.php?id=61555646021193",
     "youtube-url": "https://youtube.com/@rangmudra",
     "linkedin-url": "https://www.linkedin.com/company/rangmudra",
-    "partners-title": "Partners",
-    "partner-name": "Studio Bagru Pvt. Ltd.",
-    "partner-url": "https://www.studiobagru.com/",
     "col-1-title": "Explore",
     "col-2-title": "Collections",
     "col-3-title": "Reach Us",
@@ -141,5 +138,11 @@
   "shipping": {
     "title": "Shipping Policy",
     "body": "## Processing Time\nEach Rangmudra piece is handcrafted to order. Please allow 3–5 business days for your order to be prepared, quality-checked, and packaged before dispatch. During peak seasons or for custom workshop-related orders, processing may take up to 7 business days.\n\n## Delivery Timelines\nOrders within Bengaluru are typically delivered within 2–3 business days after dispatch. Orders to other cities within India take 5–7 business days. We currently ship only within India. International shipping is not available at this time.\n\n## Shipping Charges\nDelivery is charged at India Post Speed Post rates, worked out at checkout from the parcel's weight and the distance to your PIN code. You will see the exact fee before you pay. For bulky items or special packaging requests, additional charges may apply and will be communicated before dispatch.\n\n## Order Tracking\nOnce your order is dispatched, you will receive a tracking number that allows you to follow your shipment. You can also view your order status in the My Orders section of your profile.\n\n## Packaging\nWe take care to package every order thoughtfully. Products are wrapped in recycled tissue paper, sealed with our branded stamp, and placed in a kraft box or mailer bag. We consciously avoid single-use plastics in our packaging — in keeping with Rangmudra's commitment to sustainable craft.\n\n## Damaged or Lost Shipments\nIf your order arrives damaged, please photograph the packaging and the item and write to us at rangmudrabengaluru@gmail.com within 48 hours of delivery. We will arrange a replacement or refund at no additional cost. In the rare event of a lost shipment, we will investigate with the courier and issue a replacement or refund within 10 business days.\n\n## Contact\nFor shipping-related queries, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "sustainability": {
+    "eyebrow": "Our Commitment",
+    "title": "Sustainability Commitment",
+    "intro": "At RangMudra, we recognize the importance of preserving our environment and contributing to a sustainable future. Our commitment to sustainability is woven into every aspect of our business, from the workshops we conduct to the textiles we create.",
+    "body": "## Eco-Friendly Materials\nWe prioritize the use of organic fabrics and surplus materials of high quality, reducing the environmental impact associated with textile production.\n\n![A hand pressing a carved wooden block onto white cotton, leaving a grey floral print | Every motif is pressed by hand, one impression at a time.](/images/uploads/process-printing.jpg)\n\n## Traditional Techniques\nOur block printing methods are not only traditional but also eco-conscious, using natural dyes and minimizing chemical waste.\n\n## BYOC Initiative\nWith our Bring Your Own Clothes policy, we encourage the upcycling of pre-loved garments, extending their life cycle and reducing waste.\n\n![Hand-carved wooden printing blocks laid out on a table — florals, borders and geometric motifs | Hand-carved wooden blocks from the studio.](/images/uploads/about-story.jpg)\n\n## Empowering Local Artisans\nWe support the local economy by collaborating with rural artisans, providing them with fair wages and sustainable work environments.\n\n## Educating for Sustainability\nOur workshops not only teach the art of block printing but also impart the values of eco-friendly practices and the importance of sustainability in art.\n\n![A workshop participant block printing a red border onto a cotton runner | A participant printing at one of our studio workshops.](/images/uploads/about-sustainability.jpg)\n\n## Community Outreach\nRangMudra is committed to educating and involving the community in our sustainability efforts, fostering a collective approach to environmental stewardship.\n\n## Continuous Improvement\nBy committing to these principles, RangMudra aims to not only create beautiful textiles but also protect the beautiful world we live in. Thank you for joining us on this journey."
   }
 }

@@ -50,6 +50,7 @@ function ensureLightbox() {
     <button type="button" class="media-lightbox__nav media-lightbox__nav--prev" aria-label="Previous">‹</button>
     <div class="media-lightbox__stage"></div>
     <button type="button" class="media-lightbox__nav media-lightbox__nav--next" aria-label="Next">›</button>
+    <p class="media-lightbox__count" aria-live="polite"></p>
   `;
   document.body.appendChild(lightbox);
   return lightbox;
@@ -68,11 +69,19 @@ function openLightbox(items, startIndex) {
   const opener = document.activeElement;
   let index = startIndex;
 
+  const count = box.querySelector('.media-lightbox__count');
+
   const show = () => {
     const m = items[index];
     stage.innerHTML = m.type === 'video'
       ? `<video src="${esc(m.url)}" controls autoplay playsinline class="media-lightbox__media"></video>`
       : `<img src="${esc(m.url)}" alt="${esc(m.alt)}" class="media-lightbox__media">`;
+    count.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : '';
+    // Warm the neighbours so stepping either way shows the next photo at once.
+    [1, -1].forEach((d) => {
+      const n = items[(index + d + items.length) % items.length];
+      if (n && n.type !== 'video') new Image().src = n.url;
+    });
   };
   const step = (delta) => { index = (index + delta + items.length) % items.length; show(); };
   const close = () => {
@@ -94,6 +103,18 @@ function openLightbox(items, startIndex) {
     else if (e.target.closest('.media-lightbox__nav--next')) step(1);
     else if (e.target.closest('.media-lightbox__nav--prev')) step(-1);
   };
+  // Swipe left/right on touch screens; vertical drags are left alone.
+  let touchX = null;
+  let touchY = null;
+  box.ontouchstart = (e) => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; };
+  box.ontouchend = (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    touchX = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+  };
+
   document.addEventListener('keydown', onKey);
   box.querySelectorAll('.media-lightbox__nav').forEach((b) => { b.hidden = items.length < 2; });
   box.hidden = false;

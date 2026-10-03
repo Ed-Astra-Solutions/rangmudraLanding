@@ -23,6 +23,17 @@
   font-display: swap;
 }
 
+/* Maiandra (regular cut) for the RangMudra name only, matching the logo.
+   Registered at 400 alone on purpose: the name is set in <b>, and the browser
+   emboldens this regular cut rather than reaching for Maiandra Black. */
+@font-face {
+  font-family: 'Maiandra';
+  src: url('/fonts/maiandra-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Primary (tan / gold) */
   --pr-100: #C2A27C;
@@ -69,6 +80,8 @@
      Black has no glyphs for. */
   --font-italiana: 'Maiandra Black', Helvetica, Arial, sans-serif;
   --font-archivo:  'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* The brand name, wherever it appears — see .brand-name. */
+  --font-brand:    'Maiandra', 'Maiandra Black', Helvetica, Arial, sans-serif;
 
   /* Layout */
   --max-content: 1280px;
@@ -193,4 +206,16 @@
 :focus-visible {
   outline: 2px solid var(--pr-b2);
   outline-offset: 2px;
+}
+
+/* The RangMudra name, as drawn in the logo: Maiandra regular, emboldened by
+   the <b> it is always set in, mixed case (R and M capitals). Resets the
+   tracking and casing of whatever heading or label it sits inside. js/brand.js
+   wraps occurrences in CMS-driven copy the same way. */
+.brand-name {
+  font-family: var(--font-brand);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }

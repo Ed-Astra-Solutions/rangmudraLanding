@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workshops — Rangmudra</title>
-  <meta name="description" content="Explore Rangmudra block printing and eco printing workshops by category.">
+  <title>Workshops — RangMudra</title>
+  <meta name="description" content="Explore RangMudra block printing and eco printing workshops by category.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <link rel="canonical" href="https://rangmudra.com/workshop-category.html">
   <meta name="theme-color" content="#2C1A10">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:site_name" content="RangMudra">
   <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="Workshops — Rangmudra">
-  <meta property="og:description" content="Browse Rangmudra block printing and eco printing workshops by category.">
+  <meta property="og:title" content="Workshops — RangMudra">
+  <meta property="og:description" content="Browse RangMudra block printing and eco printing workshops by category.">
   <meta property="og:url" content="https://rangmudra.com/workshop-category.html">
   <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
-  <meta property="og:image:alt" content="Workshops — Rangmudra">
+  <meta property="og:image:alt" content="Workshops — RangMudra">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Workshops — Rangmudra">
-  <meta name="twitter:description" content="Browse Rangmudra block printing and eco printing workshops by category.">
+  <meta name="twitter:title" content="Workshops — RangMudra">
+  <meta name="twitter:description" content="Browse RangMudra block printing and eco printing workshops by category.">
   <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
@@ -65,25 +65,6 @@
     <section class="section">
       <div class="container">
 
-        <!-- Toolbar. Hidden on the Corporate page, which lists only a handful of
-             sessions and closes with its own enquiry bar instead. -->
-        <div class="workshops-toolbar" id="workshops-toolbar" style="margin-bottom:40px;">
-          <input
-            type="search"
-            class="workshops-search"
-            id="workshop-search"
-            placeholder="Search workshops..."
-            aria-label="Search workshops in this category"
-          >
-          <button class="btn-primary" id="category-pill" style="white-space:nowrap;">
-            WORKSHOP CATEGORY
-          </button>
-          <button class="btn-primary" id="open-enquire-btn" style="white-space:nowrap;display:flex;align-items:center;gap:8px;" aria-label="Open enquiry form">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            ENQUIRE NOW
-          </button>
-        </div>
-
         <!-- Category title block -->
         <div style="margin-bottom:64px;">
           <p class="eyebrow" id="category-eyebrow">WORKSHOPS</p>
@@ -99,11 +80,21 @@
       </div>
     </section>
 
-    <!-- Closing enquiry bar (Corporate page) -->
-    <button type="button" class="workshop-cta-bar" id="bottom-enquire-cta"
-      style="display:none;width:100%;border:0;" aria-label="Open enquiry form">
-      <span class="workshop-cta-bar__text">ENQUIRE NOW →</span>
-    </button>
+    <!-- Custom workshops — closing call to action, opens the enquiry panel -->
+    <section class="custom-workshop" aria-labelledby="custom-workshop-heading">
+      <div class="container">
+        <div class="custom-workshop__card">
+          <div class="custom-workshop__text">
+            <p class="eyebrow" data-content="workshops.custom-eyebrow">CUSTOM WORKSHOPS</p>
+            <h2 class="h3-i color-sc-100" id="custom-workshop-heading" data-content="workshops.custom-heading">Looking for something different?</h2>
+            <p class="h5-a color-sc-l3" data-content="workshops.custom-body">Looking for a different experience? We can custom curate or custom design workshops according to your requirements.</p>
+          </div>
+          <button type="button" class="btn-primary pill custom-workshop__cta" id="bottom-enquire-cta" aria-label="Get in touch about a custom workshop">
+            <span data-content="workshops.custom-cta">GET IN TOUCH</span> →
+          </button>
+        </div>
+      </div>
+    </section>
 
   </main>
 
@@ -198,12 +189,11 @@
       eyebrow: await getContent(`workshops.${key}-eyebrow`, 'WORKSHOPS'),
     };
 
-    document.title = `${meta.title} — Rangmudra`;
+    document.title = `${meta.title} — RangMudra`;
     document.getElementById('hero-title').textContent = meta.title;
     document.getElementById('category-heading').textContent = meta.title;
     document.getElementById('category-desc').textContent = meta.desc;
     document.getElementById('category-eyebrow').textContent = meta.eyebrow;
-    document.getElementById('category-pill').textContent = meta.title.toUpperCase();
 
     const WORKSHOPS = await getWorkshops();
     const filtered = WORKSHOPS.filter(w => w.category === cat);
@@ -273,16 +263,9 @@
     function closePanel() { panel?.classList.remove('open'); document.body.style.overflow = ''; }
 
     panelClose?.addEventListener('click', closePanel);
-    document.getElementById('open-enquire-btn')?.addEventListener('click', () => openPanel());
 
-    // Corporate sessions are few and booked by conversation, so that page drops
-    // the search/filter toolbar and ends on a single enquiry call to action.
-    if (cat === 'corporate') {
-      document.getElementById('workshops-toolbar').style.display = 'none';
-      const cta = document.getElementById('bottom-enquire-cta');
-      cta.style.display = 'block';
-      cta.addEventListener('click', () => openPanel());
-    }
+    // Every category closes on the custom-workshop card — the way into the side panel.
+    document.getElementById('bottom-enquire-cta').addEventListener('click', () => openPanel());
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
     });
@@ -321,14 +304,6 @@
         btn.disabled = false;
         btn.textContent = label;
       }
-    });
-
-    /* Workshop search */
-    document.getElementById('workshop-search')?.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      renderWorkshops(filtered.filter(w =>
-        w.title.toLowerCase().includes(q) || w.description.toLowerCase().includes(q)
-      ));
     });
 
     /* Populate workshop select in enquire form */

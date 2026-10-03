@@ -89,10 +89,14 @@
 /* Introduction section */
 .intro-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 360px) minmax(0, 560px);
+  justify-content: center;
   gap: 80px;
-  align-items: start;
+  align-items: center;
 }
+
+/* About → Sustainability: a smaller photo beside the copy. */
+.intro-grid--small-image { grid-template-columns: minmax(0, 280px) minmax(0, 560px); }
 
 .intro-eyebrow {
   font-family: var(--font-archivo);
@@ -106,6 +110,7 @@
 
 .intro-image {
   width: 100%;
+  height: auto; /* the height="600" attribute would otherwise beat the ratio */
   aspect-ratio: 520 / 600;
   object-fit: cover;
 }
@@ -133,6 +138,8 @@
 
 @media (max-width: 767px) {
   .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+  .intro-image { max-width: 320px; margin-inline: auto; }
+  .intro-grid--small-image .intro-image { max-width: 260px; }
 }
 
 /* Promo section (workshops / shop) */
@@ -290,6 +297,58 @@
   width: 100%;
   height: 100%;
   aspect-ratio: auto;
+}
+
+/* Home page band: the heading sits at the top of the quote column, beside the
+   photo, instead of stacked above it, so heading, quote and picture fit on one
+   screen. Heading and carousel share one grid cell; the quote column is padded
+   down past the heading and the quote sits at the foot of the picture. Under
+   the heading runs the same hand-block border used on the Workshops page. */
+.section.testimonials-section { padding-block: 72px; }
+.testimonials-band { display: grid; }
+.testimonials-band > * { grid-area: 1 / 1; min-width: 0; }
+.testimonials-head {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  max-width: 560px;
+}
+.testimonials-band .testimonials-eyebrow {
+  font-size: 32px;
+  line-height: 44px;
+  margin-bottom: 16px;
+}
+.testimonials-art {
+  width: auto;
+  max-width: 100%;
+  height: 56px;
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+}
+.testimonials-band .testimonial-slide .testimonials-grid {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+.testimonials-band .testimonial-slide .testimonials-grid > div:first-child {
+  max-width: 560px;
+  padding-top: 192px;
+}
+.testimonials-band .testimonial-slide__media {
+  width: auto;
+  height: min(440px, 58svh);
+  max-height: none;
+}
+@media (max-width: 1023px) {
+  .testimonials-band { display: block; }
+  .testimonials-head { margin-bottom: 32px; }
+  .testimonials-band .testimonial-slide .testimonials-grid { grid-template-columns: minmax(0, 1fr); }
+  .testimonials-band .testimonial-slide .testimonials-grid > div:first-child { padding-top: 0; }
+  .testimonials-band .testimonial-slide__media { width: 100%; height: auto; max-height: 440px; }
+}
+@media (max-width: 767px) {
+  .section.testimonials-section { padding-block: 56px; }
+  .testimonials-band .testimonials-eyebrow { font-size: 26px; line-height: 34px; }
+  .testimonials-art { height: 44px; }
 }
 
 /* A patron with no picture gets the full width for their quote. */
@@ -689,6 +748,30 @@
   object-fit: contain;
   background: var(--w1);
 }
+
+.product-gallery__main-img { cursor: zoom-in; }
+
+/* Hover magnifier (js/image-zoom.js): the lens over the photo, and the
+   enlarged view beside it, laid over the info column. */
+.zoom-lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(236, 227, 215, 0.35);
+  border: 1px solid rgba(44, 26, 16, 0.35);
+  pointer-events: none;
+}
+.zoom-pane {
+  position: fixed;
+  z-index: 60;
+  background-color: var(--w1);
+  background-repeat: no-repeat;
+  border: 1px solid rgba(44, 26, 16, 0.12);
+  box-shadow: 0 8px 32px rgba(44, 26, 16, 0.12);
+  pointer-events: none;
+}
+.zoom-lens[hidden],
+.zoom-pane[hidden] { display: none; }
 
 .product-gallery__zoom {
   position: absolute;
@@ -1360,6 +1443,44 @@
 }
 
 /* ─── Workshop detail CTA bar ─────────────────────────────────────────────── */
+
+/* Custom-workshops card — closes the workshop landing and category pages and
+   opens the enquiry panel. Sand card on the cream page, copy left, button right. */
+.custom-workshop {
+  padding: 0 0 120px;
+  background: var(--pr-l5);
+}
+@media (max-width: 1023px) { .custom-workshop { padding-bottom: 80px; } }
+.custom-workshop__card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: 48px 56px;
+  border-radius: 20px;
+  background: var(--pr-l2);
+}
+.custom-workshop__text { max-width: 600px; }
+.custom-workshop__text .eyebrow { margin-bottom: 8px; color: var(--pr-b2); } /* tan eyebrow is too faint on sand */
+.custom-workshop__text .h3-i { margin-bottom: 12px; }
+.custom-workshop__cta {
+  flex-shrink: 0;
+  height: 56px;
+  padding-inline: 32px;
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  .custom-workshop { padding-bottom: 56px; }
+  .custom-workshop__card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px 24px;
+  }
+  .custom-workshop__cta { width: 100%; }
+}
 
 .workshop-cta-bar {
   background: var(--sc-100);

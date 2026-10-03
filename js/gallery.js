@@ -2,6 +2,7 @@
 
 import { getGallery } from '/js/data.js';
 import { renderMosaic } from '/js/gallery-mosaic.js';
+import { openMediaLightbox } from '/js/media-mosaic.js';
 
 const grid = document.getElementById('gallery-grid');
 const emptyState = document.getElementById('gallery-empty');
@@ -14,6 +15,9 @@ const loadMoreWrap = document.getElementById('gallery-loadmore-wrap');
 const PAGE_SIZE = 24;
 let state = { q: '', tag: '', page: 1, total: 0, loaded: 0 };
 let allTags = [];
+// Every record rendered into the grid, in grid order — the viewer steps
+// through these.
+let items = [];
 
 function esc(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -51,6 +55,7 @@ async function reload() {
     // Only refresh the tag universe from an unfiltered response so chips don't
     // vanish as the user narrows down.
     if (!state.q && !state.tag && res.tags) { allTags = res.tags; renderTagChips(); }
+    items = res.items.slice();
     renderMosaic(grid, res.items);
     emptyState.hidden = res.items.length > 0;
     grid.hidden = res.items.length === 0;
@@ -68,6 +73,7 @@ async function loadMore() {
   try {
     const res = await getGallery({ q: state.q, tag: state.tag, page: state.page, pageSize: PAGE_SIZE });
     state.loaded += res.items.length;
+    items.push(...res.items);
     renderMosaic(grid, res.items, { append: true });
     loadMoreWrap.hidden = state.loaded >= state.total;
   } catch (e) {
@@ -79,6 +85,32 @@ function debounce(fn, ms) {
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
+
+// The viewer covers the whole current result set, not just the pages already
+// on screen, so stepping runs from the first image to the last and wraps.
+async function allMatchingItems() {
+  if (items.length >= state.total) return items;
+  const all = [];
+  for (let page = 1; ; page += 1) {
+    const res = await getGallery({ q: state.q, tag: state.tag, page, pageSize: 200 });
+    all.push(...res.items);
+    if (!res.items.length || all.length >= res.total) break;
+  }
+  return all;
+}
+
+// Clicking a tile opens the in-page viewer instead of the detail page. The
+// tile stays a real link, so a new-tab click still reaches the SEO page.
+grid.addEventListener('click', async (e) => {
+  const tile = e.target.closest('.gallery-tile');
+  if (!tile || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  const id = new URL(tile.href).searchParams.get('id');
+  let list = items;
+  try { list = await allMatchingItems(); } catch (_) { /* fall back to what is loaded */ }
+  const start = Math.max(list.findIndex((it) => String(it.id) === id), 0);
+  openMediaLightbox(list.map((it) => ({ url: it.url, type: it.type, alt: it.alt || it.title })), start);
+});
 
 if (searchInput) {
   searchInput.addEventListener('input', debounce(() => {

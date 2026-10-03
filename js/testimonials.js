@@ -63,7 +63,7 @@ function slide(patron) {
   const picture = m
     ? `<div class="testimonial-slide__media">${mediaHTML(m, {
         className: 'testimonials-image',
-        alt: `${patron.author || 'A patron'} — Rangmudra`,
+        alt: `${patron.author || 'A patron'} — RangMudra`,
         width: 480,
         height: 576,
         controls: m.type === 'video',

@@ -10,12 +10,13 @@
  */
 
 import { getContent } from '/js/content.js';
-import { escapeHtml, inlineHTML, textToBlocks } from '/js/rich-text.js';
+import { escapeHtml, figureHTML, inlineHTML, textToBlocks } from '/js/rich-text.js';
 
 function blockHTML(block) {
   if (block.type === 'h') {
     return `<h2 class="h4-i color-sc-100 policy__heading">${escapeHtml(block.text)}</h2>`;
   }
+  if (block.type === 'img' || block.type === 'video') return figureHTML(block);
   if (block.type === 'ul') {
     return `<ul class="h5-a color-sc-l3 policy__list">${block.items.map((i) => `<li>${inlineHTML(i)}</li>`).join('')}</ul>`;
   }
@@ -31,7 +32,7 @@ async function renderPolicy() {
   if (title) {
     const h1 = root.querySelector('[data-policy-title]');
     if (h1) h1.textContent = title;
-    document.title = `${title} — Rangmudra`;
+    document.title = `${title} — RangMudra`;
   }
 
   const body = await getContent(`${page}.body`, '');

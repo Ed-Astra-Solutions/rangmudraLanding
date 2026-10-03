@@ -6,6 +6,8 @@
  *   **bold**   *italic*        inline emphasis
  *   [label](https://…)         a link
  *   name@example.com, https://…  bare email addresses and web links are linked
+ *   ![alt | caption](url)      a photo or video on its own line (the blog syntax;
+ *                              a video file's extension makes it a video)
  *
  * Everything is escaped before any formatting is applied, so nothing an admin
  * types can inject markup — only the tags below are ever produced.
@@ -50,8 +52,26 @@ export function inlineHTML(text) {
   return out.replace(/\u0000(\d+)\u0000/g, (_, i) => links[Number(i)]);
 }
 
+const MEDIA_LINE = /^!\[(.*?)\]\((\S+?)\)$/;
+const VIDEO_URL = /\.(mp4|webm|mov|ogg|ogv|m4v|mkv)(\?|#|$)/i;
+const SAFE_SRC = /^(https?:\/\/|\/)/i;
+
+/* A media block as a <figure>, the same markup the blog template draws. Only
+   site-relative and http(s) sources are allowed, so a typed `javascript:` URL
+   renders nothing. */
+export function figureHTML(block) {
+  if (!SAFE_SRC.test(block.src || '')) return '';
+  const src = escapeHtml(block.src);
+  const media = block.type === 'video'
+    ? `<video src="${src}" controls playsinline preload="metadata"${block.alt ? ` aria-label="${escapeHtml(block.alt)}"` : ''}></video>`
+    : `<img src="${src}" alt="${escapeHtml(block.alt || '')}" loading="lazy">`;
+  const caption = block.caption ? `<figcaption>${inlineHTML(block.caption)}</figcaption>` : '';
+  return `<figure>${media}${caption}</figure>`;
+}
+
 /* Split long copy into blocks: blank lines separate paragraphs, `## ` starts a
-   heading, `- ` lines form a list. */
+   heading, `- ` lines form a list, and an `![alt | caption](url)` line is a
+   photo or video ({ type: 'img' | 'video', src, alt, caption }). */
 export function textToBlocks(text) {
   const blocks = [];
   let para = [];
@@ -62,9 +82,14 @@ export function textToBlocks(text) {
   String(text || '').replace(/\r\n/g, '\n').split('\n').forEach((raw) => {
     const line = raw.trim();
     if (!line) { flushPara(); flushList(); return; }
+    const media = line.match(MEDIA_LINE);
     if (line.startsWith('## ')) {
       flushPara(); flushList();
       blocks.push({ type: 'h', text: line.slice(3).trim() });
+    } else if (media) {
+      flushPara(); flushList();
+      const [alt = '', caption = ''] = media[1].split('|').map((s) => s.trim());
+      blocks.push({ type: VIDEO_URL.test(media[2]) ? 'video' : 'img', src: media[2], alt, caption });
     } else if (/^[-•]\s+/.test(line)) {
       flushPara();
       if (!list) list = { type: 'ul', items: [] };

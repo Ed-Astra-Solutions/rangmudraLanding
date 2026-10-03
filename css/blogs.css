@@ -282,3 +282,35 @@
   .blog-article { padding: 0 20px; }
   .blog-feature__body { padding: 24px; }
 }
+
+/* ─── Sustainability page ─────────────────────────────────────────────────── */
+/* Same cover + article layout as a blog post (sustainability.html). */
+
+.sustain-cover__eyebrow {
+  margin-bottom: 16px;
+  color: var(--pr-l5);
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.sustain-cover__title {
+  max-width: 920px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.1;
+  color: var(--pr-l5);
+}
+
+.sustain-intro {
+  margin-bottom: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(44, 26, 16, 0.12);
+  font-family: var(--font-archivo);
+  font-size: 18px;
+  line-height: 30px;
+  letter-spacing: 0.05em;
+  color: var(--sc-l3);
+}
+
+@media (max-width: 767px) {
+  .sustain-intro { font-size: 16px; line-height: 26px; }
+}

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Orders — Rangmudra</title>
-  <meta name="description" content="Track your Rangmudra order history and delivery status.">
+  <title>My Orders — RangMudra</title>
+  <meta name="description" content="Track your RangMudra order history and delivery status.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
@@ -111,10 +111,10 @@
       const paid = PAID.includes(o.status);
       const pending = ['created', 'failed', 'signature_failed'].includes(o.status);
       // Storefront orders can be paid again while their hold on the pieces
-      // lasts (the server allows it until 2 minutes before the hold ends).
+      // lasts — a short retry window once the payment window is closed.
       const until = o.holdUntil ? new Date(o.holdUntil) : null;
       const retryable = ['created', 'failed'].includes(o.status) && o.source !== 'manual'
-        && until && until - Date.now() > 3 * 60 * 1000;
+        && until && until > Date.now();
       return `
         <article class="order-card">
           <header class="order-card__head">
@@ -125,7 +125,7 @@
             <span class="h6-a order-badge order-badge--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
           </header>
           ${paid ? tracker(o) : ''}
-          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">${o.status === 'failed' ? 'The payment for this order didn\'t go through.' : 'This order hasn\'t been paid yet.'} ${retryable ? `You can retry payment until ${esc(holdTime(until))}, after which the order is cancelled.` : 'Unpaid orders are cancelled after 20 minutes.'} Everything is still in your cart.</p>` : ''}
+          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">${o.status === 'failed' ? 'The payment for this order didn\'t go through.' : 'This order hasn\'t been paid yet.'} ${retryable ? `You can retry payment until ${esc(holdTime(until))}, after which the order is cancelled.` : 'The time to retry has run out, so check out again to buy these pieces.'} Everything is still in your cart.</p>` : ''}
           ${trackingBox(o)}
           <ul class="order-card__items">${(o.items || []).map((i) => itemRow(i, productById.get(i.id))).join('')}</ul>
           <footer class="order-card__foot">
@@ -170,7 +170,7 @@
         const res = await fetch(apiUrl(`/api/orders/${encodeURIComponent(id)}/invoice`), { headers: { 'x-user-token': getToken() } });
         if (!res.ok) throw new Error();
         const blob = await res.blob();
-        const name = (res.headers.get('Content-Disposition') || '').match(/filename="([^"]+)"/)?.[1] || `Rangmudra-Invoice-${id}.pdf`;
+        const name = (res.headers.get('Content-Disposition') || '').match(/filename="([^"]+)"/)?.[1] || `RangMudra-Invoice-${id}.pdf`;
         const url = URL.createObjectURL(blob);
         const a = Object.assign(document.createElement('a'), { href: url, download: name });
         document.body.appendChild(a); a.click(); a.remove();

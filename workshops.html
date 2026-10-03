@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workshops &amp; Experience — Rangmudra</title>
+  <title>Workshops &amp; Experience — RangMudra</title>
   <meta name="description" content="Hands-on block printing and eco printing workshops for individuals, corporates, and curated learners.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <link rel="canonical" href="https://rangmudra.com/workshops.html">
@@ -11,17 +11,17 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:site_name" content="RangMudra">
   <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="Workshops & Experience — Rangmudra">
+  <meta property="og:title" content="Workshops & Experience — RangMudra">
   <meta property="og:description" content="Hands-on block printing and eco printing workshops in Bangalore — experience, corporate and curated formats.">
   <meta property="og:url" content="https://rangmudra.com/workshops.html">
   <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
-  <meta property="og:image:alt" content="Workshops & Experience — Rangmudra">
+  <meta property="og:image:alt" content="Workshops & Experience — RangMudra">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Workshops & Experience — Rangmudra">
+  <meta name="twitter:title" content="Workshops & Experience — RangMudra">
   <meta name="twitter:description" content="Hands-on block printing and eco printing workshops in Bangalore — experience, corporate and curated formats.">
   <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
@@ -65,28 +65,8 @@
       </div>
     </section>
 
-    <!-- Search toolbar -->
-    <section style="background:var(--pr-l5);padding:32px 0 0;">
-      <div class="container">
-        <div class="workshops-toolbar">
-          <p class="h6-a color-sc-l3" style="text-transform:uppercase;" data-content="workshops.toolbar-label">Workshops</p>
-          <input
-            type="search"
-            class="workshops-search"
-            id="workshop-search"
-            placeholder="Search workshops..."
-            aria-label="Search workshops"
-          >
-          <button class="btn-primary" id="open-enquire-btn" style="white-space:nowrap;display:flex;align-items:center;gap:8px;" aria-label="Open enquiry form">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            ENQUIRE NOW
-          </button>
-        </div>
-      </div>
-    </section>
-
     <!-- Category chooser -->
-    <section class="section workshop-cat-section" style="background:var(--pr-l5);padding-top:48px;" aria-label="Workshop categories">
+    <section class="section workshop-cat-section" style="background:var(--pr-l5);padding-top:80px;" aria-label="Workshop categories">
       <div class="container">
         <div class="workshops-cat-grid">
           <a href="#cat-experience" class="category-card">
@@ -168,6 +148,22 @@
           <p class="h5-a color-sc-l3" style="max-width:680px;" data-content="workshops.curated-desc">Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.</p>
         </div>
         <div class="shop-grid" data-workshop-list="curated" aria-label="Curated workshops"></div>
+      </div>
+    </section>
+
+    <!-- Custom workshops — closing call to action, opens the enquiry panel -->
+    <section class="custom-workshop" aria-labelledby="custom-workshop-heading">
+      <div class="container">
+        <div class="custom-workshop__card">
+          <div class="custom-workshop__text">
+            <p class="eyebrow" data-content="workshops.custom-eyebrow">CUSTOM WORKSHOPS</p>
+            <h2 class="h3-i color-sc-100" id="custom-workshop-heading" data-content="workshops.custom-heading">Looking for something different?</h2>
+            <p class="h5-a color-sc-l3" data-content="workshops.custom-body">Looking for a different experience? We can custom curate or custom design workshops according to your requirements.</p>
+          </div>
+          <button type="button" class="btn-primary pill custom-workshop__cta" id="bottom-enquire-cta" aria-label="Get in touch about a custom workshop">
+            <span data-content="workshops.custom-cta">GET IN TOUCH</span> →
+          </button>
+        </div>
       </div>
     </section>
 
@@ -269,7 +265,7 @@
     /* Enquire panel */
     const panel = document.getElementById('enquire-panel');
     const panelClose = document.getElementById('enquire-panel-close');
-    const openBtn = document.getElementById('open-enquire-btn');
+    const openBtn = document.getElementById('bottom-enquire-cta');
 
     function openPanel(preselectId) {
       panel?.classList.add('open');
@@ -319,14 +315,6 @@
         btn.disabled = false;
         btn.textContent = label;
       }
-    });
-
-    /* Search across all categories */
-    document.getElementById('workshop-search')?.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      renderAll(WORKSHOPS.filter(w =>
-        w.title.toLowerCase().includes(q) || w.description.toLowerCase().includes(q)
-      ));
     });
 
     /* Populate workshop select in enquire form */

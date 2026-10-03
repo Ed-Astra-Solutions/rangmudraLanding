@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment — Rangmudra</title>
-  <meta name="description" content="Pay securely for your Rangmudra order via UPI, cards, net banking or wallets.">
+  <title>Payment — RangMudra</title>
+  <meta name="description" content="Pay securely for your RangMudra order via UPI, cards, net banking or wallets.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
   <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
@@ -239,15 +239,19 @@
     let pendingOrder = null;
 
     /* Closed the payment window without paying: the order stays open (and its
-       pieces held) until its time runs out, and the cart is left as it was, so
-       Retry Payment reopens the same order. */
+       pieces held) for a short retry window, and the cart is left as it was, so
+       Retry Payment reopens the same order. Once the window ends, Proceed
+       starts a fresh checkout. */
+    let retryExpiry = null;
     function showPayStatus({ outcome, holdUntil }) {
       const until = holdUntil ? new Date(holdUntil) : null;
+      clearTimeout(retryExpiry);
+      if (until) retryExpiry = setTimeout(() => { pendingOrder = null; hidePayStatus(); }, until - Date.now());
       document.getElementById('pay-status-label').textContent = outcome === 'failed' ? 'Order Failed' : 'Payment Pending';
       document.getElementById('pay-status-text').textContent = (outcome === 'failed'
         ? 'Your payment didn\'t go through.'
         : 'You closed the payment window before paying.')
-        + (until ? ` Your pieces are held for you until ${holdTime(until)}.` : '')
+        + (until ? ` Your pieces are held for you until ${holdTime(until)} — retry before then, or check out again after.` : '')
         + ' Everything is still in your cart.';
       payStatus.hidden = false;
       proceedBtn.hidden = true;
@@ -260,6 +264,7 @@
 
     retryBtn.addEventListener('click', async () => {
       if (!pendingOrder) return;
+      clearTimeout(retryExpiry);
       retryBtn.disabled = true;
       const label = retryBtn.textContent;
       retryBtn.textContent = 'Reopening payment…';

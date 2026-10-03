@@ -56,8 +56,8 @@ async function init() {
     tags.map((t) => `<span class="gallery-detail__tag">${esc(t)}</span>`).join('');
 
   // Fallback for static hosting where the server didn't inject <head> meta.
-  if (!document.title || /Design Gallery — Rangmudra/.test(document.title)) {
-    document.title = `${item.title} · Rangmudra`;
+  if (!document.title || /Design Gallery — RangMudra/.test(document.title)) {
+    document.title = `${item.title} · RangMudra`;
   }
 
   wrap.hidden = false;

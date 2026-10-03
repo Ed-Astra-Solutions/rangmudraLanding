@@ -13,6 +13,11 @@ async function loadPartial(selector, url) {
 }
 
 async function initComponents() {
+  /* Started before the partials land so the name is set as the brand mark in
+     them, in admin copy, and in anything a page renders afterwards. */
+  const { watchBrand } = await import('./brand.js');
+  watchBrand();
+
   await Promise.all([
     loadPartial('[data-partial="header"]', '/partials/header.html'),
     loadPartial('[data-partial="footer"]', '/partials/footer.html'),

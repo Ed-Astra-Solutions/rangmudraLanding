@@ -46,6 +46,7 @@ const STATIC_TRAILS = {
   'blogs.html':            [{ label: 'Blogs' }],
   'gallery.html':          [{ label: 'Gallery' }],
   'about.html':            [{ label: 'About Us' }],
+  'sustainability.html':   [{ label: 'Sustainability' }],
   'enquire.html':          [{ label: 'Enquire' }],
   'cart.html':             [{ label: 'My Cart' }],
   'checkout-address.html': [{ label: 'My Cart', href: 'cart.html' }, { label: 'Delivery Address' }],

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product — Rangmudra</title>
-  <meta name="description" content="Hand block-printed artisanal product from Rangmudra.">
+  <title>Product — RangMudra</title>
+  <meta name="description" content="Hand block-printed artisanal product from RangMudra.">
   <!--SEO_DEFAULTS_START-->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <link rel="canonical" href="https://rangmudra.com/product.html">
@@ -12,17 +12,17 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="product">
-  <meta property="og:site_name" content="Rangmudra">
+  <meta property="og:site_name" content="RangMudra">
   <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="Rangmudra">
+  <meta property="og:title" content="RangMudra">
   <meta property="og:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
   <meta property="og:url" content="https://rangmudra.com/product.html">
   <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
-  <meta property="og:image:alt" content="Rangmudra">
+  <meta property="og:image:alt" content="RangMudra">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Rangmudra">
+  <meta name="twitter:title" content="RangMudra">
   <meta name="twitter:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
   <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
   <!--SEO_DEFAULTS_END-->
@@ -102,18 +102,20 @@
           <!-- Add to cart / Go to cart rendered by JS -->
         </div>
 
-        <!-- The Process section -->
+        <!-- The Process section. These three stills are the fallback, shown
+             until the product or its category has its own Process media
+             (admin → The Process); renderProcess() swaps them out then. -->
         <div class="process-section">
           <p class="process-eyebrow">THE PROCESS</p>
           <div class="process-strip" aria-label="Block printing process steps">
             <div class="process-card">
-              <img data-section="shop.process-1" src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
+              <img src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
             <div class="process-card">
-              <img data-section="shop.process-2" src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
+              <img src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
             <div class="process-card">
-              <img data-section="shop.process-3" src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
+              <img src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
             </div>
           </div>
         </div>
@@ -178,6 +180,8 @@
     import { getProducts, getData } from '/js/data.js';
     import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
     import { entityMedia, primaryImage, mediaHTML, applyMedia, normalizeMediaList } from '/js/media.js';
+    import { openMediaLightbox } from '/js/media-mosaic.js';
+    import { attachHoverZoom } from '/js/image-zoom.js';
 
     const params = new URLSearchParams(location.search);
     const slug = params.get('slug') || 'flora-patterned-set';
@@ -197,15 +201,15 @@
     }
 
     /* "The Process" strip: the product's own set if it has one, else its
-       category's set from the admin, else the site-wide shop.process-* slots
-       already in the markup. */
+       category's set from the admin, else the fixed fallback stills already
+       in the markup. */
     async function renderProcess() {
       let list = normalizeMediaList(product.processMedia);
       if (!list.length) {
         try {
           const { categories = {} } = await getData('process-media');
           list = normalizeMediaList(categories[product.category]);
-        } catch (_) { /* keep the default strip */ }
+        } catch (_) { /* keep the fallback strip */ }
       }
       if (!list.length) return;
       const strip = document.querySelector('.process-strip');
@@ -221,7 +225,7 @@
     }
 
     function renderProductPage() {
-      document.title = `${product.name} — Rangmudra`;
+      document.title = `${product.name} — RangMudra`;
       document.querySelector('meta[name="description"]').content = product.description;
 
       document.getElementById('product-category').textContent = product.tags.join(' · ');
@@ -242,6 +246,7 @@
       /* Gallery — an ordered mix of photos and videos. The main stage swaps
          between <img> and <video> as the selected entry's type changes. */
       let mainEl = document.getElementById('main-product-img');
+      let currentIndex = 0;
       if (mainEl && MEDIA.length) {
         mainEl.alt = `${product.name} — block-printed artisanal piece`;
         mainEl = applyMedia(mainEl, MEDIA[0], { controls: true, fit: 'contain' });
@@ -262,7 +267,24 @@
             thumbContainer.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             mainEl = applyMedia(mainEl, MEDIA[i], { controls: true, fit: 'contain' });
+            currentIndex = i;
           });
+        });
+      }
+
+      /* Hover magnifier on the photo, and the full-screen viewer — opened by
+         clicking the photo or the zoom button — which steps through every
+         photo and clip of this product, end to end. */
+      const stage = document.querySelector('.product-gallery__main');
+      if (stage && MEDIA.length) {
+        const zoom = attachHoverZoom(stage, () => mainEl);
+        const openViewer = () => {
+          zoom.hide();
+          openMediaLightbox(MEDIA.map((m, i) => ({ ...m, alt: `${product.name} view ${i + 1}` })), currentIndex);
+        };
+        stage.addEventListener('click', (e) => {
+          // A clip's own controls take its clicks; only photos open the viewer.
+          if (e.target.closest('.product-gallery__zoom') || e.target.tagName === 'IMG') openViewer();
         });
       }
 

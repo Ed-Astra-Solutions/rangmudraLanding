@@ -7,10 +7,7 @@
     "gallery": "/images/uploads/home-gallery.jpg"
   },
   "shop": {
-    "hero": "/images/uploads/shop-hero.jpg",
-    "process-1": "/images/uploads/process-carving.jpg",
-    "process-2": "/images/uploads/process-dyeing.jpg",
-    "process-3": "/images/uploads/process-printing.jpg"
+    "hero": "/images/uploads/shop-hero.jpg"
   },
   "workshops": {
     "hero": "/images/uploads/workshops-hero.jpg",
@@ -42,5 +39,8 @@
   },
   "gallery": {
     "hero": "/images/uploads/home-gallery.jpg"
+  },
+  "sustainability": {
+    "hero": "/images/uploads/home-testimonials.jpg"
   }
 }
