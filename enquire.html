@@ -70,72 +70,9 @@
       </div>
     </section>
 
-    <!-- Artistic Experience Carousel (chocolate band) -->
-    <section class="section bg-chocolate" aria-label="Artistic experience">
-      <div class="container">
-        <div class="carousel" id="craft-carousel" aria-label="Artistic experience showcase">
-          <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous slide">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <div class="carousel__track">
-            <div class="carousel__slide" style="width:100%;flex-shrink:0;position:relative;">
-              <img
-                data-section="enquire.carousel-1"
-                src="/images/uploads/wshop-corporate-block.jpg"
-                alt="Artisan Craftsmanship — master printer at work with hand-carved wooden blocks"
-                style="width:100%;max-height:520px;object-fit:cover;border-radius:8px;"
-                loading="lazy"
-                width="1080" height="520"
-              >
-              <div style="position:absolute;bottom:0;left:0;right:0;padding:48px;background:linear-gradient(transparent,rgba(44,26,16,0.8));">
-                <h3 class="h3-i" style="color:var(--pr-l5);margin-bottom:8px;" data-content="enquire.slide-1-title">Artisan Craftsmanship</h3>
-                <p class="h6-a" style="color:rgba(236,227,215,0.7);text-transform:uppercase;" data-content="enquire.slide-1-caption">Hand-carved wooden blocks, centuries of heritage</p>
-              </div>
-            </div>
-            <div class="carousel__slide" style="width:100%;flex-shrink:0;position:relative;">
-              <img
-                data-section="enquire.carousel-2"
-                src="/images/uploads/wshop-eco-print.jpg"
-                alt="Eco Printing — botanical leaves creating unique one-of-a-kind prints"
-                style="width:100%;max-height:520px;object-fit:cover;border-radius:8px;"
-                loading="lazy"
-                width="1080" height="520"
-              >
-              <div style="position:absolute;bottom:0;left:0;right:0;padding:48px;background:linear-gradient(transparent,rgba(44,26,16,0.8));">
-                <h3 class="h3-i" style="color:var(--pr-l5);margin-bottom:8px;" data-content="enquire.slide-2-title">Botanical Eco Printing</h3>
-                <p class="h6-a" style="color:rgba(236,227,215,0.7);text-transform:uppercase;" data-content="enquire.slide-2-caption">Nature as the artist — leaves, flowers, and plant pigments</p>
-              </div>
-            </div>
-            <div class="carousel__slide" style="width:100%;flex-shrink:0;position:relative;">
-              <img
-                data-section="enquire.carousel-3"
-                src="/images/uploads/wshop-curated-course.jpg"
-                alt="Natural dye process — traditional mordant bathing of cotton fabric"
-                style="width:100%;max-height:520px;object-fit:cover;border-radius:8px;"
-                loading="lazy"
-                width="1080" height="520"
-              >
-              <div style="position:absolute;bottom:0;left:0;right:0;padding:48px;background:linear-gradient(transparent,rgba(44,26,16,0.8));">
-                <h3 class="h3-i" style="color:var(--pr-l5);margin-bottom:8px;" data-content="enquire.slide-3-title">Natural Dye Mastery</h3>
-                <p class="h6-a" style="color:rgba(236,227,215,0.7);text-transform:uppercase;" data-content="enquire.slide-3-caption">Plant-based colours, timeless palettes</p>
-              </div>
-            </div>
-          </div>
-          <button class="carousel__arrow carousel__arrow--next" aria-label="Next slide">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-          <div class="carousel__dots" style="margin-top:24px;" aria-label="Slide indicators"></div>
-        </div>
-      </div>
-    </section>
-
     <!-- Ask Us Anything form -->
     <section class="section bg-cream" aria-labelledby="contact-form-heading">
       <div class="container">
-        <p class="eyebrow" style="text-align:center;margin-inline:auto;" data-content="enquire.form-eyebrow">GET IN TOUCH</p>
-        <h2 class="h3-i color-sc-100" style="text-align:center;margin-bottom:16px;" id="contact-form-heading" data-content="enquire.form-heading">Ask Us Anything</h2>
-        <p class="h5-a color-sc-l3" style="text-align:center;max-width:480px;margin:0 auto 64px;" data-content="enquire.form-subtitle">Choose your experience level and book a session that speaks to you.</p>
-
         <!-- Contact info cards -->
         <div class="contact-cards-grid" role="list">
           <div class="contact-card" role="listitem">
@@ -163,6 +100,10 @@
             <p class="contact-card__line" data-content="enquire.card-email-line-2">We respond within 24hrs</p>
           </div>
         </div>
+
+        <p class="eyebrow" style="text-align:center;margin-inline:auto;" data-content="enquire.form-eyebrow">GET IN TOUCH</p>
+        <h2 class="h3-i color-sc-100" style="text-align:center;margin-bottom:16px;" id="contact-form-heading" data-content="enquire.form-heading">Ask Us Anything</h2>
+        <p class="h5-a color-sc-l3" style="text-align:center;max-width:480px;margin:0 auto 64px;" data-content="enquire.form-subtitle">Choose your experience level and book a session that speaks to you.</p>
 
         <!-- Contact form -->
         <form id="contact-form" style="max-width:920px;margin:0 auto;" novalidate>
@@ -205,11 +146,9 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
-    import { initCarousels } from '/js/carousel.js';
     import { apiUrl } from '/js/config.js';
     import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousels();
       armForm(document.getElementById('contact-form'));
 
       document.getElementById('contact-form')?.addEventListener('submit', async (e) => {

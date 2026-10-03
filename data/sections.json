@@ -29,10 +29,7 @@
     "team-video": ""
   },
   "enquire": {
-    "hero": "/images/uploads/enquire-hero.jpg",
-    "carousel-1": "/images/uploads/enquire-carousel-1.jpg",
-    "carousel-2": "/images/uploads/enquire-carousel-2.jpg",
-    "carousel-3": "/images/uploads/enquire-carousel-3.jpg"
+    "hero": "/images/uploads/enquire-hero.jpg"
   },
   "blogs": {
     "hero": "/images/uploads/process-dyeing.jpg"
