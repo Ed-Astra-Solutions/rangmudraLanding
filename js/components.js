@@ -31,6 +31,7 @@ async function initComponents() {
   const { initReveal } = await import('./reveal.js');
   const { initDummyImages } = await import('./dummy-images.js');
   const { initBreadcrumbs } = await import('./breadcrumbs.js');
+  const { initVideoControls } = await import('./video-controls.js');
   const { mountSaleBanner } = await import('./sale.js');
   const { updateCartBadge, syncCart } = await import('./cart.js');
   const { isLoggedIn } = await import('./auth.js');
@@ -60,6 +61,7 @@ async function initComponents() {
   initReveal();
   initDummyImages();
   initBreadcrumbs();
+  initVideoControls();
   initNewsletter();
 }
 
