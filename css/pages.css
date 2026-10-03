@@ -1538,3 +1538,119 @@ a.order-item__thumb:hover img { transform: scale(1.03); }
   .order-track__label { font-size: 10px; letter-spacing: 0.1em; }
   .order-card__invoice { width: 100%; justify-content: center; }
 }
+
+/* ─── Homepage enquiry box ────────────────────────────────────────────────
+   One card: a chocolate details panel on the left, a plain contact-form
+   layout on the right (labels above fields, required asterisks, inline
+   errors, a result line above the button). */
+.home-enquiry {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--w1);
+  box-shadow: 0 1px 2px rgba(44, 26, 16, 0.04), 0 4px 12px rgba(44, 26, 16, 0.04);
+}
+.home-enquiry__info {
+  display: flex;
+  flex-direction: column;
+  padding: 56px 48px;
+  background: var(--sc-100);
+  color: var(--pr-l5);
+}
+.home-enquiry__eyebrow { color: var(--pr-100); text-transform: uppercase; margin-bottom: 12px; }
+.home-enquiry__heading { margin-bottom: 16px; }
+.home-enquiry__intro { color: var(--pr-l3); margin-bottom: 40px; }
+.home-enquiry__details {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: auto;
+  padding: 32px 0 0;
+  border-top: 1px solid rgba(236, 227, 215, 0.2);
+  list-style: none;
+}
+.home-enquiry__details li { display: flex; gap: 16px; align-items: flex-start; }
+.home-enquiry__details p { overflow-wrap: anywhere; }
+.home-enquiry__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(236, 227, 215, 0.3);
+  border-radius: 999px;
+  color: var(--pr-100);
+}
+.home-enquiry__label { color: var(--pr-100); text-transform: uppercase; }
+.home-enquiry__muted { color: var(--sc-l4x); }
+
+.home-enquiry__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 56px 48px;
+}
+.home-enquiry__form-title { margin-bottom: 8px; }
+.home-enquiry__row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.home-enquiry__field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.home-enquiry__field label { color: var(--sc-100); text-transform: uppercase; }
+.home-enquiry__req { color: var(--pr-b2); }
+.home-enquiry__field input,
+.home-enquiry__field select,
+.home-enquiry__field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(44, 26, 16, 0.2);
+  border-radius: 8px;
+  background: var(--pr-l5);
+  color: var(--sc-100);
+  font-family: var(--font-archivo);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.05em;
+  transition: border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.home-enquiry__field select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.home-enquiry__field textarea { min-height: 140px; resize: vertical; }
+.home-enquiry__field input:focus,
+.home-enquiry__field select:focus,
+.home-enquiry__field textarea:focus {
+  border-color: var(--sc-100);
+  background-color: var(--w1);
+  outline: none;
+}
+.home-enquiry__field.is-invalid input,
+.home-enquiry__field.is-invalid textarea { border-color: var(--error); }
+.home-enquiry__error { color: var(--error); }
+.home-enquiry__status {
+  padding: 12px 16px;
+  border-left: 3px solid var(--ac-100);
+  background: rgba(129, 153, 122, 0.12);
+  color: var(--sc-100);
+}
+.home-enquiry__status[data-kind="error"] {
+  border-left-color: var(--error);
+  background: rgba(187, 68, 68, 0.08);
+}
+.home-enquiry__submit { align-self: flex-start; min-width: 240px; }
+
+@media (max-width: 1023px) {
+  .home-enquiry { grid-template-columns: minmax(0, 1fr); }
+  .home-enquiry__info,
+  .home-enquiry__form { padding: 48px 32px; }
+}
+@media (max-width: 767px) {
+  .home-enquiry__info,
+  .home-enquiry__form { padding: 40px 20px; }
+  .home-enquiry__row { grid-template-columns: minmax(0, 1fr); }
+  .home-enquiry__submit { align-self: stretch; }
+}
