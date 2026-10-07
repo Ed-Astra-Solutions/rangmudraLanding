@@ -2958,7 +2958,7 @@
   cursor: pointer;
 }
 
-/* ─── WhatsApp FAB (mobile only) ──────────────────────────────────────────── */
+/* ─── WhatsApp FAB (every page, every screen size) ───────────────────────── */
 
 .whatsapp-fab {
   position: fixed;
@@ -2972,16 +2972,18 @@
   align-items: center;
   justify-content: center;
   color: var(--w1);
-  box-shadow: var(--shadow-hover);
+  box-shadow: var(--shadow-dropdown);
   z-index: 50;
-  display: none;
   transition: background var(--dur-micro) var(--ease-standard),
               transform var(--dur-micro) var(--ease-standard);
 }
 
 .whatsapp-fab:hover { background: var(--pr-b3); transform: scale(1.05); }
+.whatsapp-fab:focus-visible { outline: 2px solid var(--pr-b2); outline-offset: 3px; }
 
-@media (max-width: 767px) { .whatsapp-fab { display: flex; } }
+@media (min-width: 1024px) {
+  .whatsapp-fab { right: 32px; bottom: 32px; width: 60px; height: 60px; }
+}
 
 /* Lift the FAB clear of the sticky bottom CTA bar on pages that have one
    (cart, product) so it never covers the Proceed / Add-to-cart button. */
