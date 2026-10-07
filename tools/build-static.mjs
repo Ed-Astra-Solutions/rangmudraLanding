@@ -8,9 +8,10 @@
 // Products, workshops, posts and gallery pieces each get their own address
 // (/product/<slug>/ …). The page scripts still run in the visitor's browser
 // and refresh everything from the API, so admin edits show up immediately;
-// the saved HTML catches up on the next build (the workflow rebuilds daily).
+// the saved HTML catches up on the next publish.
 //
-//   cd tools && npm install && node build-static.mjs
+//   cd tools && ./publish.sh        # build + push to gh-pages (what Pages serves)
+//   cd tools && node build-static.mjs   # build into ../_site only
 //
 // Env: API_BASE (default https://api.rangmudra.com), SITE_URL (default
 // https://rangmudra.com), CHROME_PATH (default: system Chrome), OUT (default
