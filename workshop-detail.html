@@ -50,6 +50,9 @@
          sits in the breadcrumb) and carries the first BOOK NOW, so the price,
          photos and booking card all land inside the first screen. -->
     <section class="page-hero wd-hero" aria-labelledby="workshop-title">
+      <!-- Blurred copy fills the band; the photo itself is shown whole on top,
+           so a group shot never loses heads to the banner's crop. -->
+      <img src="/images/uploads/wshop-corporate-block.jpg" alt="" class="wd-hero__blur" id="workshop-hero-blur" aria-hidden="true">
       <img
         src="/images/uploads/wshop-corporate-block.jpg"
         alt=""
@@ -397,8 +400,12 @@
     /* ── Photos ────────────────────────────────────────────────────────── */
     const media = entityMedia(workshop, 'image');
     if (media.length) {
-      // The title band is a decorative backdrop: it keeps the stored framing.
-      applyMedia($('workshop-hero-img'), media.find((m) => m.type !== 'video') || media[0], { controls: false });
+      // The whole photo, never cropped, over a blurred copy that fills the band.
+      const heroMedia = media.find((m) => m.type !== 'video');
+      if (heroMedia) {
+        applyMedia($('workshop-hero-img'), heroMedia, { fit: 'contain', controls: false });
+        $('workshop-hero-blur').src = heroMedia.url;
+      }
     }
 
     const gallery = $('wd-gallery');

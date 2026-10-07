@@ -1557,8 +1557,18 @@ a.order-item__thumb:hover img { transform: scale(1.03); }
 .wd-main [hidden],
 .wd-related[hidden] { display: none; }
 
-.wd-hero { min-height: 280px; }
-.wd-hero__content { padding: 72px 48px 56px; max-width: 880px; }
+.wd-hero { min-height: 400px; }
+.wd-hero__blur {
+  position: absolute;
+  inset: -32px;
+  width: calc(100% + 64px);
+  height: calc(100% + 64px);
+  object-fit: cover;
+  filter: blur(28px) brightness(0.75);
+}
+/* Above the blur, below the scrim and the title. */
+.wd-hero .page-hero__bg { z-index: 0; }
+.wd-hero__content { padding: 88px 48px 56px; max-width: 880px; }
 .wd-hero__eyebrow { color: var(--pr-l1); margin-bottom: 8px; }
 .wd-hero__title { color: var(--pr-l5); }
 .wd-hero__tagline { color: var(--pr-l3); margin-top: 12px; }
@@ -1946,8 +1956,9 @@ a.order-item__thumb:hover img { transform: scale(1.03); }
 
 /* ─── Phones ─── */
 @media (max-width: 767px) {
-  .wd-hero { min-height: 220px; }
-  .wd-hero__content { padding: 64px 20px 40px; }
+  .wd-hero { min-height: 300px; }
+  /* Clear the back button pinned at the top-left before the title starts. */
+  .wd-hero__content { padding: 84px 20px 40px; }
   .wd-main { padding-block: 24px 64px; }
   .wd-layout {
     grid-template-columns: minmax(0, 1fr);
