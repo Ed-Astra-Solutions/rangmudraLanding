@@ -125,8 +125,8 @@ function organization(content) {
     areaServed: 'IN',
     sameAs: [
       'https://www.instagram.com/rangmudra_bengaluru/',
-      'https://www.facebook.com/profile.php?id=61555646021193',
-      'https://youtube.com/@rangmudra',
+      'https://www.facebook.com/rangmudra.bengaluru/',
+      'https://www.youtube.com/@rangmudra',
       'https://www.linkedin.com/company/rangmudra',
     ],
   };
