@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>RangMudra Journal</title>
+  <link>https://rangmudra.com/blogs.html</link>
+  <atom:link href="https://rangmudra.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Notes from the RangMudra studio in Bengaluru on block printing, eco printing and caring for hand printed fabric.</description>
+  <language>en-in</language>
+  <item>
+    <title>Eco Printing: Process of turning Plants around us into unique Prints</title>
+    <link>https://rangmudra.com/blog/eco-printing-at-home/</link>
+    <guid isPermaLink="true">https://rangmudra.com/blog/eco-printing-at-home/</guid>
+    <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
+    <description>Pressed leaves, simple bundles, and a steaming pot — discover how the slow art of eco printing can be practised in your kitchen, with results that surprise every time.</description>
+  </item>
+  <item>
+    <title>Caring for your block-printed fabric</title>
+    <link>https://rangmudra.com/blog/caring-for-block-printed-fabric/</link>
+    <guid isPermaLink="true">https://rangmudra.com/blog/caring-for-block-printed-fabric/</guid>
+    <pubDate>Tue, 10 Mar 2026 00:00:00 GMT</pubDate>
+    <description>Hand-block printed pieces are made to be lived in, washed, and loved — but they ask for gentleness. A short field guide to keeping them beautiful for decades.</description>
+  </item>
+</channel>
+</rss>

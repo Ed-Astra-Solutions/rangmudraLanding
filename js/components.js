@@ -1,0 +1,128 @@
+/* components.js — Loads partials into header/footer slots */
+
+async function loadPartial(selector, url) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to load ${url}`);
+    el.innerHTML = await res.text();
+  } catch (e) {
+    console.warn('Partial load failed:', e);
+  }
+}
+
+async function initComponents() {
+  /* Started before the partials land so the name is set as the brand mark in
+     them, in admin copy, and in anything a page renders afterwards. */
+  const { watchBrand } = await import('./brand.js');
+  watchBrand();
+
+  await Promise.all([
+    loadPartial('[data-partial="header"]', '/partials/header.html'),
+    loadPartial('[data-partial="footer"]', '/partials/footer.html'),
+    loadPartial('[data-partial="auth-modal"]', '/partials/auth-modal.html'),
+  ]);
+
+  /* Dynamically import modules that depend on DOM being ready */
+  const { initMobileMenu } = await import('./mobile-menu.js');
+  const { initAuthModal } = await import('./auth.js');
+  const { initOTPInput } = await import('./otp-input.js');
+  const { initReveal } = await import('./reveal.js');
+  const { initDummyImages } = await import('./dummy-images.js');
+  const { initBreadcrumbs } = await import('./breadcrumbs.js');
+  const { initVideoControls } = await import('./video-controls.js');
+  const { mountSaleBanner } = await import('./sale.js');
+  const { updateCartBadge, syncCart } = await import('./cart.js');
+  const { isLoggedIn } = await import('./auth.js');
+  const { applyContent } = await import('./content.js');
+
+  /* The header and footer carry admin-editable copy too, and they only exist
+     now that the partials are injected. */
+  applyContent();
+
+  /* The header only exists now that the partial is injected, so this is the
+     first point at which the cart badge can show a real count. */
+  updateCartBadge();
+
+  /* Signed-in shoppers get their account cart merged in behind the badge — the
+     local copy has already rendered, so this only ever adds to it. */
+  if (isLoggedIn()) syncCart();
+
+  mountSaleBanner();
+  initMobileMenu();
+  initAuthModal();
+  initOTPInput();
+  // Page scripts that gate on sign-in wait for this before opening the modal.
+  window.dispatchEvent(new CustomEvent('auth-modal-ready'));
+
+  highlightActiveNavLink();
+  initScrollHeader();
+  initReveal();
+  initDummyImages();
+  initBreadcrumbs();
+  initVideoControls();
+  initNewsletter();
+}
+
+async function initNewsletter() {
+  const form = document.querySelector('.footer__newsletter-form');
+  if (!form) return;
+  const { apiUrl } = await import('./config.js');
+  const { armForm, botFields, guardedFetch } = await import('./bot-guard.js');
+  // Replace the no-op onsubmit="return false" with a real handler.
+  form.removeAttribute('onsubmit');
+  armForm(form);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input[type=email]');
+    const btn = form.querySelector('button[type=submit]');
+    const email = (input?.value || '').trim();
+    if (!email) return;
+    if (btn) btn.disabled = true;
+    try {
+      const res = await guardedFetch(apiUrl('/api/newsletter'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, ...(await botFields(form, 'newsletter')) }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+      form.reset();
+      if (input) { input.placeholder = '✓ Subscribed!'; }
+    } catch (err) {
+      if (input) { input.value = ''; input.placeholder = 'Try again'; }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+}
+
+function highlightActiveNavLink() {
+  // Built detail pages live at /product/<slug>/ etc., so take the template's
+  // name from RM_PAGE; detail pages light up the section they belong to.
+  const file = (window.RM_PAGE && window.RM_PAGE.file) || window.location.pathname.split('/').pop() || 'index.html';
+  const SECTION = {
+    'product.html': 'shop.html', 'workshop-detail.html': 'workshops.html', 'workshop-category.html': 'workshops.html',
+    'blog-detail.html': 'blogs.html', 'gallery-item.html': 'gallery.html',
+  };
+  const path = SECTION[file] || file;
+  document.querySelectorAll('.header__nav-link').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === path || (path === '' && href === 'index.html')) {
+      link.classList.add('active');
+    }
+  });
+}
+
+function initScrollHeader() {
+  const header = document.getElementById('site-header');
+  if (!header) return;
+  const threshold = 80;
+  const onScroll = () => {
+    header.classList.toggle('scrolled', window.scrollY > threshold);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+document.addEventListener('DOMContentLoaded', initComponents);

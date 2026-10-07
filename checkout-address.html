@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Address — RangMudra</title>
+  <meta name="description" content="Choose your delivery address to complete your RangMudra order.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body class="checkout-page" data-step="2">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <div class="checkout-grid container">
+
+    <!-- Left column: decorative negative space + Add new address -->
+    <div style="padding-top:0;">
+      <h2 class="h2-i color-sc-100" style="margin-bottom:8px;">Delivery Address</h2>
+      <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:32px;"></div>
+      <p class="h5-a color-sc-l3" style="margin-bottom:32px;">Choose a saved address or add a new one.</p>
+
+      <!-- Saved addresses to choose from — shown when there is more than one -->
+      <div id="address-choices" class="address-choices" role="radiogroup" aria-label="Saved addresses" hidden></div>
+
+      <button
+        class="h6-a"
+        style="display:flex;align-items:center;gap:8px;color:var(--pr-b2);text-transform:uppercase;letter-spacing:0.15em;background:none;border:none;cursor:pointer;text-decoration:underline;"
+        id="add-address-btn"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add new address
+      </button>
+
+      <!-- Add new address form (hidden by default) -->
+      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;"></div>
+    </div>
+
+    <!-- Right: Sidebar with addresses -->
+    <aside class="checkout-sidebar" aria-label="Delivery address selection">
+
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 1: Cart">1</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step active" aria-current="step">
+          <div class="stepper__circle" aria-label="Step 2: Delivery Address (current)">2</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 3: Payment">3</div>
+        </div>
+      </div>
+
+      <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Delivery Address</h2>
+
+      <p class="h5-a color-sc-l3" id="address-empty" style="display:none;margin-bottom:24px;">No saved addresses yet — add one to continue.</p>
+      <!-- The selected address only; the choice is made in the list on the left -->
+      <div id="address-list" aria-live="polite"></div>
+      <a href="#address-choices" class="address-change-link h6-a" id="address-change-link" hidden>Change address</a>
+
+      <button class="btn-proceed" style="margin-top:32px;" id="proceed-btn">Proceed</button>
+      <a href="cart.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
+
+    </aside>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, openAuthModal, requireAuth, getUserAddresses } from '/js/auth.js';
+    import { mountAddressForm } from '/js/address-form.js';
+    import { getCart } from '/js/cart.js';
+    import { quoteDelivery, addressPincode } from '/js/shipping.js';
+
+    let ADDRESSES = [];
+    let selectedId;
+
+    /* Delivery is priced by India Post Speed Post from the studio to the
+       destination PIN, so it differs per address — show it on each card rather
+       than surprising the shopper with the number on the payment step. Quotes
+       fill in as they arrive; a card whose PIN we cannot price just stays
+       blank rather than showing a wrong figure. */
+    async function showDeliveryFees() {
+      const cart = getCart();
+      if (!cart.length) return;
+      await Promise.all(ADDRESSES.map(async (addr) => {
+        const quote = await quoteDelivery(addressPincode(addr), cart);
+        if (!quote) return;
+        document.querySelectorAll(`[data-delivery-for="${CSS.escape(addr.id)}"]`).forEach((el) => {
+          el.textContent = `Delivery ₹${quote.deliveryFee.toLocaleString('en-IN')} · Speed Post, ${quote.zoneLabel.toLowerCase()}`;
+        });
+      }));
+    }
+
+    /* Addresses are per-account, so they can only be fetched once the shopper
+       is signed in. Sign-in normally already happened on the cart page; this
+       covers a direct landing on the URL. */
+    async function loadAddresses() {
+      try {
+        ADDRESSES = await getUserAddresses();
+      } catch (err) {
+        // Same reasoning as the profile page: a dead session is a sign-in
+        // problem, not an empty address book. Showing "no saved addresses"
+        // here would push the shopper into re-typing an address they have.
+        if (err.authExpired) { openAuthModal(() => location.reload()); return; }
+        ADDRESSES = [];
+      }
+      selectedId = ADDRESSES.find(a => a.default)?.id || ADDRESSES[0]?.id;
+      renderAddresses();
+    }
+
+    requireAuth({
+      onSuccess: loadAddresses,
+      // Nothing on this page works signed out — send them back to the cart.
+      onCancel: () => { window.location.href = 'cart.html'; },
+    });
+
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const selectedAddress = () => ADDRESSES.find(a => a.id === selectedId);
+
+    /* Left: every saved address as a radio list (only when there is a choice
+       to make). Right: just the selected one, which is what Proceed uses. */
+    function renderAddresses() {
+      const list = document.getElementById('address-list');
+      const choices = document.getElementById('address-choices');
+      const changeLink = document.getElementById('address-change-link');
+      if (!list) return;
+      const emptyEl = document.getElementById('address-empty');
+      if (emptyEl) emptyEl.style.display = ADDRESSES.length ? 'none' : 'block';
+
+      const multiple = ADDRESSES.length > 1;
+      choices.hidden = !multiple;
+      changeLink.hidden = !multiple;
+      choices.innerHTML = multiple ? ADDRESSES.map(addr => `
+        <div class="address-option" data-id="${esc(addr.id)}" role="radio"
+             aria-checked="${addr.id === selectedId}" tabindex="${addr.id === selectedId ? 0 : -1}">
+          <span class="address-option__radio" aria-hidden="true"></span>
+          <span class="address-option__text">
+            <span class="address-option__head">
+              <span class="address-option__title">${esc(addr.title)}</span>
+              <span class="address-option__label">${esc(addr.label)}</span>
+              ${addr.default ? '<span class="address-option__default">Default</span>' : ''}
+            </span>
+            <span class="address-option__body">${esc(addr.address).replace(/\n/g, ', ')}</span>
+            <span class="address-option__delivery" data-delivery-for="${esc(addr.id)}"></span>
+          </span>
+        </div>
+      `).join('') : '';
+
+      renderSelected();
+      showDeliveryFees();
+    }
+
+    function renderSelected() {
+      const list = document.getElementById('address-list');
+      const addr = selectedAddress();
+      // Rendered already revealed: reveal.js would otherwise re-hide the card
+      // and fade it in again on every switch of address.
+      list.innerHTML = addr ? `
+        <div class="address-card selected is-visible" data-reveal="fade">
+          <span class="address-card__label">${esc(addr.label)}</span>
+          <p class="address-card__title">${esc(addr.title)}</p>
+          <p class="address-card__body">${esc(addr.address).replace(/\n/g, '<br>')}</p>
+          <p class="address-card__body" data-delivery-for="${esc(addr.id)}" style="margin-top:12px;opacity:0.75;"></p>
+        </div>` : '';
+      document.querySelectorAll('#address-choices .address-option').forEach(o => {
+        const on = o.dataset.id === selectedId;
+        o.setAttribute('aria-checked', String(on));
+        o.tabIndex = on ? 0 : -1;
+      });
+    }
+
+    function selectAddress(id, { focus = false } = {}) {
+      if (!id || id === selectedId) return;
+      selectedId = id;
+      renderSelected();
+      showDeliveryFees();
+      if (focus) document.querySelector(`#address-choices [data-id="${CSS.escape(id)}"]`)?.focus();
+    }
+
+    // One set of listeners on the list itself — it is re-rendered on every save.
+    const choicesEl = document.getElementById('address-choices');
+    choicesEl.addEventListener('click', (e) => {
+      const opt = e.target.closest('.address-option');
+      if (opt) selectAddress(opt.dataset.id);
+    });
+    choicesEl.addEventListener('keydown', (e) => {
+      const opt = e.target.closest('.address-option');
+      if (!opt) return;
+      const opts = [...choicesEl.querySelectorAll('.address-option')];
+      const i = opts.indexOf(opt);
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectAddress(opt.dataset.id); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); selectAddress(opts[(i + 1) % opts.length].dataset.id, { focus: true }); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); selectAddress(opts[(i - 1 + opts.length) % opts.length].dataset.id, { focus: true }); }
+    });
+
+    const newAddressWrap = document.getElementById('new-address-form');
+    document.getElementById('add-address-btn')?.addEventListener('click', () => {
+      if (newAddressWrap) newAddressWrap.style.display = newAddressWrap.style.display === 'none' ? 'block' : 'none';
+    });
+
+    /* Save a new address to the user's account, then show + select it */
+    if (newAddressWrap) mountAddressForm(newAddressWrap, {
+      onSaved(saved) {
+        ADDRESSES.push(saved);
+        selectedId = saved.id;
+        renderAddresses();
+        newAddressWrap.style.display = 'none';
+      },
+    });
+
+    document.getElementById('proceed-btn')?.addEventListener('click', () => {
+      if (!selectedId) {
+        alert('Please add and select a delivery address to continue.');
+        const wrap = document.getElementById('new-address-form');
+        if (wrap) wrap.style.display = 'block';
+        return;
+      }
+      localStorage.setItem('rangmudra_delivery_address', selectedId);
+      window.location.href = 'checkout-payment.html';
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "homepage": {
+    "hero": "/images/uploads/home-hero.jpg",
+    "introduction": "/images/uploads/home-introduction.jpg",
+    "workshops-promo": "/images/uploads/home-workshops-promo.jpg",
+    "shop-promo": "/images/uploads/home-shop-promo.jpg",
+    "gallery": "/images/uploads/home-gallery.jpg"
+  },
+  "shop": {
+    "hero": "/images/uploads/shop-hero.jpg"
+  },
+  "workshops": {
+    "hero": "/images/uploads/workshops-hero.jpg",
+    "category-experience": "/images/uploads/workshops-cat-experience.jpg",
+    "category-corporate": "/images/uploads/workshops-cat-corporate.jpg",
+    "category-curated": "/images/uploads/workshops-cat-curated.jpg",
+    "category-hero-experience": "/images/uploads/workshops-cat-experience.jpg",
+    "category-hero-corporate": "/images/uploads/workshops-cat-corporate.jpg",
+    "category-hero-curated": "/images/uploads/workshops-cat-curated.jpg",
+    "divider": "/images/textures/divider-block-print.png"
+  },
+  "about": {
+    "hero": "/images/uploads/about-hero.jpg",
+    "story": "/images/uploads/about-story.jpg",
+    "sustainability": "/images/uploads/about-sustainability.jpg",
+    "team-hero": "/images/uploads/about-team-hero.jpg",
+    "team-secondary": "/images/uploads/about-team-secondary.jpg",
+    "faq-decor": "/images/uploads/about-faq-decor.jpg",
+    "team-video": ""
+  },
+  "enquire": {
+    "hero": "/images/uploads/enquire-hero.jpg"
+  },
+  "blogs": {
+    "hero": "/images/uploads/process-dyeing.jpg"
+  },
+  "gallery": {
+    "hero": "/images/uploads/home-gallery.jpg"
+  },
+  "sustainability": {
+    "hero": "/images/uploads/home-testimonials.jpg"
+  }
+}

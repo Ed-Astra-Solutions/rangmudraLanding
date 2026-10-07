@@ -1,0 +1,312 @@
+[
+  {
+    "id": "ajrakh-corset",
+    "slug": "ajrakh-corset",
+    "name": "Ajrakh Corset",
+    "category": "Women's Wear",
+    "tags": [
+      "INDIGO",
+      "TOPWEAR"
+    ],
+    "price": 2800,
+    "sizes": [
+      "S/M",
+      "M/L"
+    ],
+    "printType": "Block Printed",
+    "featured": true,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-ajrakh-corset-1.jpg",
+      "/images/uploads/prod-ajrakh-corset-2.jpg",
+      "/images/uploads/prod-ajrakh-corset-3.jpg"
+    ],
+    "description": "Carefully block printed Ajrakh corset crafted on natural cotton fabric. Features traditional geometric patterns hand-stamped with carved wooden blocks dipped in natural indigo dye.",
+    "features": [
+      "100% natural cotton",
+      "Hand block printed",
+      "Indigo natural dye",
+      "Machine washable"
+    ],
+    "measurements": "S/M: Bust 36-38, Length 24. M/L: Bust 38-40, Length 25.",
+    "care": "Cold wash, dry in shade, iron on reverse."
+  },
+  {
+    "id": "flora-patterned-set",
+    "slug": "flora-patterned-set",
+    "name": "Flora patterned set",
+    "category": "Women's Wear",
+    "tags": [
+      "NANDANA",
+      "PAIRED SET"
+    ],
+    "price": 2800,
+    "sizes": [
+      "S/M",
+      "M/L"
+    ],
+    "printType": "Block Printed",
+    "featured": true,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-flora-set-1.jpg",
+      "/images/uploads/prod-flora-set-2.jpg"
+    ],
+    "description": "Carefully block printed 3 piece clothing to enhance your everyday mood.",
+    "features": [
+      "3-piece set",
+      "Natural cotton fabric",
+      "Floral block print",
+      "Handcrafted"
+    ],
+    "measurements": "S/M: Standard small/medium fit. M/L: Standard medium/large fit.",
+    "care": "Hand wash recommended, dry in shade."
+  },
+  {
+    "id": "shiro-shirt",
+    "slug": "shiro-shirt",
+    "name": "Shiro Shirt",
+    "category": "Men's Wear",
+    "tags": [
+      "SHIRO",
+      "SHIRT"
+    ],
+    "price": 1500,
+    "sizes": [
+      "S/M",
+      "M/L",
+      "L/XL"
+    ],
+    "printType": "Block Printed",
+    "featured": false,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-shiro-shirt-1.jpg",
+      "/images/uploads/prod-shiro-shirt-2.jpg"
+    ],
+    "description": "A refined block-printed shirt featuring delicate geometric patterns. Made from breathable natural cotton.",
+    "features": [
+      "Natural cotton",
+      "Block printed",
+      "Button-down collar",
+      "Relaxed fit"
+    ],
+    "measurements": "S/M: Chest 38-40. M/L: Chest 40-42. L/XL: Chest 42-44.",
+    "care": "Cold wash, line dry."
+  },
+  {
+    "id": "eco-dupatta",
+    "slug": "eco-dupatta",
+    "name": "Eco Print Dupatta",
+    "category": "Women's Wear",
+    "tags": [
+      "ECO",
+      "DUPATTA"
+    ],
+    "price": 3200,
+    "sizes": [
+      "One Size"
+    ],
+    "printType": "Eco Printed",
+    "featured": true,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-eco-dupatta-1.jpg",
+      "/images/uploads/prod-eco-dupatta-2.jpg"
+    ],
+    "description": "Each eco-printed dupatta is unique — natural leaves and flowers are pressed onto the fabric to create one-of-a-kind botanical prints.",
+    "features": [
+      "Natural silk base",
+      "Eco/botanical print",
+      "One-of-a-kind pattern",
+      "Natural plant dyes"
+    ],
+    "measurements": "Length: 2.5m, Width: 0.6m",
+    "care": "Dry clean only."
+  },
+  {
+    "id": "home-decor-runner",
+    "slug": "home-decor-runner",
+    "name": "Block Print Table Runner",
+    "category": "Home Decor",
+    "tags": [
+      "HOME",
+      "RUNNER"
+    ],
+    "price": 1200,
+    "sizes": [
+      "One Size"
+    ],
+    "printType": "Block Printed",
+    "featured": false,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-runner-1.jpg",
+      "/images/uploads/prod-runner-2.jpg"
+    ],
+    "description": "A handcrafted table runner featuring traditional Rangmudra block-print motifs. Brings artisanal heritage to your everyday spaces.",
+    "features": [
+      "100% cotton",
+      "Block printed",
+      "Traditional motifs",
+      "Washable"
+    ],
+    "measurements": "Length: 180cm, Width: 35cm",
+    "care": "Cold wash, iron while damp."
+  },
+  {
+    "id": "indigo-saree",
+    "slug": "indigo-saree",
+    "name": "Indigo Botanical Saree",
+    "category": "Women's Wear",
+    "tags": [
+      "INDIGO",
+      "SAREE"
+    ],
+    "price": 8500,
+    "sizes": [
+      "One Size"
+    ],
+    "printType": "Block Printed",
+    "featured": true,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-indigo-saree-1.jpg",
+      "/images/uploads/prod-indigo-saree-2.jpg"
+    ],
+    "description": "A 6.5-yard hand block-printed saree featuring intricate botanical motifs in deep indigo on natural cotton. Each yard tells a story of centuries-old craft.",
+    "features": [
+      "6.5 yards cotton",
+      "Deep indigo block print",
+      "Includes unstitched blouse piece",
+      "Handcrafted"
+    ],
+    "measurements": "Length: 6.5 yards. Blouse piece: 0.8 yards.",
+    "care": "Dry clean first wash, thereafter cold hand wash."
+  },
+  {
+    "id": "eco-print-blazer",
+    "slug": "eco-print-blazer",
+    "name": "Eco Print Blazer",
+    "category": "Men's Wear",
+    "tags": [
+      "ECO",
+      "BLAZER"
+    ],
+    "price": 6800,
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "printType": "Eco Printed",
+    "featured": true,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-eco-blazer-1.jpg",
+      "/images/uploads/prod-eco-blazer-2.jpg",
+      "/images/uploads/prod-eco-blazer-3.jpg"
+    ],
+    "description": "A statement blazer carrying the imprint of real leaves and petals. Each piece is one-of-a-kind, dyed and printed entirely with botanicals.",
+    "features": [
+      "Linen-cotton blend",
+      "Eco/botanical print",
+      "One-of-a-kind",
+      "Lined interior"
+    ],
+    "measurements": "M: Chest 40. L: Chest 42. XL: Chest 44.",
+    "care": "Dry clean only."
+  },
+  {
+    "id": "lotus-tote",
+    "slug": "lotus-tote",
+    "name": "Lotus Canvas Tote",
+    "category": "Accessories",
+    "tags": [
+      "LOTUS",
+      "TOTE"
+    ],
+    "price": 850,
+    "sizes": [
+      "One Size"
+    ],
+    "printType": "Block Printed",
+    "featured": false,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-lotus-tote-1.jpg",
+      "/images/uploads/prod-lotus-tote-2.jpg"
+    ],
+    "description": "A sturdy canvas tote hand-stamped with our signature lotus block. Built for the long haul — groceries, books, beach.",
+    "features": [
+      "Heavy cotton canvas",
+      "Hand block printed",
+      "Reinforced handles",
+      "Inner pocket"
+    ],
+    "measurements": "Height: 40cm, Width: 36cm, Depth: 12cm.",
+    "care": "Cold wash, line dry."
+  },
+  {
+    "id": "cushion-set",
+    "slug": "cushion-set",
+    "name": "Block Print Cushion Set",
+    "category": "Home Decor",
+    "tags": [
+      "HOME",
+      "CUSHIONS"
+    ],
+    "price": 2400,
+    "sizes": [
+      "Set of 2"
+    ],
+    "printType": "Block Printed",
+    "featured": false,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-cushion-set-1.jpg",
+      "/images/uploads/prod-cushion-set-2.jpg"
+    ],
+    "description": "A pair of cotton cushion covers stamped with our heritage block-print motifs. Adds a slow, handmade warmth to any room.",
+    "features": [
+      "Set of 2 covers",
+      "100% cotton",
+      "Concealed zip",
+      "Insert sold separately"
+    ],
+    "measurements": "Each cover: 45cm x 45cm.",
+    "care": "Cold wash, iron on reverse."
+  },
+  {
+    "id": "kids-block-tee",
+    "slug": "kids-block-tee",
+    "name": "Children's Block Print Tee",
+    "category": "Accessories",
+    "tags": [
+      "KIDS",
+      "TEE"
+    ],
+    "price": 650,
+    "sizes": [
+      "4-6Y",
+      "6-8Y",
+      "8-10Y"
+    ],
+    "printType": "Block Printed",
+    "featured": false,
+    "available": true,
+    "images": [
+      "/images/uploads/prod-kids-tee-1.jpg",
+      "/images/uploads/prod-kids-tee-2.jpg"
+    ],
+    "description": "Soft cotton tees hand-stamped by our young workshop participants. Every print is slightly different — that's the charm.",
+    "features": [
+      "100% cotton",
+      "Hand block printed",
+      "Child-safe natural dyes",
+      "Pre-shrunk"
+    ],
+    "measurements": "Standard kids' fit.",
+    "care": "Cold wash, line dry, iron on reverse."
+  }
+]

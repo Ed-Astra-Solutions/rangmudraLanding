@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Addresses — RangMudra</title>
+  <meta name="description" content="Manage your saved delivery addresses for RangMudra orders.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+  <main class="profile-page">
+    <div class="container" style="max-width:700px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;">
+        <a href="index.html" class="btn-ghost" aria-label="Go to the home page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+          Home
+        </a>
+        <h1 class="h3-i color-sc-100">Saved Addresses</h1>
+      </div>
+      <p class="h5-a color-sc-l3" id="address-empty" style="display:none;margin-bottom:24px;">You have no saved addresses yet. Add one below.</p>
+      <div id="address-list" style="display:flex;flex-direction:column;gap:24px;" role="list" aria-label="Saved addresses"></div>
+      <button class="btn-gold" style="margin-top:32px;display:flex;align-items:center;gap:8px;" id="add-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add New Address
+      </button>
+
+      <!-- Add new address form (hidden by default) -->
+      <div id="new-address-form" style="display:none;margin-top:32px;max-width:480px;"></div>
+    </div>
+  </main>
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, openAuthModal, getUserAddresses, updateUserAddress, deleteUserAddress } from '/js/auth.js';
+    import { mountAddressForm } from '/js/address-form.js';
+
+    if (!isLoggedIn()) {
+      openAuthModal(() => location.reload());
+    } else {
+      const list = document.getElementById('address-list');
+      const emptyEl = document.getElementById('address-empty');
+      const form = document.getElementById('new-address-form');
+
+      function escapeHtml(s) {
+        return (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      }
+
+      function render(addresses) {
+        emptyEl.style.display = addresses.length ? 'none' : 'block';
+        list.innerHTML = addresses.map(a => `
+          <div class="address-card ${a.default ? 'selected' : ''}" role="listitem" data-id="${a.id}">
+            <span class="address-card__label">${escapeHtml(a.label)}</span>
+            <p class="address-card__title">${escapeHtml(a.title)}</p>
+            <p class="address-card__body">${escapeHtml(a.address).replace(/\n/g,'<br>')}</p>
+            <div style="display:flex;gap:16px;margin-top:16px;">
+              ${a.default ? '<span class="h7-a" style="color:var(--pr-100);text-transform:uppercase;letter-spacing:0.15em;">Default</span>'
+                : `<button type="button" class="h7-a addr-default" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:var(--sc-l3);text-transform:uppercase;letter-spacing:0.15em;text-decoration:underline;">Set default</button>`}
+              <button type="button" class="h7-a addr-delete" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:#B44;text-transform:uppercase;letter-spacing:0.15em;text-decoration:underline;">Remove</button>
+            </div>
+          </div>
+        `).join('');
+
+        list.querySelectorAll('.addr-default').forEach(b => b.addEventListener('click', async () => {
+          try { await updateUserAddress(b.dataset.id, { default: true }); reload(); } catch (e) { alert(e.message); }
+        }));
+        list.querySelectorAll('.addr-delete').forEach(b => b.addEventListener('click', async () => {
+          try { await deleteUserAddress(b.dataset.id); reload(); } catch (e) { alert(e.message); }
+        }));
+      }
+
+      async function reload() {
+        try {
+          render(await getUserAddresses());
+        } catch (err) {
+          // An expired session must not look like an empty address book — the
+          // shopper's addresses are still on their account, they just need to
+          // sign in again.
+          if (err.authExpired) { openAuthModal(() => location.reload()); return; }
+          emptyEl.textContent = 'We could not load your saved addresses. Please refresh and try again.';
+          emptyEl.style.display = 'block';
+          list.innerHTML = '';
+        }
+      }
+
+      document.getElementById('add-btn').addEventListener('click', () => {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      });
+
+      mountAddressForm(form, {
+        onSaved() {
+          form.style.display = 'none';
+          reload();
+        },
+      });
+
+      reload();
+    }
+  </script>
+</body>
+</html>

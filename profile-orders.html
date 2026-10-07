@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — RangMudra</title>
+  <meta name="description" content="Track your RangMudra order history and delivery status.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+</head>
+<body>
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+  <main class="profile-page">
+    <div class="container" style="max-width:800px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;">
+        <a href="index.html" class="btn-ghost" aria-label="Go to the home page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+          Home
+        </a>
+        <h1 class="h3-i color-sc-100">My Orders</h1>
+      </div>
+      <div id="orders-list" class="orders-list"></div>
+      <div id="orders-empty" style="text-align:center;padding:80px 0;display:none;">
+        <p class="h4-i color-sc-l3" style="margin-bottom:24px;">No orders yet</p>
+        <a href="shop.html" class="btn-primary">Start Shopping</a>
+      </div>
+    </div>
+  </main>
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { isLoggedIn, getToken, openAuthModal } from '/js/auth.js';
+    import { apiUrl } from '/js/config.js';
+    import { getProducts } from '/js/data.js';
+    import { retryPayment } from '/js/pay.js';
+    import { holdTime } from '/js/holds.js';
+
+    const fmt = (n) => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const day = (iso) => iso ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    const PAID = ['paid', 'shipped', 'delivered'];
+    const STATUS = {
+      created: 'Payment Pending', failed: 'Order Failed', signature_failed: 'Payment not verified',
+      paid: 'Confirmed', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
+    };
+
+    // Placed → Confirmed → Shipped → Delivered, each with the date it happened.
+    function tracker(o) {
+      const steps = [
+        ['Placed', o.createdAt, true],
+        ['Confirmed', o.paidAt, PAID.includes(o.status)],
+        ['Shipped', o.shippedAt, ['shipped', 'delivered'].includes(o.status)],
+        ['Delivered', o.deliveredAt, o.status === 'delivered'],
+      ];
+      return `<ol class="order-track" aria-label="Order progress">${steps.map(([label, at, done]) => `
+        <li class="order-track__step${done ? ' is-done' : ''}">
+          <span class="order-track__dot" aria-hidden="true"></span>
+          <span class="h6-a order-track__label">${label}</span>
+          <span class="h7-a order-track__date">${done ? esc(day(at)) : ''}</span>
+        </li>`).join('')}</ol>`;
+    }
+
+    function trackingBox(o) {
+      const t = o.tracking;
+      if (!t || !['shipped', 'delivered'].includes(o.status)) return '';
+      const bits = [t.carrier, t.number ? `Tracking no. ${t.number}` : ''].filter(Boolean).map(esc).join(' · ');
+      return `<div class="order-card__tracking">
+        <span class="h6-a color-sc-100">${bits || 'Shipped'}</span>
+        ${t.url ? `<a class="order-card__link h6-a" href="${esc(t.url)}" target="_blank" rel="noopener">Track shipment →</a>` : ''}
+      </div>`;
+    }
+
+    function itemRow(i, product) {
+      const slug = i.slug || (product && product.slug) || i.id;
+      const href = i.id ? `product.html?slug=${encodeURIComponent(slug)}` : '';
+      const image = i.image || (product && ((product.images && product.images[0]) || product.image)) || '';
+      const meta = [i.category || (product && product.category), i.printType || (product && product.printType)].filter(Boolean).map(esc).join(' · ');
+      const open = href ? `<a href="${href}"` : '<div';
+      const close = href ? '</a>' : '</div>';
+      return `
+        <li class="order-item">
+          ${open} class="order-item__thumb" ${href ? `aria-label="View ${esc(i.name)}"` : ''}>
+            ${image ? `<img src="${esc(image)}" alt="" width="72" height="90" loading="lazy">` : ''}
+          ${close}
+          <div class="order-item__info">
+            ${meta ? `<p class="h6-a order-item__meta">${meta}</p>` : ''}
+            ${href ? `<a class="h4-i color-sc-100 order-item__name" href="${href}">${esc(i.name)}</a>` : `<p class="h4-i color-sc-100">${esc(i.name)}</p>`}
+            <p class="h6-a color-sc-l3">${[i.size ? `Size ${esc(i.size)}` : '', (i.qty || 1) > 1 ? `Qty ${i.qty}` : ''].filter(Boolean).join(' · ')}</p>
+          </div>
+          <p class="h5-a color-sc-100 order-item__price">${fmt((i.price || 0) * (i.qty || 1))}</p>
+        </li>`;
+    }
+
+    function addressText(a) {
+      if (!a) return '';
+      return [a.title, a.address, a.line1, a.line2, a.city, a.state].filter(Boolean).map(esc).join(', ');
+    }
+
+    function orderCard(o, productById) {
+      const paid = PAID.includes(o.status);
+      const pending = ['created', 'failed', 'signature_failed'].includes(o.status);
+      // Storefront orders can be paid again while their hold on the pieces
+      // lasts — a short retry window once the payment window is closed.
+      const until = o.holdUntil ? new Date(o.holdUntil) : null;
+      const retryable = ['created', 'failed'].includes(o.status) && o.source !== 'manual'
+        && until && until > Date.now();
+      return `
+        <article class="order-card">
+          <header class="order-card__head">
+            <div>
+              <p class="h6-a color-sc-l3 order-card__id">Order ${esc(o.id)}</p>
+              <p class="h6-a color-sc-l3">Placed ${esc(day(o.createdAt))}</p>
+            </div>
+            <span class="h6-a order-badge order-badge--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
+          </header>
+          ${paid ? tracker(o) : ''}
+          ${pending ? `<p class="h6-a color-sc-l3 order-card__note">${o.status === 'failed' ? 'The payment for this order didn\'t go through.' : 'This order hasn\'t been paid yet.'} ${retryable ? `You can retry payment until ${esc(holdTime(until))}, after which the order is cancelled.` : 'The time to retry has run out, so check out again to buy these pieces.'} Everything is still in your cart.</p>` : ''}
+          ${trackingBox(o)}
+          <ul class="order-card__items">${(o.items || []).map((i) => itemRow(i, productById.get(i.id))).join('')}</ul>
+          <footer class="order-card__foot">
+            <div>
+              ${addressText(o.address) ? `<p class="h6-a color-sc-l3 order-card__address">Delivering to ${addressText(o.address)}</p>` : ''}
+              <p class="h5-a color-sc-100">Total ${paid ? 'paid' : ''} <strong>${fmt(o.amount)}</strong>${o.discount > 0 ? ` <span class="h6-a color-sc-l3">(saved ${fmt(o.discount)})</span>` : ''}</p>
+            </div>
+            ${paid ? `<button type="button" class="btn-ghost order-card__invoice" data-invoice="${esc(o.id)}">Download invoice</button>` : ''}
+            ${retryable ? `<button type="button" class="btn-primary order-card__retry" data-retry="${esc(o.id)}">Retry Payment</button>` : ''}
+          </footer>
+        </article>`;
+    }
+
+    // Reopen the payment window for an unpaid order. Closing it again changes
+    // nothing — the order stays as it is and the cart keeps its pieces — so the
+    // page just reloads to show the order's latest state.
+    async function retryOrder(btn, order) {
+      if (!order) return;
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Reopening payment…';
+      try {
+        await retryPayment(order.id, {
+          itemIds: (order.items || []).map((i) => i.id).filter(Boolean),
+          onClose: () => location.reload(),
+        });
+      } catch (err) {
+        alert(err.message);
+        location.reload();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    }
+
+    async function downloadInvoice(btn) {
+      const id = btn.dataset.invoice;
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Preparing…';
+      try {
+        const res = await fetch(apiUrl(`/api/orders/${encodeURIComponent(id)}/invoice`), { headers: { 'x-user-token': getToken() } });
+        if (!res.ok) throw new Error();
+        const blob = await res.blob();
+        const name = (res.headers.get('Content-Disposition') || '').match(/filename="([^"]+)"/)?.[1] || `RangMudra-Invoice-${id}.pdf`;
+        const url = URL.createObjectURL(blob);
+        const a = Object.assign(document.createElement('a'), { href: url, download: name });
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        btn.textContent = label;
+      } catch {
+        btn.textContent = 'Could not download, try again';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!isLoggedIn()) { openAuthModal(() => location.reload()); return; }
+
+      const list = document.getElementById('orders-list');
+      const empty = document.getElementById('orders-empty');
+      try {
+        const [orders, products] = await Promise.all([
+          fetch(apiUrl('/api/orders'), { headers: { 'x-user-token': getToken() } }).then(r => r.json()),
+          // Only for older orders saved before items carried their own photo.
+          getProducts().catch(() => []),
+        ]);
+        if (!Array.isArray(orders) || !orders.length) { empty.style.display = 'block'; return; }
+        const productById = new Map((products || []).map((p) => [p.id, p]));
+        orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        list.innerHTML = orders.map((o) => orderCard(o, productById)).join('');
+        const orderById = new Map(orders.map((o) => [o.id, o]));
+        list.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-invoice]');
+          if (btn) downloadInvoice(btn);
+          const retry = e.target.closest('[data-retry]');
+          if (retry) retryOrder(retry, orderById.get(retry.dataset.retry));
+        });
+      } catch {
+        empty.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

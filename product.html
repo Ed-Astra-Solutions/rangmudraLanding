@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — RangMudra</title>
+  <meta name="description" content="Hand block-printed artisanal product from RangMudra.">
+  <!--SEO_DEFAULTS_START-->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/product.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="RangMudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="RangMudra">
+  <meta property="og:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
+  <meta property="og:url" content="https://rangmudra.com/product.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <meta property="og:image:alt" content="RangMudra">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RangMudra">
+  <meta name="twitter:description" content="Hand block-printed pieces made on natural fabrics with plant-based dyes.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <!--SEO_DEFAULTS_END-->
+
+  <!--SEO_META-->
+  <!--SEO_JSONLD-->
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+    <div class="product-layout">
+
+      <!-- Left: Gallery -->
+      <div class="product-gallery">
+        <div class="product-gallery__main">
+          <img
+            src="/images/uploads/prod-ajrakh-corset-1.jpg"
+            alt="Product main image"
+            class="product-gallery__main-img"
+            id="main-product-img"
+            loading="eager"
+            fetchpriority="high"
+            width="600" height="750"
+          >
+          <button class="product-gallery__zoom" aria-label="Zoom image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+        </div>
+        <div class="product-gallery__thumbnails" id="thumbnails" role="list" aria-label="Product images"></div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="product-info" id="product-info">
+        <h1 class="product-info__title" id="product-title"></h1>
+        <div class="product-info__price-row">
+          <p class="product-info__price" id="product-price"></p>
+          <span class="available-chip" id="availability-chip">AVAILABLE</span>
+        </div>
+
+        <p class="product-info__size-label">Select Size</p>
+        <div class="size-chips" id="size-chips" role="group" aria-label="Select size"></div>
+
+        <!-- Tabs -->
+        <div class="product-tabs" role="tablist" aria-label="Product information">
+          <button class="product-tab active" role="tab" aria-selected="true" aria-controls="tab-desc" id="tab-desc-btn" data-tab="desc">Description</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-feat" id="tab-feat-btn" data-tab="feat">Features</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-meas" id="tab-meas-btn" data-tab="meas">Measurements</button>
+          <button class="product-tab" role="tab" aria-selected="false" aria-controls="tab-care" id="tab-care-btn" data-tab="care">Care</button>
+        </div>
+
+        <div class="product-tab-content active" id="tab-desc" role="tabpanel" aria-labelledby="tab-desc-btn">
+          <p class="product-tab-body" id="product-desc"></p>
+        </div>
+        <div class="product-tab-content" id="tab-feat" role="tabpanel" aria-labelledby="tab-feat-btn">
+          <ul id="product-features" class="product-tab-body" style="padding-left:20px;"></ul>
+        </div>
+        <div class="product-tab-content" id="tab-meas" role="tabpanel" aria-labelledby="tab-meas-btn">
+          <p class="product-tab-body" id="product-meas"></p>
+        </div>
+        <div class="product-tab-content" id="tab-care" role="tabpanel" aria-labelledby="tab-care-btn">
+          <p class="product-tab-body" id="product-care"></p>
+        </div>
+
+        <div id="cta-area">
+          <!-- Add to cart / Go to cart rendered by JS -->
+        </div>
+
+        <!-- The Process section. These three stills are the fallback, shown
+             until the product or its category has its own Process media
+             (admin → The Process); renderProcess() swaps them out then. -->
+        <div class="process-section">
+          <p class="process-eyebrow">THE PROCESS</p>
+          <div class="process-strip" aria-label="Block printing process steps">
+            <div class="process-card">
+              <img src="/images/uploads/process-carving.jpg" alt="Step 1: Carving the wooden block" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+            <div class="process-card">
+              <img src="/images/uploads/process-dyeing.jpg" alt="Step 2: Preparing natural dyes" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+            <div class="process-card">
+              <img src="/images/uploads/process-printing.jpg" alt="Step 3: Printing on fabric" class="process-card__image" loading="lazy" width="200" height="280">
+            </div>
+          </div>
+        </div>
+
+        <p class="product-info__category" id="product-category"></p>
+
+      </div><!-- /product-info -->
+
+    </div><!-- /product-layout -->
+
+    <!-- Similar Products -->
+    <section class="section bg-cream">
+      <div class="container">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:40px;">
+          <div>
+            <p class="eyebrow">SIMILAR PRODUCTS</p>
+            <h2 class="h3-i color-sc-100">Purchase together !</h2>
+          </div>
+          <div class="similar-filter" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+            <div class="filter-pills" id="similar-pills">
+              <button class="filter-pill active" data-filter="all">ALL</button>
+              <button class="filter-pill" data-filter="mens">MEN'S WEAR</button>
+              <button class="filter-pill" data-filter="womens">WOMEN'S WEAR</button>
+              <button class="filter-pill" data-filter="decor">HOME DECOR</button>
+              <button class="filter-pill" data-filter="accessories">ACCESSORIES</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel">
+          <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous products">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="carousel__track" id="similar-track" style="gap:40px;"></div>
+          <button class="carousel__arrow carousel__arrow--next" aria-label="Next products">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile sticky CTA -->
+  <div class="mobile-cta-bar" aria-label="Quick add to cart" id="mobile-cta">
+    <div>
+      <p class="h6-a" style="color:var(--sc-l3);text-transform:uppercase;" id="mobile-product-name"></p>
+      <p class="mobile-cta-bar__price" id="mobile-product-price"></p>
+    </div>
+    <button class="btn-primary" id="mobile-add-btn">ADD TO CART</button>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module" src="/js/sections.js"></script>
+  <script type="module">
+    import { addToCart, isInCart } from '/js/cart.js';
+    import { productUrl, pageQuery, preferCleanUrl } from '/js/routes.js';
+    import { heldUntil, holdTime } from '/js/holds.js';
+    import { openCartDrawer } from '/js/cart-drawer.js';
+    import { initFilterPills } from '/js/filter-pills.js';
+    import { initCarousel } from '/js/carousel.js';
+    import { getProducts, getData } from '/js/data.js';
+    import { getSale, itemPriceHTML, productDiscount } from '/js/sale.js';
+    import { entityMedia, primaryImage, mediaHTML, applyMedia, normalizeMediaList } from '/js/media.js';
+    import { openMediaLightbox } from '/js/media-mosaic.js';
+    import { attachHoverZoom } from '/js/image-zoom.js';
+
+    const params = new URLSearchParams(pageQuery());
+    const slug = params.get('slug') || 'flora-patterned-set';
+
+    const PRODUCTS = await getProducts();
+    const SALE = await getSale();
+    const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
+    if (product.slug === slug) preferCleanUrl(productUrl(slug));
+
+    /* Full gallery (photos + videos) and the single still used for the cart. */
+    const MEDIA = entityMedia(product);
+    const COVER = primaryImage(product);
+
+    let selectedSize = product.sizes[0];
+
+    function formatPrice(n) {
+      return '₹' + n.toLocaleString('en-IN');
+    }
+
+    /* "The Process" strip: the product's own set if it has one, else its
+       category's set from the admin, else the fixed fallback stills already
+       in the markup. */
+    async function renderProcess() {
+      let list = normalizeMediaList(product.processMedia);
+      if (!list.length) {
+        try {
+          const { categories = {} } = await getData('process-media');
+          list = normalizeMediaList(categories[product.category]);
+        } catch (_) { /* keep the fallback strip */ }
+      }
+      if (!list.length) return;
+      const strip = document.querySelector('.process-strip');
+      if (!strip) return;
+      strip.innerHTML = list.map((m, i) => `
+        <div class="process-card">
+          ${mediaHTML(m, {
+            className: 'process-card__image',
+            alt: m.alt || `${product.name} — the process, step ${i + 1}`,
+            width: 200, height: 280, loop: true, controls: false,
+          })}
+        </div>`).join('');
+    }
+
+    function renderProductPage() {
+      document.title = `${product.name} — RangMudra`;
+      document.querySelector('meta[name="description"]').content = product.description;
+
+      document.getElementById('product-category').textContent = product.tags.join(' · ');
+      document.getElementById('product-title').textContent = product.name;
+      document.getElementById('product-price').innerHTML = itemPriceHTML(product, SALE);
+      document.getElementById('product-desc').textContent = product.description;
+
+      const meas = document.getElementById('product-meas');
+      if (meas) meas.textContent = product.measurements;
+      const care = document.getElementById('product-care');
+      if (care) care.textContent = product.care;
+
+      const featList = document.getElementById('product-features');
+      if (featList) {
+        featList.innerHTML = product.features.map(f => `<li style="margin-bottom:8px;">${f}</li>`).join('');
+      }
+
+      /* Gallery — an ordered mix of photos and videos. The main stage swaps
+         between <img> and <video> as the selected entry's type changes. */
+      let mainEl = document.getElementById('main-product-img');
+      let currentIndex = 0;
+      if (mainEl && MEDIA.length) {
+        mainEl.alt = `${product.name} — block-printed artisanal piece`;
+        mainEl = applyMedia(mainEl, MEDIA[0], { controls: true, fit: 'contain' });
+      }
+
+      const thumbContainer = document.getElementById('thumbnails');
+      if (thumbContainer && MEDIA.length > 1) {
+        thumbContainer.innerHTML = MEDIA.map((m, i) => `
+          <button class="product-gallery__thumb ${i === 0 ? 'active' : ''}" aria-label="View ${m.type === 'video' ? 'video' : 'image'} ${i + 1}" role="listitem">
+            ${mediaHTML({ ...m, fit: 'contain' }, {
+              alt: `${product.name} view ${i + 1}`, width: 80, height: 80, controls: false,
+            })}
+            ${m.type === 'video' ? '<span class="product-gallery__thumb-play" aria-hidden="true">▶</span>' : ''}
+          </button>
+        `).join('');
+        thumbContainer.querySelectorAll('.product-gallery__thumb').forEach((btn, i) => {
+          btn.addEventListener('click', () => {
+            thumbContainer.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            mainEl = applyMedia(mainEl, MEDIA[i], { controls: true, fit: 'contain' });
+            currentIndex = i;
+          });
+        });
+      }
+
+      /* Hover magnifier on the photo, and the full-screen viewer — opened by
+         clicking the photo or the zoom button — which steps through every
+         photo and clip of this product, end to end. */
+      const stage = document.querySelector('.product-gallery__main');
+      if (stage && MEDIA.length) {
+        const zoom = attachHoverZoom(stage, () => mainEl);
+        const openViewer = () => {
+          zoom.hide();
+          openMediaLightbox(MEDIA.map((m, i) => ({ ...m, alt: `${product.name} view ${i + 1}` })), currentIndex);
+        };
+        stage.addEventListener('click', (e) => {
+          // A clip's own controls take its clicks; only photos open the viewer.
+          if (e.target.closest('.product-gallery__zoom') || e.target.tagName === 'IMG') openViewer();
+        });
+      }
+
+      /* Size chips */
+      const sizeContainer = document.getElementById('size-chips');
+      if (sizeContainer) {
+        sizeContainer.innerHTML = product.sizes.map((size, i) => `
+          <button class="size-chip ${i === 0 ? 'active' : ''}" data-size="${size}" aria-pressed="${i === 0}">${size}</button>
+        `).join('');
+        sizeContainer.querySelectorAll('.size-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            sizeContainer.querySelectorAll('.size-chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+            chip.classList.add('active');
+            chip.setAttribute('aria-pressed', 'true');
+            selectedSize = chip.dataset.size;
+            renderCTA();
+          });
+        });
+      }
+
+      /* Mobile CTA */
+      const mobileName = document.getElementById('mobile-product-name');
+      if (mobileName) mobileName.textContent = product.name;
+      const mobilePrice = document.getElementById('mobile-product-price');
+      if (mobilePrice) mobilePrice.innerHTML = itemPriceHTML(product, SALE);
+
+      renderCTA();
+      renderSimilarProducts();
+    }
+
+    function renderCTA() {
+      const area = document.getElementById('cta-area');
+      if (!area) return;
+      renderCTAButtons(area);
+      // A piece another shopper is paying for can still be added — it comes
+      // back if they don't finish — but say so plainly.
+      const held = heldUntil(product);
+      if (held && product.available !== false) {
+        area.insertAdjacentHTML('beforeend', `<p class="h6-a color-sc-l3 hold-note">Another shopper is checking out this one-of-a-kind piece. If they don't complete payment, it's available again after ${holdTime(held)}.</p>`);
+      }
+    }
+
+    function renderCTAButtons(area) {
+      const inCart = isInCart(product.id, selectedSize);
+
+      /* Sold-out items stay browsable but must not be addable — the checkout
+         rejects them server-side, so letting one into the cart only surfaces
+         the problem at payment time. */
+      const soldOut = product.available === false;
+      const held = heldUntil(product);
+      const chip = document.getElementById('availability-chip');
+      if (chip) {
+        chip.textContent = soldOut ? 'SOLD OUT' : held ? 'ON HOLD' : 'AVAILABLE';
+        chip.classList.toggle('available-chip--sold-out', soldOut || !!held);
+      }
+
+      if (soldOut) {
+        area.innerHTML = `
+          <button class="btn-add-to-cart" disabled aria-disabled="true">SOLD OUT</button>
+          <p class="h6-a color-sc-l3" style="margin-top:12px;text-align:center;">This piece is currently unavailable. <a href="enquire.html" style="text-decoration:underline;">Enquire about a restock</a>.</p>
+        `;
+        const mobileSoldOut = document.getElementById('mobile-add-btn');
+        if (mobileSoldOut) {
+          mobileSoldOut.textContent = 'SOLD OUT';
+          mobileSoldOut.disabled = true;
+          mobileSoldOut.onclick = null;
+        }
+        return;
+      }
+
+      if (inCart) {
+        area.innerHTML = `
+          <div class="btn-go-to-cart" role="group" aria-label="Cart actions">
+            <a href="cart.html" class="btn-go-to-cart__label">
+              GO TO CART
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </a>
+            <button class="btn-go-to-cart__trash" id="remove-btn" aria-label="Remove from cart">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+            </button>
+          </div>
+        `;
+        document.getElementById('remove-btn')?.addEventListener('click', () => {
+          import('/js/cart.js').then(({ removeFromCart }) => { removeFromCart(product.id, selectedSize); renderCTA(); });
+        });
+      } else {
+        area.innerHTML = `
+          <button class="btn-add-to-cart" id="add-to-cart-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            ADD TO CART
+          </button>
+        `;
+        document.getElementById('add-to-cart-btn')?.addEventListener('click', () => {
+          addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null, taxPercent: product.taxPercent ?? null });
+          renderCTA();
+          // Show what's in the cart with Quick checkout / Shop more.
+          openCartDrawer();
+        });
+      }
+
+      /* Mobile button */
+      const mobileBtn = document.getElementById('mobile-add-btn');
+      if (mobileBtn) {
+        mobileBtn.textContent = inCart ? 'GO TO CART' : 'ADD TO CART';
+        mobileBtn.onclick = inCart
+          ? () => window.location.href = 'cart.html'
+          : () => { addToCart({ id: product.id, name: product.name, price: product.price, size: selectedSize, image: COVER, discount: product.discount || null, taxPercent: product.taxPercent ?? null }); renderCTA(); openCartDrawer(); };
+      }
+    }
+
+    function renderSimilarProducts() {
+      const track = document.getElementById('similar-track');
+      if (!track) return;
+      const similar = PRODUCTS.filter(p => p.id !== product.id).slice(0, 4);
+      track.innerHTML = similar.map(p => `
+        <a href="${productUrl(p.slug)}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
+          <div class="shop-card__img-wrap">
+            <img src="${primaryImage(p)}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
+            ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}
+            ${(() => { const d = productDiscount(p); return d ? `<span class="shop-card__sale-tag">${d.type === 'flat' ? `₹${d.value} OFF` : `${d.value}% OFF`}</span>` : (SALE.live ? `<span class="shop-card__sale-tag">${SALE.percent}% OFF</span>` : ''); })()}
+          </div>
+          <div class="shop-card__info">
+            <p class="shop-card__category">${p.tags.join(' · ')}</p>
+            <h3 class="shop-card__name">${p.name}</h3>
+            <p class="shop-card__price">${itemPriceHTML(p, SALE)}</p>
+          </div>
+        </a>
+      `).join('');
+      initCarousel(document.querySelector('.carousel'));
+    }
+
+    /* Tabs */
+    function initTabs() {
+      document.querySelectorAll('.product-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.product-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+          document.querySelectorAll('.product-tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          document.getElementById(`tab-${tab.dataset.tab}`)?.classList.add('active');
+        });
+      });
+    }
+
+    renderProductPage();
+    renderProcess();
+    initTabs();
+    initFilterPills('#similar-pills');
+  </script>
+</body>
+</html>

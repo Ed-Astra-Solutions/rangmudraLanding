@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#D8C4AB"/>
+  <rect x="40" y="40" width="520" height="520" fill="none" stroke="#2C1A10" stroke-width="1" stroke-dasharray="6 4" opacity="0.4"/>
+  <text x="50%" y="46%" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, serif" font-size="18" fill="#2C1A10" opacity="0.6">The Process — Step 3</text>
+  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="11" fill="#2C1A10" opacity="0.35" letter-spacing="3">600×600</text>
+</svg>

@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Cart, checkout and account pages only make sense for a signed-in shopper.
+Disallow: /cart.html
+Disallow: /checkout-address.html
+Disallow: /checkout-payment.html
+Disallow: /order-confirmation.html
+Disallow: /profile.html
+Disallow: /profile-addresses.html
+Disallow: /profile-orders.html
+Disallow: /profile-settings.html
+Disallow: /profile-wishlist.html
+Disallow: /components-test.html
+
+Sitemap: https://rangmudra.com/sitemap.xml

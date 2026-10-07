@@ -1,0 +1,37 @@
+[
+  {
+    "id": "faq-1",
+    "question": "Do I need any prior experience?",
+    "answer": "No prior experience is needed. Our workshops are designed for complete beginners and walk you through every step of the process. Our facilitators are patient and encouraging.",
+    "published": true,
+    "order": 1
+  },
+  {
+    "id": "faq-2",
+    "question": "What should I wear?",
+    "answer": "We recommend wearing clothes you don't mind getting a little dye on. Aprons are provided, but working with natural dyes can sometimes leave a mark.",
+    "published": true,
+    "order": 2
+  },
+  {
+    "id": "faq-3",
+    "question": "Are the dyes safe?",
+    "answer": "Yes, all our dyes are natural, plant-based, and non-toxic. They are safe for all ages including children and those with sensitive skin.",
+    "published": true,
+    "order": 3
+  },
+  {
+    "id": "faq-4",
+    "question": "Can I book a private group session?",
+    "answer": "Absolutely! We welcome private bookings for birthday parties, corporate events, school groups, and family gatherings. Please reach out via our Enquire page for custom pricing.",
+    "published": true,
+    "order": 4
+  },
+  {
+    "id": "faq-5",
+    "question": "What is the cancellation policy?",
+    "answer": "Cancellations made 48 hours or more before the workshop receive a full refund. Cancellations within 48 hours may be rescheduled to a future date. No-shows are non-refundable.",
+    "published": true,
+    "order": 5
+  }
+]

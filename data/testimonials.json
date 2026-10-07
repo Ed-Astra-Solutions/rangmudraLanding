@@ -1,0 +1,82 @@
+[
+  {
+    "id": "patron-1",
+    "quote": "The workshop was absolutely magical. I came with no experience and left with a beautifully printed scarf I made myself.",
+    "author": "Priya M.",
+    "location": "Bangalore",
+    "rating": 5,
+    "media": [
+      {
+        "url": "/images/uploads/home-testimonials.jpg",
+        "type": "image",
+        "fit": "cover",
+        "position": "50% 50%"
+      }
+    ],
+    "image": "/images/uploads/home-testimonials.jpg",
+    "published": true,
+    "order": 1,
+    "createdAt": "2026-09-08T00:00:00.000Z",
+    "updatedAt": "2026-09-08T14:23:45.217Z"
+  },
+  {
+    "id": "patron-2",
+    "quote": "Rangmudra's sarees are simply stunning. The quality and craftsmanship are unlike anything I've seen. Each print is unique.",
+    "author": "Kavitha R.",
+    "location": "Chennai",
+    "rating": 5,
+    "media": [
+      {
+        "url": "/images/uploads/about-sustainability.jpg",
+        "type": "image",
+        "fit": "cover",
+        "position": "50% 50%"
+      }
+    ],
+    "image": "/images/uploads/about-sustainability.jpg",
+    "published": true,
+    "order": 2,
+    "createdAt": "2026-09-08T00:00:00.000Z",
+    "updatedAt": "2026-09-08T14:23:45.217Z"
+  },
+  {
+    "id": "patron-3",
+    "quote": "Our corporate team workshop was phenomenal. Everyone left feeling inspired and connected. Highly recommend for team bonding!",
+    "author": "Arjun S.",
+    "location": "Hyderabad",
+    "rating": 5,
+    "media": [
+      {
+        "url": "/images/uploads/about-team-hero.jpg",
+        "type": "image",
+        "fit": "cover",
+        "position": "50% 50%"
+      }
+    ],
+    "image": "/images/uploads/about-team-hero.jpg",
+    "published": true,
+    "order": 3,
+    "createdAt": "2026-09-08T00:00:00.000Z",
+    "updatedAt": "2026-09-08T14:23:45.217Z"
+  },
+  {
+    "id": "patron-4",
+    "quote": "I've purchased from many textile studios but Rangmudra is in a league of its own. The depth of knowledge, the quality of craft, the passion — it's evident in every piece.",
+    "author": "Meena K.",
+    "location": "Mumbai",
+    "rating": 5,
+    "media": [
+      {
+        "url": "/images/uploads/wshop-curated-course.jpg",
+        "type": "image",
+        "fit": "cover",
+        "position": "50% 50%"
+      }
+    ],
+    "image": "/images/uploads/wshop-curated-course.jpg",
+    "published": true,
+    "order": 4,
+    "createdAt": "2026-09-08T00:00:00.000Z",
+    "updatedAt": "2026-09-08T14:23:45.217Z"
+  }
+]

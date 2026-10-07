@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment — RangMudra</title>
+  <meta name="description" content="Pay securely for your RangMudra order via UPI, cards, net banking or wallets.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="checkout-page" data-step="3">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <div class="checkout-grid container">
+
+    <!-- Left column: order summary review -->
+    <div style="padding-top:0;">
+      <h2 class="h2-i color-sc-100" style="margin-bottom:8px;">Review &amp; Pay</h2>
+      <div style="width:60%;height:1px;background:rgba(44,26,16,0.12);margin-bottom:32px;"></div>
+      <p class="h5-a color-sc-l3">Please review your order before completing payment.</p>
+
+      <div style="margin-top:32px;background:var(--w1);border-radius:16px;padding:32px;" id="order-summary-card">
+        <h3 class="h4-i color-sc-100" style="margin-bottom:24px;">Order Summary</h3>
+        <div id="order-items-preview" style="display:flex;flex-direction:column;gap:16px;"></div>
+        <div style="border-top:1px solid rgba(44,26,16,0.12);margin-top:24px;padding-top:24px;">
+          <div class="cart-summary-row"><span class="h5-a">Subtotal</span><span class="h5-a" id="review-subtotal">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a" id="review-tax-label">Tax</span><span class="h5-a" id="review-tax">₹0</span></div>
+          <div class="cart-summary-row"><span class="h5-a">Delivery</span><span class="h5-a" id="review-delivery">—</span></div>
+          <p class="h7-a color-sc-l3" id="review-delivery-note" style="margin:-8px 0 0;"></p>
+          <div class="cart-summary-row" id="review-discount-row" style="display:none;"><span class="h5-a" id="review-discount-label">Discount</span><span class="h5-a" id="review-discount">-₹0</span></div>
+          <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-value" id="review-total">₹0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Sidebar with payment methods -->
+    <aside class="checkout-sidebar" aria-label="Payment">
+
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 1: Cart">1</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step">
+          <div class="stepper__circle" aria-label="Step 2: Delivery Address">2</div>
+        </div>
+        <div class="stepper__connector"></div>
+        <div class="stepper__step active" aria-current="step">
+          <div class="stepper__circle" aria-label="Step 3: Payment (current)">3</div>
+        </div>
+      </div>
+
+      <h2 class="h2-i color-sc-100" style="margin-bottom:32px;">Payment</h2>
+
+      <!-- No payment-method choice: Razorpay is the only gateway, so Proceed opens it directly -->
+      <p class="h5-a color-sc-l3" style="margin-bottom:48px;">Pay securely by UPI, Cards, Net Banking or Wallets. Tap Proceed to complete your payment.</p>
+
+      <!-- Shown when the shopper closes the payment window without paying -->
+      <div class="pay-status" id="pay-status" role="status" hidden>
+        <p class="h6-a pay-status__label" id="pay-status-label"></p>
+        <p class="h5-a color-sc-100" id="pay-status-text"></p>
+        <button class="btn-proceed" id="retry-btn">Retry Payment</button>
+      </div>
+
+      <button class="btn-proceed" id="proceed-btn">Proceed</button>
+      <a href="checkout-address.html" class="btn-back" style="display:flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center;">Back</a>
+
+    </aside>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { getCart } from '/js/cart.js';
+    import { isLoggedIn, getToken, openAuthModal, getUserAddresses } from '/js/auth.js';
+    import { apiUrl } from '/js/config.js';
+    import { getSale, isSaleLive, effectivePrice } from '/js/sale.js';
+    import { computeCartTax, taxRowLabel } from '/js/tax.js';
+    import { holdTime } from '/js/holds.js';
+    import { openPayment, retryPayment } from '/js/pay.js';
+    import { quoteDelivery, addressPincode, deliveryNote, FALLBACK_DELIVERY_FEE } from '/js/shipping.js';
+
+    // Priced from the chosen address's PIN — see refreshDelivery(). The server
+    // recomputes the same number in create-order before charging.
+    let DELIVERY_FEE = FALLBACK_DELIVERY_FEE;
+    let DELIVERY_QUOTE = null;
+    const COUPON_KEY = 'rangmudra_coupon';
+    let SALE = { live: false, percent: 0 };
+
+    // The store-wide sale discount for a subtotal — mirrors the server.
+    function saleDiscountFor(subtotal) {
+      if (!isSaleLive(SALE)) return 0;
+      let d = Math.round((subtotal * SALE.percent) / 100);
+      if (SALE.maxDiscount != null) d = Math.min(d, SALE.maxDiscount);
+      return Math.max(0, Math.min(d, subtotal));
+    }
+
+    function formatPrice(n) {
+      return '₹' + Math.round(n).toLocaleString('en-IN');
+    }
+
+    // Break the cart into the numbers the server uses: per-product discounts are
+    // netted into `serverSubtotal`; only items without their own discount are
+    // eligible for the store-wide sale (a product discount takes priority).
+    const NO_SALE = { live: false, percent: 0 };
+    function cartSubtotals() {
+      let listSubtotal = 0, serverSubtotal = 0, saleEligible = 0;
+      getCart().forEach((item) => {
+        const qty = item.qty || 1;
+        const list = Number(item.price) || 0;
+        const productUnit = effectivePrice(item, NO_SALE); // product discount only
+        listSubtotal += list * qty;
+        serverSubtotal += productUnit * qty;
+        if (productUnit >= list) saleEligible += list * qty;
+      });
+      return { listSubtotal, serverSubtotal, productDiscount: listSubtotal - serverSubtotal, saleEligible };
+    }
+
+    // Re-check any applied coupon against the current cart for the summary preview.
+    // The authoritative discount is recomputed by create-order before charging.
+    async function getCouponDiscount(subtotal) {
+      const code = localStorage.getItem(COUPON_KEY);
+      if (!code || subtotal <= 0) return { code: null, discount: 0 };
+      try {
+        const res = await fetch(apiUrl('/api/checkout/apply-coupon'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, subtotal, itemCount: getCart().length }),
+        });
+        if (!res.ok) { localStorage.removeItem(COUPON_KEY); return { code: null, discount: 0 }; }
+        const data = await res.json();
+        return { code, discount: data.discount || 0, freeDelivery: !!data.freeDelivery };
+      } catch {
+        return { code, discount: 0 };
+      }
+    }
+
+    /* The Speed Post fee for the address this order ships to. Runs before the
+       summary is drawn so the customer never sees the fee change under them. */
+    async function refreshDelivery() {
+      const cart = getCart();
+      if (!cart.length) return;
+      const address = await resolveDeliveryAddress();
+      const quote = await quoteDelivery(addressPincode(address), cart);
+      DELIVERY_QUOTE = quote;
+      DELIVERY_FEE = quote ? quote.deliveryFee : FALLBACK_DELIVERY_FEE;
+    }
+
+    async function renderOrderSummary() {
+      const cart = getCart();
+      const sub = cartSubtotals();
+      const { code, discount: couponDiscount, freeDelivery } = await getCouponDiscount(sub.serverSubtotal);
+      // The master code waives delivery too.
+      const deliveryFee = freeDelivery ? 0 : DELIVERY_FEE;
+      const saleDiscount = saleDiscountFor(sub.saleEligible);
+      // Best promo wins — sale and coupon never stack; sale takes ties.
+      const saleWins = saleDiscount >= couponDiscount;
+      const promoDiscount = Math.max(saleDiscount, couponDiscount);
+      const discount = sub.productDiscount + promoDiscount;
+      const subtotal = sub.listSubtotal;
+      const discountedSubtotal = Math.max(0, subtotal - discount);
+      // Per-product tax rates, mirroring the server's line-by-line maths.
+      const tax = computeCartTax(cart, promoDiscount);
+      const total = discountedSubtotal + tax + deliveryFee;
+
+      const deliveryEl = document.getElementById('review-delivery');
+      if (deliveryEl) deliveryEl.textContent = formatPrice(deliveryFee);
+      const deliveryNoteEl = document.getElementById('review-delivery-note');
+      if (deliveryNoteEl) deliveryNoteEl.textContent = deliveryNote(DELIVERY_QUOTE);
+
+      const discRow = document.getElementById('review-discount-row');
+      const discEl = document.getElementById('review-discount');
+      const discLabel = document.getElementById('review-discount-label');
+      if (discount > 0) {
+        if (discLabel) discLabel.textContent = (promoDiscount > 0 && sub.productDiscount > 0)
+          ? 'Discounts'
+          : promoDiscount > 0
+            ? (saleWins ? `${SALE.label ? SALE.label : 'Store Sale'} (${SALE.percent}% off)` : `Coupon (${code})`)
+            : 'Product discounts';
+        if (discEl) discEl.textContent = '-' + formatPrice(discount);
+        if (discRow) discRow.style.display = '';
+      } else if (discRow) {
+        discRow.style.display = 'none';
+      }
+
+      const preview = document.getElementById('order-items-preview');
+      if (preview) {
+        preview.innerHTML = cart.map(item => `
+          <div style="display:flex;gap:16px;align-items:center;">
+            <img src="${item.image || '/images/uploads/prod-ajrakh-corset-1.jpg'}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" loading="lazy" width="60" height="60">
+            <div style="flex:1;">
+              <p class="h5-a color-sc-100">${item.name}</p>
+              <p class="h6-a color-sc-l3" style="text-transform:uppercase;">Size: ${item.size}</p>
+            </div>
+            <p class="h5-a color-sc-100">${formatPrice(effectivePrice(item, SALE))}</p>
+          </div>
+        `).join('');
+      }
+
+      const s = document.getElementById('review-subtotal');
+      const t = document.getElementById('review-tax');
+      const tot = document.getElementById('review-total');
+      if (s) s.textContent = formatPrice(subtotal);
+      if (t) t.textContent = formatPrice(tax);
+      const tLabel = document.getElementById('review-tax-label');
+      if (tLabel) tLabel.textContent = taxRowLabel(cart);
+      if (tot) tot.textContent = formatPrice(total);
+    }
+
+    async function resolveDeliveryAddress() {
+      const id = localStorage.getItem('rangmudra_delivery_address');
+      if (!id) return null;
+      try {
+        const addresses = await getUserAddresses();
+        return addresses.find(a => a.id === id) || null;
+      } catch {
+        return null;
+      }
+    }
+
+    const proceedBtn = document.getElementById('proceed-btn');
+    const payStatus = document.getElementById('pay-status');
+    const retryBtn = document.getElementById('retry-btn');
+    // The order the shopper last opened the payment window for.
+    let pendingOrder = null;
+
+    /* Closed the payment window without paying: the order stays open (and its
+       pieces held) for a short retry window, and the cart is left as it was, so
+       Retry Payment reopens the same order. Once the window ends, Proceed
+       starts a fresh checkout. */
+    let retryExpiry = null;
+    function showPayStatus({ outcome, holdUntil }) {
+      const until = holdUntil ? new Date(holdUntil) : null;
+      clearTimeout(retryExpiry);
+      if (until) retryExpiry = setTimeout(() => { pendingOrder = null; hidePayStatus(); }, until - Date.now());
+      document.getElementById('pay-status-label').textContent = outcome === 'failed' ? 'Order Failed' : 'Payment Pending';
+      document.getElementById('pay-status-text').textContent = (outcome === 'failed'
+        ? 'Your payment didn\'t go through.'
+        : 'You closed the payment window before paying.')
+        + (until ? ` Your pieces are held for you until ${holdTime(until)} — retry before then, or check out again after.` : '')
+        + ' Everything is still in your cart.';
+      payStatus.hidden = false;
+      proceedBtn.hidden = true;
+    }
+
+    function hidePayStatus() {
+      payStatus.hidden = true;
+      proceedBtn.hidden = false;
+    }
+
+    retryBtn.addEventListener('click', async () => {
+      if (!pendingOrder) return;
+      clearTimeout(retryExpiry);
+      retryBtn.disabled = true;
+      const label = retryBtn.textContent;
+      retryBtn.textContent = 'Reopening payment…';
+      try {
+        await retryPayment(pendingOrder.id, { itemIds: pendingOrder.itemIds, onClose: showPayStatus });
+      } catch (err) {
+        // Out of time (or no longer payable): start over with Proceed, which
+        // places a fresh order from the cart.
+        pendingOrder = null;
+        hidePayStatus();
+        alert(err.message);
+      } finally {
+        retryBtn.disabled = false;
+        retryBtn.textContent = label;
+      }
+    });
+
+    proceedBtn?.addEventListener('click', async () => {
+      const cart = getCart();
+      if (!cart.length) {
+        alert('Your cart is empty.');
+        window.location.href = 'shop.html';
+        return;
+      }
+
+      if (!isLoggedIn()) {
+        openAuthModal(() => proceedBtn.click());
+        return;
+      }
+
+      proceedBtn.disabled = true;
+      const originalLabel = proceedBtn.textContent;
+      proceedBtn.textContent = 'Starting payment…';
+
+      try {
+        const address = await resolveDeliveryAddress();
+        if (!address) {
+          alert('Please choose a delivery address before paying.');
+          window.location.href = 'checkout-address.html';
+          return;
+        }
+        const token = getToken();
+
+        const orderRes = await fetch(apiUrl('/api/checkout/create-order'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-user-token': token },
+          body: JSON.stringify({
+            items: cart.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty || 1, price: i.price })),
+            address,
+            couponCode: localStorage.getItem(COUPON_KEY) || undefined,
+          }),
+        });
+        const order = await orderRes.json().catch(() => ({}));
+        if (!orderRes.ok) {
+          alert(order.error || 'Could not start payment. Please try again.');
+          return;
+        }
+        hidePayStatus();
+        pendingOrder = { id: order.receipt, itemIds: cart.map((i) => i.id) };
+        openPayment(order, { itemIds: pendingOrder.itemIds, onClose: showPayStatus });
+      } catch (err) {
+        alert('Something went wrong starting payment. Please try again.');
+      } finally {
+        proceedBtn.disabled = false;
+        proceedBtn.textContent = originalLabel;
+      }
+    });
+
+    async function initSummary() {
+      SALE = await getSale();
+      await refreshDelivery();
+      renderOrderSummary();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSummary);
+    } else {
+      initSummary();
+    }
+  </script>
+</body>
+</html>

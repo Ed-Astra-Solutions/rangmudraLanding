@@ -1,0 +1,119 @@
+[
+  {
+    "id": "block-print-party",
+    "slug": "block-print-party",
+    "category": "experience",
+    "categoryLabel": "Experience Workshops",
+    "title": "Block Print Party",
+    "level": "Beginner",
+    "description": "Join us for a fun and creative block printing session where you'll learn the basics of hand block printing using traditional wooden stamps and natural dyes. Perfect for beginners and those looking to unwind through art.",
+    "duration": "2 hrs",
+    "packageFor": "Individual / Group up to 10",
+    "tags": [
+      "Hands-on",
+      "In-studio"
+    ],
+    "price": 2500,
+    "priceUnit": "per person",
+    "seatsBooked": 12,
+    "totalSeats": 14,
+    "image": "/images/uploads/wshop-block-print-party.jpg"
+  },
+  {
+    "id": "eco-print-workshop",
+    "slug": "eco-print-workshop",
+    "category": "experience",
+    "categoryLabel": "Experience Workshops",
+    "title": "Eco Print Workshop",
+    "level": "Beginner",
+    "description": "Discover the magical world of botanical eco printing. Use leaves, flowers, and natural mordants to create stunning one-of-a-kind textile prints inspired by nature.",
+    "duration": "3 hrs",
+    "packageFor": "Individual / Group up to 8",
+    "tags": [
+      "Hands-on",
+      "Eco-friendly",
+      "In-studio"
+    ],
+    "priceLabel": "Contact for pricing",
+    "seatsBooked": 6,
+    "totalSeats": 8,
+    "image": "/images/uploads/wshop-eco-print.jpg"
+  },
+  {
+    "id": "block-printing-workshop",
+    "slug": "block-printing-workshop",
+    "category": "corporate",
+    "categoryLabel": "Corporate Workshops",
+    "title": "Block Printing Workshop",
+    "level": "All Levels",
+    "description": "Transform your workplace into a space of creativity, collaboration, and meaningful team experiences. Our corporate block printing workshop is designed to foster teamwork while exploring the timeless craft of hand printing.",
+    "duration": "2 hrs",
+    "packageFor": "Package for 25 people",
+    "tags": [
+      "On-site",
+      "Hands-on"
+    ],
+    "priceLabel": "Contact for pricing",
+    "seatsBooked": 0,
+    "totalSeats": 25,
+    "image": "/images/uploads/wshop-corporate-block.jpg",
+    "includes": [
+      "Guided Step-By-Step Instruction By Experienced Facilitators",
+      "All Materials And Tools Provided",
+      "Beginner-Friendly Activities Suitable For Everyone",
+      "Customizable Themes Based On Your Team Or Event",
+      "Interactive And Collaborative Creative Sessions",
+      "Take-Home Creations For Every Participant"
+    ],
+    "idealFor": [
+      "Team Bonding Activities",
+      "Employee Wellness Programs",
+      "Corporate Offsites & Retreats",
+      "Festive Office Celebrations",
+      "Client Engagement Events",
+      "Creative Networking Sessions"
+    ]
+  },
+  {
+    "id": "children-block-print",
+    "slug": "children-block-print",
+    "category": "experience",
+    "categoryLabel": "Experience Workshops",
+    "title": "Children's Block Print",
+    "level": "Children",
+    "description": "An age-appropriate introduction to block printing for children aged 6–14. Kids create their own stamped artwork using safe, water-based natural dyes and pre-carved wooden blocks.",
+    "duration": "1.5 hrs",
+    "packageFor": "Children (age 6–14)",
+    "tags": [
+      "Hands-on",
+      "In-studio",
+      "Kid-friendly"
+    ],
+    "price": 1500,
+    "priceUnit": "per child",
+    "seatsBooked": 8,
+    "totalSeats": 12,
+    "image": "/images/uploads/wshop-children.jpg"
+  },
+  {
+    "id": "curated-textile-course",
+    "slug": "curated-textile-course",
+    "category": "curated",
+    "categoryLabel": "Curated Workshops",
+    "title": "Textile Arts Deep Dive",
+    "level": "Advanced",
+    "description": "A 4-week immersive course for design students and creative learners. Covers block carving, colour theory with natural dyes, repeat pattern design, and fabric selection. Culminates in a personal collection of 5 printed pieces.",
+    "duration": "4 weeks (8 sessions)",
+    "packageFor": "Small group (max 6 students)",
+    "tags": [
+      "Multi-session",
+      "Certificate",
+      "In-studio"
+    ],
+    "price": 12000,
+    "priceUnit": "per participant",
+    "seatsBooked": 4,
+    "totalSeats": 6,
+    "image": "/images/uploads/wshop-curated-course.jpg"
+  }
+]

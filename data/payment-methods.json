@@ -1,0 +1,13 @@
+{
+  "upi": [
+    { "id": "apple-pay", "name": "Apple Pay", "logo": "/images/logos/apple-pay.svg" },
+    { "id": "gpay", "name": "Gpay", "logo": "/images/logos/gpay.svg" }
+  ],
+  "cards": [
+    { "id": "visa-0981", "name": "4153 xxxx xxxxx 0981", "logo": "/images/logos/visa.svg" }
+  ],
+  "banks": [
+    { "id": "hdfc", "name": "HDFC Bank", "logo": "/images/logos/hdfc.svg" },
+    { "id": "sbi", "name": "SBI Bank", "logo": "/images/logos/sbi.svg" }
+  ]
+}

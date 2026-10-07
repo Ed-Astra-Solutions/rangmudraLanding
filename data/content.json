@@ -1,0 +1,142 @@
+{
+  "homepage": {
+    "hero-tagline": "Block Printing, Colors and More.",
+    "intro-heading": "Immerse in the Spectrum of Tradition.",
+    "intro-body-1": "Discover the traditional art of block printing and Eco printing at Rangmudra. We are a Bangalore-based studio reviving the age-old craft of hand block printing and eco printing.",
+    "intro-body-2": "Each piece is lovingly hand-printed by skilled artisans using carved wooden blocks dipped in natural dyes derived from plants and minerals. The result is wearable art that carries the imprint of human hands and centuries of heritage.",
+    "workshops-promo-cta": "Explore Now",
+    "workshops-promo-meta": "12 PROJECTS · WORKSHOPS · EXPERTISE",
+    "shop-promo-cta": "Explore Now",
+    "shop-promo-meta": "BLOCK PRINTED · MODERN COLLECTION · HANDMADE",
+    "testimonials-heading": "WHAT OUR\nPATRONS SAY",
+    "gallery-heading": "From the studio",
+    "gallery-body": "A window into the work — prints, dye vats, and the pieces they become.",
+    "gallery-cta": "View the gallery",
+    "reads-heading": "Quick Reads",
+    "reads-link": "View all stories →"
+  },
+  "shop": {
+    "hero-eyebrow": "HANDCRAFTED WITH LOVE",
+    "hero-title": "The Collection",
+    "hero-subtitle": "Each piece hand-printed on natural fabrics with wooden blocks and plant-based dyes."
+  },
+  "workshops": {
+    "hero-eyebrow": "EXPLORE",
+    "hero-title": "Workshops &\nExperience",
+    "custom-eyebrow": "CUSTOM WORKSHOPS",
+    "custom-heading": "Looking for something different?",
+    "custom-body": "Looking for a different experience? We can custom curate or custom design workshops according to your requirements.",
+    "custom-cta": "GET IN TOUCH",
+    "experience-eyebrow": "WORKSHOPS",
+    "experience-title": "Experience Workshops",
+    "experience-desc": "Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.",
+    "corporate-eyebrow": "WORKSHOPS",
+    "corporate-title": "Corporate Workshops",
+    "corporate-desc": "Transform your workplace into a space of creativity, collaboration, and meaningful team experiences through engaging hands-on corporate workshops.",
+    "curated-eyebrow": "WORKSHOPS",
+    "curated-title": "Curated Workshops",
+    "curated-desc": "Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.",
+    "enquire-panel-title": "Reach out to us",
+    "card-experience-title": "Experience\nWorkshops",
+    "card-corporate-title": "Corporate\nWorkshops",
+    "card-curated-title": "Curated\nWorkshops"
+  },
+  "about": {
+    "hero-title": "The Soul of\nRangmudra",
+    "stat-1-number": "20+",
+    "stat-1-label": "Block Prints",
+    "stat-1-caption": "EVERY BLOCK MEETING IS YEARS OLD",
+    "stat-2-number": "50+",
+    "stat-2-label": "Skill Sets",
+    "stat-2-caption": "ARTISAN TECHNIQUES MASTERED",
+    "stat-3-number": "5,000+",
+    "stat-3-label": "Happy Patrons",
+    "stat-3-caption": "ACROSS INDIA AND THE WORLD",
+    "story-eyebrow": "OUR STORY",
+    "story-heading": "Where Ancient Patterns Meet Living Heritage",
+    "story-body-1": "Rangmudra was born from a deep reverence for India's centuries-old textile traditions. Founded in Bangalore, we are a studio committed to preserving and celebrating the art of hand block printing and eco printing — crafts that have been passed down through generations of artisans.",
+    "story-body-2": "Our name says it all: \"Rang\" — colour, and \"Mudra\" — the impression of a hand. Every piece we create carries both: the colour of natural dyes and the literal imprint of human hands on fabric.",
+    "story-body-3": "We work directly with skilled artisans, ensuring fair wages and a sustainable practice that honours both people and planet.",
+    "sustainability-heading": "SUSTAINABILITY",
+    "sustainability-body-1": "Every decision we make at Rangmudra is filtered through a commitment to sustainability. We source fabrics from certified organic cotton and natural silk producers. Our dyes are derived entirely from plants, minerals, and other natural sources — never synthetic chemicals.",
+    "sustainability-body-2": "Our workshop waste water is treated and reused. Our packaging is recycled and compostable. We are not just making beautiful things; we are trying to make them responsibly.",
+    "sustainability-body-3": "In a world of fast fashion, Rangmudra stands for slow, intentional creation — pieces made to last a lifetime and beyond.",
+    "team-eyebrow": "OUR TEAM",
+    "team-heading": "Carve a design is more than being pretty :)",
+    "team-body-1": "Our team is a family of passionate artisans, designers, and heritage enthusiasts. Each member brings a unique skill set — from the precise hand of a master block carver to the keen eye of a pattern designer.",
+    "team-body-2": "We are committed to using only organic fabrics and natural dyes in every piece we create. Our partnership with local artisan communities ensures that ancient skills are preserved while providing sustainable livelihoods.",
+    "faq-heading": "Frequently Asked Questions",
+    "testimonials-heading": "WHAT OUR\nPATRONS SAY"
+  },
+  "blogs": {
+    "hero-eyebrow": "BLOGS",
+    "hero-title": "Quick Reads &\nLong Stories",
+    "hero-subtitle": "Notes from the studio, the dye vat, and the carving bench — for anyone who loves the slow art of making by hand.",
+    "featured-eyebrow": "FEATURED",
+    "recent-eyebrow": "RECENT POSTS",
+    "empty-text": "No stories match your search. Try a different keyword or category.",
+    "toolbar-label": "All stories"
+  },
+  "gallery": {
+    "hero-eyebrow": "THE GALLERY",
+    "hero-title": "Colour of the Hand",
+    "hero-subtitle": "Every piece hand-printed on natural fabrics with wooden blocks and plant-based dyes. Explore the studio's designs.",
+    "empty-text": "No designs match your search yet. Try a different keyword or tag."
+  },
+  "enquire": {
+    "hero-eyebrow": "ENQUIRE",
+    "hero-title": "Connect With Us",
+    "hero-subtitle": "Experience the artistry of block printing and eco printing. Join our workshops or explore our curated collection.",
+    "scroll-label": "SCROLL TO EXPLORE",
+    "form-eyebrow": "GET IN TOUCH",
+    "form-heading": "Ask Us Anything",
+    "form-subtitle": "Choose your experience level and book a session that speaks to you.",
+    "card-visit-title": "Visit Us",
+    "card-visit-line-1": "Workstation 2, Shankaraa Foundation, Kanakapura Main Road",
+    "card-visit-line-2": "Next to Doddakalasandra Metro, Bengaluru — 560062",
+    "card-call-title": "Call Us",
+    "card-call-line-1": "+91 89514 80256",
+    "card-call-line-2": "Mon-Sat, 10AM-4PM",
+    "card-email-title": "Email Us",
+    "card-email-line-1": "rangmudrabengaluru@gmail.com",
+    "card-email-line-2": "We respond within 24hrs"
+  },
+  "footer": {
+    "tagline": "Block Printing, Colors and More.",
+    "instagram-url": "https://www.instagram.com/rangmudra_bengaluru/",
+    "facebook-url": "https://www.facebook.com/profile.php?id=61555646021193",
+    "youtube-url": "https://youtube.com/@rangmudra",
+    "linkedin-url": "https://www.linkedin.com/company/rangmudra",
+    "col-1-title": "Explore",
+    "col-2-title": "Collections",
+    "col-3-title": "Reach Us",
+    "address": "Workstation 2, Shankaraa Foundation,\nKanakapura Main Road, next to\nDoddakalasandra Metro Station,\nBengaluru, Karnataka — 560062",
+    "maps-url": "https://g.co/kgs/nUjV54V",
+    "phone": "+91 89514 80256",
+    "phone-note": "Mon-Sat, 10AM-4PM",
+    "email": "rangmudrabengaluru@gmail.com",
+    "email-note": "We respond within 24hrs",
+    "newsletter-title": "Join Our World",
+    "newsletter-placeholder": "Your email",
+    "copyright": "© 2026 Rangmudra. All rights reserved. Crafted with love in Bangalore.",
+    "whatsapp-link": "https://wa.me/918951480256"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "body": "## Information We Collect\nWe collect your email address to sign you in and your delivery addresses for order fulfilment. We do not collect or store payment card details — all payments are processed securely through our payment gateway partner.\n\n## How We Use Your Information\nYour information is used solely for processing orders, sending shipping updates, and improving your experience on our platform. We do not sell your data to third parties.\n\n## Data Security\nWe use industry-standard encryption and security practices to protect your personal information. Our session tokens expire after 30 days.\n\n## Contact\nFor any privacy concerns, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "body": "## Acceptance of Terms\nBy accessing or using the Rangmudra website or placing an order, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.\n\n## Products & Orders\nAll products listed on Rangmudra are handcrafted using natural dyes and wooden block printing techniques. Due to the handmade nature of our products, slight variations in colour, pattern placement, and texture are inherent and not considered defects. We reserve the right to limit quantities and refuse orders at our discretion.\n\n## Pricing & Payment\nAll prices are listed in Indian Rupees (₹) and are inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time without notice. Payment must be completed in full before an order is processed and dispatched.\n\n## Workshops & Bookings\nWorkshop bookings are confirmed upon receipt of full payment. We reserve the right to reschedule or cancel a workshop due to insufficient registrations or unforeseen circumstances, in which case a full refund will be issued. Participants are responsible for arriving on time; late arrivals may not be accommodated.\n\n## Cancellations & Returns\nOrders cancelled within 24 hours of placement are eligible for a full refund. After 24 hours, cancellations are subject to a 10% processing fee. Returns are accepted within 7 days of delivery for items that are damaged or significantly different from the listing. Please write to us at rangmudrabengaluru@gmail.com with photographs of the item to initiate a return.\n\n## Intellectual Property\nAll content on this website — including photographs, block-print designs, text, and the Rangmudra wordmark — is the exclusive intellectual property of Rangmudra Studio. Reproduction, distribution, or commercial use of any content without prior written permission is prohibited.\n\n## Limitation of Liability\nRangmudra shall not be liable for any indirect, incidental, or consequential damages arising from your use of our platform or products. Our total liability is limited to the amount paid for the specific order or service in question.\n\n## Governing Law\nThese terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Bengaluru, Karnataka.\n\n## Contact\nFor any questions about these terms, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "shipping": {
+    "title": "Shipping Policy",
+    "body": "## Processing Time\nEach Rangmudra piece is handcrafted to order. Please allow 3–5 business days for your order to be prepared, quality-checked, and packaged before dispatch. During peak seasons or for custom workshop-related orders, processing may take up to 7 business days.\n\n## Delivery Timelines\nOrders within Bengaluru are typically delivered within 2–3 business days after dispatch. Orders to other cities within India take 5–7 business days. We currently ship only within India. International shipping is not available at this time.\n\n## Shipping Charges\nDelivery is charged at India Post Speed Post rates, worked out at checkout from the parcel's weight and the distance to your PIN code. You will see the exact fee before you pay. For bulky items or special packaging requests, additional charges may apply and will be communicated before dispatch.\n\n## Order Tracking\nOnce your order is dispatched, you will receive a tracking number that allows you to follow your shipment. You can also view your order status in the My Orders section of your profile.\n\n## Packaging\nWe take care to package every order thoughtfully. Products are wrapped in recycled tissue paper, sealed with our branded stamp, and placed in a kraft box or mailer bag. We consciously avoid single-use plastics in our packaging — in keeping with Rangmudra's commitment to sustainable craft.\n\n## Damaged or Lost Shipments\nIf your order arrives damaged, please photograph the packaging and the item and write to us at rangmudrabengaluru@gmail.com within 48 hours of delivery. We will arrange a replacement or refund at no additional cost. In the rare event of a lost shipment, we will investigate with the courier and issue a replacement or refund within 10 business days.\n\n## Contact\nFor shipping-related queries, please write to us at rangmudrabengaluru@gmail.com."
+  },
+  "sustainability": {
+    "eyebrow": "Our Commitment",
+    "title": "Sustainability Commitment",
+    "intro": "At RangMudra, we recognize the importance of preserving our environment and contributing to a sustainable future. Our commitment to sustainability is woven into every aspect of our business, from the workshops we conduct to the textiles we create.",
+    "body": "## Eco-Friendly Materials\nWe prioritize the use of organic fabrics and surplus materials of high quality, reducing the environmental impact associated with textile production.\n\n![A hand pressing a carved wooden block onto white cotton, leaving a grey floral print | Every motif is pressed by hand, one impression at a time.](/images/uploads/process-printing.jpg)\n\n## Traditional Techniques\nOur block printing methods are not only traditional but also eco-conscious, using natural dyes and minimizing chemical waste.\n\n## BYOC Initiative\nWith our Bring Your Own Clothes policy, we encourage the upcycling of pre-loved garments, extending their life cycle and reducing waste.\n\n![Hand-carved wooden printing blocks laid out on a table — florals, borders and geometric motifs | Hand-carved wooden blocks from the studio.](/images/uploads/about-story.jpg)\n\n## Empowering Local Artisans\nWe support the local economy by collaborating with rural artisans, providing them with fair wages and sustainable work environments.\n\n## Educating for Sustainability\nOur workshops not only teach the art of block printing but also impart the values of eco-friendly practices and the importance of sustainability in art.\n\n![A workshop participant block printing a red border onto a cotton runner | A participant printing at one of our studio workshops.](/images/uploads/about-sustainability.jpg)\n\n## Community Outreach\nRangMudra is committed to educating and involving the community in our sustainability efforts, fostering a collective approach to environmental stewardship.\n\n## Continuous Improvement\nBy committing to these principles, RangMudra aims to not only create beautiful textiles but also protect the beautiful world we live in. Thank you for joining us on this journey."
+  }
+}

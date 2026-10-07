@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshops — RangMudra</title>
+  <meta name="description" content="Explore RangMudra block printing and eco printing workshops by category.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://rangmudra.com/workshop-category.html">
+  <meta name="theme-color" content="#2C1A10">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RangMudra">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Workshops — RangMudra">
+  <meta property="og:description" content="Browse RangMudra block printing and eco printing workshops by category.">
+  <meta property="og:url" content="https://rangmudra.com/workshop-category.html">
+  <meta property="og:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <meta property="og:image:alt" content="Workshops — RangMudra">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Workshops — RangMudra">
+  <meta name="twitter:description" content="Browse RangMudra block printing and eco printing workshops by category.">
+  <meta name="twitter:image" content="https://rangmudra.com/images/uploads/home-hero.jpg">
+  <link rel="icon" href="/images/logo/rangmudra-logo-32.png" sizes="32x32">
+  <link rel="icon" href="/images/logo/rangmudra-logo-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo/rangmudra-logo-180.png">
+  <link rel="preload" href="/fonts/maiandra-black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body style="background:var(--pr-l5);">
+
+  <div data-partial="header"></div>
+
+  <div class="breadcrumb-wrap"><nav data-breadcrumb></nav></div>
+
+  <main>
+
+    <!-- Small hero -->
+    <section class="page-hero" style="min-height:360px;" aria-label="Category hero">
+      <img
+        src="/images/uploads/wshop-block-print-party.jpg"
+        alt="Block printing workshop in progress"
+        class="page-hero__bg"
+        id="category-hero-img"
+        data-section="workshops.category-hero-experience"
+        loading="eager"
+        fetchpriority="high"
+        width="1440" height="320"
+      >
+      <a href="index.html" class="btn-ghost page-hero__back" aria-label="Go to the home page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        Home
+      </a>
+      <div class="page-hero__content">
+        <h1 class="h2-i" style="color:var(--pr-l5);" id="hero-title">Workshops</h1>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+
+        <!-- Category title block -->
+        <div style="margin-bottom:64px;">
+          <p class="eyebrow" id="category-eyebrow">WORKSHOPS</p>
+          <h2 class="h2-i color-sc-100" id="category-heading" style="margin-bottom:16px;"></h2>
+          <p class="h5-a color-sc-l3" id="category-desc" style="max-width:680px;"></p>
+        </div>
+
+        <!-- Workshop zigzag cards -->
+        <div class="workshop-zigzag" id="workshop-list" aria-label="Workshops in this category">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Custom workshops — closing call to action, opens the enquiry panel -->
+    <section class="custom-workshop" aria-labelledby="custom-workshop-heading">
+      <div class="container">
+        <div class="custom-workshop__card">
+          <div class="custom-workshop__text">
+            <p class="eyebrow" data-content="workshops.custom-eyebrow">CUSTOM WORKSHOPS</p>
+            <h2 class="h3-i color-sc-100" id="custom-workshop-heading" data-content="workshops.custom-heading">Looking for something different?</h2>
+            <p class="h5-a color-sc-l3" data-content="workshops.custom-body">Looking for a different experience? We can custom curate or custom design workshops according to your requirements.</p>
+          </div>
+          <button type="button" class="btn-primary pill custom-workshop__cta" id="bottom-enquire-cta" aria-label="Get in touch about a custom workshop">
+            <span data-content="workshops.custom-cta">GET IN TOUCH</span> →
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Enquire side panel -->
+  <div class="enquire-panel" id="enquire-panel" role="dialog" aria-modal="true" aria-labelledby="enquire-panel-title">
+    <button class="enquire-panel__close" id="enquire-panel-close" aria-label="Close enquiry form">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 class="h3-i color-sc-100" id="enquire-panel-title" style="margin-bottom:32px;" data-content="workshops.enquire-panel-title">Reach out to us</h2>
+    <form id="enquire-form">
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-name">Name</label>
+        <input type="text" id="eq-name" class="input-field" placeholder="Your name" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-email">Email</label>
+        <input type="email" id="eq-email" class="input-field" placeholder="hello@you.com" required>
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-phone">Phone</label>
+        <input type="tel" id="eq-phone" class="input-field" placeholder="+91 98765 43210">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-group">Group Size</label>
+        <input type="number" id="eq-group" class="input-field" placeholder="Number of people" min="1">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-date">Preferred Date</label>
+        <input type="date" id="eq-date" class="input-field">
+      </div>
+      <div class="input-wrap" style="margin-bottom:20px;">
+        <label class="input-label" for="eq-workshop">Workshop</label>
+        <select id="eq-workshop" class="input-field" style="cursor:pointer;appearance:auto;">
+          <option value="">Select a workshop...</option>
+        </select>
+      </div>
+      <div class="input-wrap" style="margin-bottom:32px;">
+        <label class="input-label" for="eq-message">Message</label>
+        <textarea id="eq-message" class="textarea-field" placeholder="Tell us more about your requirements..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary full-width">Submit</button>
+    </form>
+  </div>
+
+  <div data-partial="footer"></div>
+  <div data-partial="auth-modal"></div>
+
+  <script type="module" src="/js/components.js"></script>
+  <script type="module">
+    import { getWorkshops } from '/js/data.js';
+    import { workshopUrl, workshopCategoryUrl, pageQuery, preferCleanUrl } from '/js/routes.js';
+    import { apiUrl } from '/js/config.js';
+    import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
+    import { primaryImage } from '/js/media.js';
+    import { applySections } from '/js/sections.js';
+
+    const params = new URLSearchParams(pageQuery());
+    const cat = params.get('cat') || 'experience';
+    if (params.get('cat')) preferCleanUrl(workshopCategoryUrl(cat));
+
+    // Each category page has its own banner slot in the admin. The markup ships
+    // with the Experience slot; point it at this category's before the section
+    // pass paints, then re-run in case that pass already went by.
+    const heroImg = document.getElementById('category-hero-img');
+    if (heroImg && ['experience', 'corporate', 'curated'].includes(cat)) {
+      heroImg.setAttribute('data-section', `workshops.category-hero-${cat}`);
+    }
+    applySections();
+
+    // Category titles and blurbs come from the page-copy CMS, so the Corporate
+    // (and Experience / Curated) landing pages are editable from the admin like
+    // every other page. The literals here are the shipped defaults.
+    const FALLBACK = {
+      experience: {
+        title: 'Experience Workshops',
+        desc: 'Experience the art of block printing and eco printing through hands-on workshops that blend creativity, craftsmanship, and nature-inspired design.',
+      },
+      corporate: {
+        title: 'Corporate Workshops',
+        desc: 'Transform your workplace into a space of creativity, collaboration, and meaningful team experiences through engaging hands-on corporate workshops.',
+      },
+      curated: {
+        title: 'Curated Workshops',
+        desc: 'Immersive multi-week workshops crafted for design students and creative learners to explore, experiment, and build hands-on artistic skills through guided practice.',
+      },
+    };
+    const fallback = FALLBACK[cat] || FALLBACK.experience;
+    const key = FALLBACK[cat] ? cat : 'experience';
+
+    const { getContent } = await import('/js/content.js');
+    const meta = {
+      title: await getContent(`workshops.${key}-title`, fallback.title),
+      desc: await getContent(`workshops.${key}-desc`, fallback.desc),
+      eyebrow: await getContent(`workshops.${key}-eyebrow`, 'WORKSHOPS'),
+    };
+
+    document.title = `${meta.title} — RangMudra`;
+    document.getElementById('hero-title').textContent = meta.title;
+    document.getElementById('category-heading').textContent = meta.title;
+    document.getElementById('category-desc').textContent = meta.desc;
+    document.getElementById('category-eyebrow').textContent = meta.eyebrow;
+
+    const WORKSHOPS = await getWorkshops();
+    const filtered = WORKSHOPS.filter(w => w.category === cat);
+
+    function renderWorkshops(list) {
+      const container = document.getElementById('workshop-list');
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<p class="h5-a color-sc-l3">No workshops found.</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map(w => `
+        <div class="workshop-zigzag__item">
+          <div class="workshop-card">
+            <div class="workshop-card__img-wrap">
+              <img
+                src="${primaryImage(w, 'image')}"
+                alt="${w.title} workshop"
+                class="workshop-card__image"
+                loading="lazy"
+                width="520" height="650"
+                onerror="this.src='/images/uploads/wshop-block-print-party.jpg'"
+              >
+              <span class="workshop-card__level-tag">${w.level}</span>
+            </div>
+            <div class="workshop-card__body">
+              <h3 class="workshop-card__title">${w.title}</h3>
+              <p class="workshop-card__desc">${w.description}</p>
+              <div class="workshop-card__meta">
+                <span>⏱ ${w.duration}</span>
+                <span class="workshop-card__meta-divider" aria-hidden="true"></span>
+                <span>👤 ${w.packageFor}</span>
+              </div>
+              <div class="workshop-card__chips">
+                ${w.tags.map(t => `<span class="workshop-card__chip">${t}</span>`).join('')}
+              </div>
+              <div class="workshop-card__footer">
+                <div>
+                  ${w.price
+                    ? `<p class="workshop-card__price-value">₹${w.price.toLocaleString('en-IN')}</p><p class="workshop-card__price-unit">${w.priceUnit}</p>`
+                    : `<p class="workshop-card__price-label">${w.priceLabel || 'Contact for pricing'}</p>`
+                  }
+                </div>
+                <a href="${workshopUrl(cat, w.slug)}" class="btn-primary pill" style="height:48px;padding-inline:24px;font-size:12px;">
+                  BOOK NOW →
+                </a>
+              </div>
+              <div class="workshop-card__progress-wrap">
+                <div class="workshop-card__progress-bar">
+                  <div class="workshop-card__progress-fill" style="width:${Math.round((w.seatsBooked / w.totalSeats) * 100)}%"></div>
+                </div>
+                <p class="workshop-card__progress-label">${w.seatsBooked} of ${w.totalSeats} seats booked</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* Enquire panel */
+    const panel = document.getElementById('enquire-panel');
+    const panelClose = document.getElementById('enquire-panel-close');
+
+    function openPanel() { panel?.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closePanel() { panel?.classList.remove('open'); document.body.style.overflow = ''; }
+
+    panelClose?.addEventListener('click', closePanel);
+
+    // Every category closes on the custom-workshop card — the way into the side panel.
+    document.getElementById('bottom-enquire-cta').addEventListener('click', () => openPanel());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel?.classList.contains('open')) closePanel();
+    });
+    armForm(document.getElementById('enquire-form'));
+    document.getElementById('enquire-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('[type=submit]');
+      const label = btn.textContent;
+      const select = form.querySelector('#eq-workshop');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await guardedFetch(apiUrl('/api/workshops/book'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('#eq-name').value,
+            email: form.querySelector('#eq-email').value,
+            phone: form.querySelector('#eq-phone').value,
+            workshopId: select ? select.value : '',
+            workshopTitle: select ? select.options[select.selectedIndex]?.text : '',
+            groupSize: form.querySelector('#eq-group').value,
+            date: form.querySelector('#eq-date').value,
+            message: form.querySelector('#eq-message').value,
+            ...(await botFields(form, 'workshop_booking')),
+          }),
+        });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Failed');
+        closePanel();
+        form.reset();
+        alert('Booking sent! We\'ll confirm the details within 24 hours.');
+      } catch (err) {
+        alert('Sorry, we couldn\'t send your booking. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    });
+
+    /* Populate workshop select in enquire form */
+    const select = document.getElementById('eq-workshop');
+    if (select) {
+      select.length = 1; // keep "Select a workshop…"; a pre-built page already lists them
+      WORKSHOPS.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.id;
+        opt.textContent = w.title;
+        select.appendChild(opt);
+      });
+    }
+
+    renderWorkshops(filtered);
+  </script>
+</body>
+</html>
