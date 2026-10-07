@@ -313,13 +313,20 @@ function buildRoutes(data) {
       title: clean(b.title).length > 48 ? `${clean(b.title)} | RangMudra` : `${clean(b.title)} | RangMudra Journal`,
       desc: clip(b.excerpt || firstSentence((b.content || []).map((c) => c.text || '').join(' '))),
       image: img, ogType: 'article',
+      images: [img, ...(b.content || []).filter((c) => c.type === 'img').map((c) => c.src)].filter(Boolean),
+      extraMeta: [
+        ...(b.date ? [['property', 'article:published_time', b.date]] : []),
+        ...(b.updatedAt ? [['property', 'article:modified_time', b.updatedAt]] : []),
+        ...(b.category ? [['property', 'article:section', b.category]] : []),
+      ],
       jsonld: [
         breadcrumbs([['Home', '/'], ['Journal', '/blogs.html'], [clean(b.title)]]),
         {
           '@type': 'BlogPosting',
           headline: clean(b.title).slice(0, 110),
           description: clip(b.excerpt || '', 300),
-          image: img ? [img] : undefined,
+          image: [img, ...(b.content || []).filter((c) => c.type === 'img').map((c) => c.src)].filter(Boolean),
+          wordCount: (b.content || []).map((c) => [c.text, ...(c.items || [])].join(' ')).join(' ').split(/\s+/).filter(Boolean).length,
           datePublished: b.date || undefined,
           dateModified: b.updatedAt || b.date || undefined,
           author: { '@type': 'Organization', name: clean(b.author) || 'RangMudra Studio', url: `${SITE}/about.html` },
@@ -469,7 +476,7 @@ function finalizePage({ seo, originalScripts }) {
   head.querySelectorAll([
     'title', 'meta[name="description"]', 'meta[name="keywords"]', 'meta[name="robots"]', 'meta[name="author"]',
     'link[rel="canonical"]', 'meta[property^="og:"]', 'meta[name^="twitter:"]', 'meta[property^="product:"]',
-    'script[type="application/ld+json"]',
+    'meta[property^="article:"]', 'link[rel="alternate"][type="application/rss+xml"]', 'script[type="application/ld+json"]',
   ].join(',')).forEach((n) => n.remove());
   for (const node of [...head.childNodes]) {
     if (node.nodeType === Node.COMMENT_NODE && /SEO|Open Graph|Twitter|Primary SEO|Structured data/i.test(node.nodeValue)) node.remove();
@@ -512,6 +519,7 @@ function finalizePage({ seo, originalScripts }) {
   el('meta', { name: 'theme-color', content: '#2C1A10' });
   el('meta', { name: 'application-name', content: 'RangMudra' });
   el('meta', { name: 'apple-mobile-web-app-title', content: 'RangMudra' });
+  if (seo.feed) el('link', { rel: 'alternate', type: 'application/rss+xml', title: 'RangMudra Journal', href: '/blog/feed.xml' });
   if (seo.jsonld) el('script', { type: 'application/ld+json' }, seo.jsonld);
   let after = anchor;
   for (const n of nodes) { after.after(n); after = n; }
@@ -574,6 +582,28 @@ function writeSitemaps(routes, data) {
     `Sitemap: ${SITE}/sitemap.xml`,
     '',
   ].join('\n'));
+  // Journal feed, newest first, for feed readers and aggregators.
+  const posts = [...data.blogs].sort((x, y) => String(y.date).localeCompare(String(x.date)));
+  const rfc = (d) => (d && !Number.isNaN(Date.parse(d)) ? new Date(d).toUTCString() : '');
+  fs.mkdirSync(path.join(OUT, 'blog'), { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'blog', 'feed.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>RangMudra Journal</title>
+  <link>${SITE}/blogs.html</link>
+  <atom:link href="${SITE}/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Notes from the RangMudra studio in Bengaluru on block printing, eco printing and caring for hand printed fabric.</description>
+  <language>en-in</language>
+${posts.map((b) => `  <item>
+    <title>${esc(clean(b.title))}</title>
+    <link>${SITE}/blog/${b.slug}/</link>
+    <guid isPermaLink="true">${SITE}/blog/${b.slug}/</guid>
+    ${rfc(b.date) ? `<pubDate>${rfc(b.date)}</pubDate>` : ''}
+    <description>${esc(clean(b.excerpt || ''))}</description>
+  </item>`).join('\n')}
+</channel>
+</rss>
+`);
   fs.writeFileSync(path.join(OUT, GOOGLE_VERIFICATION), `google-site-verification: ${GOOGLE_VERIFICATION}`);
 
   // Folder roots without a page of their own point at the matching listing.
@@ -609,7 +639,7 @@ async function main() {
   for (const r of routes) {
     const rec = r.kind === 'product' ? products.find((p) => p.slug === r.key)
       : r.kind === 'workshop' ? workshops.find((w) => w.slug === r.key) : null;
-    r.images = rec ? imagesOf(rec) : r.image ? [r.image] : [];
+    r.images = r.images || (rec ? imagesOf(rec) : r.image ? [r.image] : []);
   }
 
   fs.rmSync(OUT, { recursive: true, force: true });
@@ -667,6 +697,7 @@ async function main() {
           ogType: r.ogType, image: r.image ? abs(r.image) : '', extraMeta: r.extraMeta,
           jsonld: JSON.stringify({ '@context': 'https://schema.org', '@graph': r.jsonld.filter(Boolean) }),
           page: r.file ? { file: r.file, query: r.query } : null,
+          feed: r.kind === 'blog' || r.src === '/blogs.html',
         },
       });
       const outFile = path.join(OUT, r.out);

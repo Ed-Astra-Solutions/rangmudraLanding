@@ -31,6 +31,7 @@ function renderHero(post) {
 function renderBody(post) {
   document.getElementById('article-excerpt').textContent = post.excerpt;
   const bodyEl = document.getElementById('article-body');
+  let photo = 0;
   bodyEl.innerHTML = (post.content || []).map(block => {
     // Paragraphs and bullets carry **bold**, *italic* and [links](…) — see
     // rich-text.js. Headings are plain text.
@@ -44,7 +45,8 @@ function renderBody(post) {
       const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : '';
       const media = block.type === 'video'
         ? `<video src="${escapeAttr(block.src)}" controls playsinline preload="metadata"${block.alt ? ` aria-label="${escapeAttr(block.alt)}"` : ''}></video>`
-        : `<img src="${escapeAttr(block.src)}" alt="${escapeAttr(block.alt || '')}" loading="lazy">`;
+        // No alt text in the admin: describe it from the caption, else the post.
+        : `<img src="${escapeAttr(block.src)}" alt="${escapeAttr(block.alt || block.caption || `${post.title}, photo ${++photo}`)}" loading="lazy">`;
       return `<figure>${media}${caption}</figure>`;
     }
     return '';
