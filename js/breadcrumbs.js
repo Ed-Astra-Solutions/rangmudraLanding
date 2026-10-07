@@ -8,6 +8,7 @@
  * Trail format: [{ label, href? }] — last item has no href (current page).
  */
 
+import { workshopCategoryUrl, pageQuery } from '/js/routes.js';
 const WORKSHOP_CATS = {
   experience: 'Experience Workshops',
   corporate: 'Corporate Workshops',
@@ -75,8 +76,8 @@ function normalizePage(pathname) {
 }
 
 async function buildTrail() {
-  const page = normalizePage(window.location.pathname);
-  const params = new URLSearchParams(window.location.search);
+  const page = window.RM_PAGE ? window.RM_PAGE.file : normalizePage(window.location.pathname);
+  const params = new URLSearchParams(pageQuery());
   const trail = [{ label: 'Home', href: 'index.html' }];
 
   if (page === 'index.html') return trail;
@@ -136,7 +137,7 @@ async function buildTrail() {
     if (cat) {
       trail.push({
         label: WORKSHOP_CATS[cat] || 'Category',
-        href: `workshop-category.html?cat=${cat}`,
+        href: workshopCategoryUrl(cat),
       });
     }
     if (slug) {

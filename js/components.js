@@ -98,7 +98,14 @@ async function initNewsletter() {
 }
 
 function highlightActiveNavLink() {
-  const path = window.location.pathname.split('/').pop() || 'index.html';
+  // Built detail pages live at /product/<slug>/ etc., so take the template's
+  // name from RM_PAGE; detail pages light up the section they belong to.
+  const file = (window.RM_PAGE && window.RM_PAGE.file) || window.location.pathname.split('/').pop() || 'index.html';
+  const SECTION = {
+    'product.html': 'shop.html', 'workshop-detail.html': 'workshops.html', 'workshop-category.html': 'workshops.html',
+    'blog-detail.html': 'blogs.html', 'gallery-item.html': 'gallery.html',
+  };
+  const path = SECTION[file] || file;
   document.querySelectorAll('.header__nav-link').forEach(link => {
     const href = link.getAttribute('href');
     if (href === path || (path === '' && href === 'index.html')) {

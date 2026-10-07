@@ -1,6 +1,7 @@
 /* blogs.js — Blogs index page: featured post, search, category filter, grid. */
 
 import { getBlogs } from '/js/data.js';
+import { blogUrl } from '/js/routes.js';
 
 const grid = document.getElementById('blogs-grid');
 const emptyState = document.getElementById('blogs-empty');
@@ -23,7 +24,7 @@ async function loadPosts() {
 function renderFeatured(post) {
   if (!post) return;
   const card = document.getElementById('featured-card');
-  card.href = `blog-detail.html?slug=${encodeURIComponent(post.slug)}`;
+  card.href = blogUrl(post.slug);
   document.getElementById('featured-img').src = post.image;
   document.getElementById('featured-img').alt = post.title;
   document.getElementById('featured-cat').textContent = post.category;
@@ -65,7 +66,7 @@ function renderGrid() {
   emptyState.hidden = true;
 
   grid.innerHTML = matches.map(p => `
-    <a href="blog-detail.html?slug=${encodeURIComponent(p.slug)}" class="blog-post-card" aria-label="Read: ${escapeAttr(p.title)}">
+    <a href="${blogUrl(p.slug)}" class="blog-post-card" aria-label="Read: ${escapeAttr(p.title)}">
       <div class="blog-post-card__img-wrap">
         <img src="${p.image}" alt="${escapeAttr(p.title)}" class="blog-post-card__img" loading="lazy" width="600" height="400">
       </div>

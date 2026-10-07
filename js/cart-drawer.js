@@ -1,3 +1,4 @@
+import { productUrl } from '/js/routes.js';
 /* cart-drawer.js — the slide-in cart shown right after ADD TO CART.
  *
  *   import { openCartDrawer } from '/js/cart-drawer.js';
@@ -41,7 +42,7 @@ function esc(s) {
 
 // A product's id is its slug (both set from the slug when it is created), so
 // the id alone is enough to link a cart line back to its page.
-const productHref = (item) => `product.html?slug=${encodeURIComponent(item.id)}`;
+const productHref = (item) => productUrl(item.slug || item.id);
 
 function ensureDrawer() {
   if (drawer) return drawer;

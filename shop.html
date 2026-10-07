@@ -137,6 +137,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { initDropdowns } from '/js/dropdown.js';
+    import { productUrl } from '/js/routes.js';
     import { heldUntil } from '/js/holds.js';
     import { initFilterPills } from '/js/filter-pills.js';
     import { isInWishlist, toggleWishlist } from '/js/wishlist.js';
@@ -155,7 +156,7 @@
       const grid = document.getElementById('product-grid');
       if (!grid) return;
       grid.innerHTML = products.map(p => `
-        <a href="product.html?slug=${p.slug}" class="shop-card${p.available === false ? ' shop-card--sold-out' : ''}" data-product-id="${p.id}">
+        <a href="${productUrl(p.slug)}" class="shop-card${p.available === false ? ' shop-card--sold-out' : ''}" data-product-id="${p.id}">
           <div class="shop-card__img-wrap">
             <img
               src="${primaryImage(p)}"

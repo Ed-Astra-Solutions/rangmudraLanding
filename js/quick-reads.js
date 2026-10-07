@@ -7,6 +7,7 @@
  */
 
 import { getBlogs } from '/js/data.js';
+import { blogUrl } from '/js/routes.js';
 
 const grid = document.getElementById('quick-reads-grid');
 
@@ -21,7 +22,7 @@ function byNewest(a, b) {
 }
 
 function card(post, { large }) {
-  const href = `blog-detail.html?slug=${encodeURIComponent(post.slug)}`;
+  const href = blogUrl(post.slug);
   const title = escapeHTML(post.title);
   const meta = escapeHTML([post.author && `By ${post.author}`, post.readTime].filter(Boolean).join(' · '));
   const img = escapeHTML(post.image || '/images/uploads/home-quickreads-large.jpg');

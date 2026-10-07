@@ -3,12 +3,14 @@
 
 import { getBlogs } from '/js/data.js';
 import { inlineHTML } from '/js/rich-text.js';
+import { blogUrl, pageQuery, preferCleanUrl } from '/js/routes.js';
 
 async function loadPost() {
-  const slug = new URLSearchParams(window.location.search).get('slug');
+  const slug = new URLSearchParams(pageQuery()).get('slug');
   try {
     const posts = await getBlogs();
     const post = posts.find(p => p.slug === slug) || posts[0];
+    if (post && post.slug === slug) preferCleanUrl(blogUrl(slug));
     return { post, posts };
   } catch (e) {
     console.warn('Could not load blogs:', e);
@@ -56,7 +58,7 @@ function renderRelated(post, posts) {
     .slice(0, 3);
   const grid = document.getElementById('related-grid');
   grid.innerHTML = related.map(p => `
-    <a href="blog-detail.html?slug=${encodeURIComponent(p.slug)}" class="blog-post-card" aria-label="Read: ${escapeAttr(p.title)}">
+    <a href="${blogUrl(p.slug)}" class="blog-post-card" aria-label="Read: ${escapeAttr(p.title)}">
       <div class="blog-post-card__img-wrap">
         <img src="${p.image}" alt="${escapeAttr(p.title)}" class="blog-post-card__img" loading="lazy" width="600" height="400">
       </div>

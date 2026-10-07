@@ -145,13 +145,15 @@
   <script type="module" src="/js/components.js"></script>
   <script type="module">
     import { getWorkshops } from '/js/data.js';
+    import { workshopUrl, workshopCategoryUrl, pageQuery, preferCleanUrl } from '/js/routes.js';
     import { apiUrl } from '/js/config.js';
     import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     import { primaryImage } from '/js/media.js';
     import { applySections } from '/js/sections.js';
 
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(pageQuery());
     const cat = params.get('cat') || 'experience';
+    if (params.get('cat')) preferCleanUrl(workshopCategoryUrl(cat));
 
     // Each category page has its own banner slot in the admin. The markup ships
     // with the Experience slot; point it at this category's before the section
@@ -239,7 +241,7 @@
                     : `<p class="workshop-card__price-label">${w.priceLabel || 'Contact for pricing'}</p>`
                   }
                 </div>
-                <a href="workshop-detail.html?cat=${cat}&slug=${w.slug}" class="btn-primary pill" style="height:48px;padding-inline:24px;font-size:12px;">
+                <a href="${workshopUrl(cat, w.slug)}" class="btn-primary pill" style="height:48px;padding-inline:24px;font-size:12px;">
                   BOOK NOW →
                 </a>
               </div>
@@ -309,6 +311,7 @@
     /* Populate workshop select in enquire form */
     const select = document.getElementById('eq-workshop');
     if (select) {
+      select.length = 1; // keep "Select a workshop…"; a pre-built page already lists them
       WORKSHOPS.forEach(w => {
         const opt = document.createElement('option');
         opt.value = w.id;

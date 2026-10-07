@@ -7,6 +7,7 @@
  */
 
 import { getGallery } from '/js/data.js';
+import { galleryItemUrl } from '/js/routes.js';
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -21,7 +22,7 @@ function isVideo(item) {
 }
 
 export function tileHTML(item) {
-  const href = `gallery-item.html?id=${encodeURIComponent(item.id)}`;
+  const href = galleryItemUrl(item.id);
   const dims = item.width && item.height ? `width="${item.width}" height="${item.height}"` : '';
   const tags = (item.tags || []).slice(0, 3).map((t) => esc(t)).join(' · ');
   // Videos show their first frame (the #t=0.1 fragment nudges browsers to paint

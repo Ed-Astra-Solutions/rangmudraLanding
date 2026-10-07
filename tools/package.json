@@ -1,0 +1,8 @@
+{
+  "name": "rangmudra-site-build",
+  "private": true,
+  "type": "module",
+  "description": "Builds the static, pre-rendered copy of the public site that GitHub Pages serves.",
+  "scripts": { "build": "node build-static.mjs" },
+  "dependencies": { "playwright-core": "^1.48.0" }
+}

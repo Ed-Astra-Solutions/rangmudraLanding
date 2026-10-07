@@ -217,6 +217,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { getWorkshops } from '/js/data.js';
+    import { workshopUrl } from '/js/routes.js';
     import { apiUrl } from '/js/config.js';
     import { armForm, botFields, guardedFetch } from '/js/bot-guard.js';
     import { primaryImage } from '/js/media.js';
@@ -230,7 +231,7 @@
         ? `₹${w.price.toLocaleString('en-IN')} · ${w.priceUnit}`
         : (w.priceLabel || 'Contact for pricing');
       return `
-        <a href="workshop-detail.html?cat=${w.category}&slug=${w.slug}" class="shop-card" data-workshop-id="${w.id}">
+        <a href="${workshopUrl(w.category, w.slug)}" class="shop-card" data-workshop-id="${w.id}">
           <div class="shop-card__img-wrap">
             <img
               src="${primaryImage(w, 'image')}"
@@ -320,6 +321,7 @@
     /* Populate workshop select in enquire form */
     const select = document.getElementById('eq-workshop');
     if (select) {
+      select.length = 1; // keep "Select a workshop…"; a pre-built page already lists them
       WORKSHOPS.forEach(w => {
         const opt = document.createElement('option');
         opt.value = w.id;

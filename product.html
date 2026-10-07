@@ -175,6 +175,7 @@
   <script type="module" src="/js/sections.js"></script>
   <script type="module">
     import { addToCart, isInCart } from '/js/cart.js';
+    import { productUrl, pageQuery, preferCleanUrl } from '/js/routes.js';
     import { heldUntil, holdTime } from '/js/holds.js';
     import { openCartDrawer } from '/js/cart-drawer.js';
     import { initFilterPills } from '/js/filter-pills.js';
@@ -185,12 +186,13 @@
     import { openMediaLightbox } from '/js/media-mosaic.js';
     import { attachHoverZoom } from '/js/image-zoom.js';
 
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(pageQuery());
     const slug = params.get('slug') || 'flora-patterned-set';
 
     const PRODUCTS = await getProducts();
     const SALE = await getSale();
     const product = PRODUCTS.find(p => p.slug === slug) || PRODUCTS[0];
+    if (product.slug === slug) preferCleanUrl(productUrl(slug));
 
     /* Full gallery (photos + videos) and the single still used for the cart. */
     const MEDIA = entityMedia(product);
@@ -402,7 +404,7 @@
       if (!track) return;
       const similar = PRODUCTS.filter(p => p.id !== product.id).slice(0, 4);
       track.innerHTML = similar.map(p => `
-        <a href="product.html?slug=${p.slug}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
+        <a href="${productUrl(p.slug)}" class="carousel__slide shop-card" data-product-id="${p.id}" style="width:300px;">
           <div class="shop-card__img-wrap">
             <img src="${primaryImage(p)}" alt="${p.name}" class="shop-card__image" loading="lazy" width="300" height="375">
             ${p.featured ? `<span class="shop-card__featured">Featured</span>` : ''}

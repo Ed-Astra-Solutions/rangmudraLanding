@@ -5,6 +5,7 @@
 
 import { getGalleryItem } from '/js/data.js';
 import '/js/gallery-mosaic.js';
+import { pageQuery } from '/js/routes.js';
 
 function esc(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -12,7 +13,7 @@ function esc(s) {
 }
 
 async function init() {
-  const id = new URLSearchParams(location.search).get('id')
+  const id = new URLSearchParams(pageQuery()).get('id')
     || location.pathname.split('/gallery/')[1];
   const wrap = document.getElementById('gallery-detail');
   const missing = document.getElementById('detail-missing');
